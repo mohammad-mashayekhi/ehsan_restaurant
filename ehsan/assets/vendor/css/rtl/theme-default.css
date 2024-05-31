@@ -252,8 +252,8 @@ button.list-group-item-primary.active {
 
 .btn-primary {
   color: #fff;
-  background-color: #666cff;
-  border-color: #666cff;
+  background-color: #FF8A00;
+  border-color: #FF8A00;
 }
 .btn-primary:hover {
   color: #fff !important;
@@ -1307,7 +1307,7 @@ li.ui-timepicker-selected,
   color: #fff !important;
 }
 .bg-menu-theme .menu-item.active > .menu-link:not(.menu-toggle) {
-  background-color: #666cff;
+  background-color: #007390;
 }
 .bg-menu-theme.menu-horizontal .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle), .bg-menu-theme.menu-horizontal .menu-sub > .menu-item.active > .menu-link:not(.menu-toggle)::before {
   background-color: #ededff;

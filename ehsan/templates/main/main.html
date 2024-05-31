@@ -1,0 +1,281 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" class="light-style layout-navbar-fixed layout-menu-fixed" dir="rtl" data-theme="theme-default"
+    data-assets-path="{% static '' %}" data-template="vertical-menu-template">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <title>رستوران احسان</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="img/favicon/favicon.ico" />
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'vendor/fonts/materialdesignicons.css' %}" />
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/css/rtl/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'vendor/css/rtl/theme-default.css' %}"
+        class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'css/demo.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/fonts/IRANSans.css' %}" />
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/node-waves/node-waves.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/typeahead-js/typeahead.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/datatables-bs5/datatables.bootstrap5.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/libs/flatpickr/flatpickr.css' %}" />
+    <!-- Row Group CSS -->
+    <link rel="stylesheet" href="{% static 'vendor/libs/datatables-rowgroup-bs5/rowgroup.bootstrap5.css' %}" />
+    <!-- Form Validation -->
+    <link rel="stylesheet" href="{% static 'vendor/libs/formvalidation/dist/css/formValidation.min.css' %}" />
+
+    <!-- Page CSS -->
+
+    <!-- Helpers -->
+    <script src="{% static 'vendor/js/helpers.js' %}"></script>
+    <script src="{% static 'js/config.js' %}"></script>
+</head>
+<style>
+.container-xxl .flex-grow-1 .container-p-y{
+    font-weight: bold !important;
+}
+.curved-border {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin-top: 80px; /* Adjust margin-top as needed */
+    margin-bottom: 60px; /* Adjust margin-bottom as needed */
+    margin-left: 40px;
+    padding-right: 10px;
+    line-height: 2rem;
+    position: relative;
+    z-index: 10;
+}
+.app-brand{
+    justify-content: center;
+}
+.menu-link div {
+    color: #fff; 
+    font-weight: bold;
+}
+.menu-text{
+    color: #fff !important; 
+}
+.avatar-container {
+    text-align: center;
+    margin-top: -50px; /* Adjust the negative margin as needed */
+}
+
+.avatar {
+    width: 6rem; /* Adjust the width of the avatar */
+    height: 6rem; /* Adjust the height of the avatar */
+    border-radius: 50%; /* Make the avatar circular */
+}
+.logout-btn-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0 !important;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.logout-btn-wrapper button {
+    width: 120%;
+    height: 3rem;
+}
+.menu-link div img {
+    margin-left: 5px; 
+}
+.logout-btn-wrapper button a div img {
+    margin-right: 20px;
+}
+</style>
+<body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+        {% if user.is_authenticated %}
+        <div class="layout-container">
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme curved-border" style="background: #69C0D7 !important;">
+                <div class="avatar-container">
+                    <img src="{% static 'img/avatars/21.png' %}" class="avatar">
+                </div>
+                <div class="app-brand demo">
+                    <a href="index.html" class="app-brand-link">
+                        <span class="menu-text">{{user.username}}</span>
+                        </br>
+                        <span class="menu-text ms-2">خوش آمدید!</span>
+                    </a>
+                </div>
+                <li class="menu-item">
+                    <a href="cards-basic.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            داشبورد
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-advance.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            رسپی
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-statistics.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/anbar.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            انبار
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item {% if request.resolver_match.view_name == 'foodstuff:foodstuffs' %} active {% endif %}">
+                    <a href="{% url 'foodstuff:foodstuffs' %}" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/commitdata.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            ثبت اطلاعات اولیه
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-gamifications.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            ثبت گزارشات حسابداری
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            ثبت فروش روزانه
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/moneybag.png' %}" alt="Dashboard Icon" width="20" height="20">
+                                ثبت مطالبات و بدهی
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/masrafreport.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            گزارش مصرف
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/mojodianbar.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            گزارش موجودی انبار
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/sell.png' %}" alt="Dashboard Icon" width="20" height="20">
+                             گزارش فروش
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/briefcase.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            اتوماسیون اداری
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="cards-actions.html" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/reserve.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            رزرو
+                        </div>
+                    </a>
+                </li>
+                <div class="logout-btn-wrapper">
+                    <button class="btn btn-primary">
+                        <a href="cards-actions.html" class="menu-link">
+                            <div>خروج از حساب کاربری</div>
+                            <div>
+                                <img src="{% static 'img/icons/menu/logout.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            </div>
+                        </a>
+                    </button>
+                </div>
+            </aside>
+            <!-- / Menu -->
+
+            <!-- Layout container -->
+            <div class="layout-page">
+                <!-- Navbar -->
+
+                <!-- / Navbar -->
+
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    {% block contant %}
+                    {% endblock %}
+                </div>
+                <!-- / Layout page -->
+            </div>
+        </div>
+        {% else %}
+        <div class="layout-container">
+            برای استفاده از سیتسم وارد شوید
+        </div>
+        {% endif %}
+        <!-- / Layout wrapper -->
+        <!-- Core JS -->
+        <!-- build:js assets/vendor/js/core.js -->
+        <script src="{% static 'vendor/libs/jquery/jquery.js' %}"></script>
+        <script src="{% static 'vendor/libs/popper/popper.js' %}"></script>
+        <script src="{% static 'vendor/js/bootstrap.js' %}"></script>
+        <script src="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+        <script src="{% static 'vendor/libs/node-waves/node-waves.js' %}"></script>
+
+        <script src="{% static 'vendor/libs/hammer/hammer.js' %}"></script>
+        <script src="{% static 'vendor/libs/i18n/i18n.js' %}"></script>
+        <script src="{% static 'vendor/libs/typeahead-js/typeahead.js' %}"></script>
+
+        <script src="{% static 'vendor/js/menu.js' %}"></script>
+        <!-- endbuild -->
+
+        <!-- Vendors JS -->
+        <script src="{% static 'vendor/libs/datatables-bs5/datatables-bootstrap5.js' %}"></script>
+        <!-- Flat Picker -->
+        <script src="{% static 'vendor/libs/moment/moment.js' %}"></script>
+        <script src="{% static 'vendor/libs/jdate/jdate.js' %}"></script>
+        <script src="{% static 'vendor/libs/flatpickr/flatpickr-jdate.js' %}"></script>
+        <script src="{% static 'vendor/libs/flatpickr/fa-jdate.js' %}"></script>
+        <!-- Form Validation -->
+        <script src="{% static 'vendor/libs/formvalidation/dist/js/FormValidation.min.js' %}"></script>
+        <script src="{% static 'vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js' %}"></script>
+        <script src="{% static 'vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js' %}"></script>
+
+        <!-- Main JS -->
+        <script src="{% static 'js/main.js' %}"></script>
+
+        <!-- Page JS -->
+        <!-- <script src="{% static 'js/tables-datatables-basic.js' %}"></script> -->
+
+
+
+    </body>
+
+</html>
+
+<!-- beautify ignore:end -->

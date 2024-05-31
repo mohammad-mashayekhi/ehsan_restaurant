@@ -7,7 +7,7 @@
 :root,
 [data-bs-theme=light] {
   --bs-blue: #26c6f9;
-  --bs-indigo: #668cff;
+  --bs-indigo: #666cff;
   --bs-purple: #6f42c1;
   --bs-pink: #e83e8c;
   --bs-red: #ff4d49;
@@ -22,7 +22,7 @@
   --bs-gray-dark: rgba(76, 78, 100, 0.8);
   --bs-gray-25: rgba(76, 78, 100, 0.015);
   --bs-gray-50: rgba(76, 78, 100, 0.03);
-  --bs-primary: #667aff;
+  --bs-primary: #666cff;
   --bs-secondary: #6d788d;
   --bs-success: #72e128;
   --bs-info: #26c6f9;
@@ -7053,7 +7053,7 @@ a.invert-bg-dark:hover, a.invert-bg-dark:focus {
 }
 
 .container-p-y:not([class^=pt-]):not([class*=" pt-"]) {
-  padding-top: 1.5rem !important;
+  padding-top: 1.50rem !important;
 }
 .container-p-y:not([class^=pb-]):not([class*=" pb-"]) {
   padding-bottom: 1.5rem !important;
