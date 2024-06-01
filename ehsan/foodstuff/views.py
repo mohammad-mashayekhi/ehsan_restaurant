@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .forms import StuffsForm ,PriceForm
 from .models import Stuffs ,Category, Price
 from django.utils import timezone
+import jdatetime
+from datetime import datetime
 
 def foodstuffs(request):
     stuffs = Stuffs.objects.all()
@@ -53,9 +55,8 @@ def add_price(request, date):
             return redirect('foodstuff:foodstuffs')
     else:
         form = PriceForm(initial=initial_data)
-    return render(request, 'add_price.html', {'form': form})
 
-
-
-def price_added(request):
-    return render(request, 'price_added.html')
+    gregorian_date = datetime.strptime(date, '%Y-%m-%d')
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+  
+    return render(request, 'foodstuff/add_price.html', {'form': form, 'date': jalali_date})

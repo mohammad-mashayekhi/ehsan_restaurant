@@ -1,8 +1,9 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
-
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+<script src="https://cdn.jsdelivr.net/npm/persian-date@1.2.0/dist/persian-date.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
 <style>
   .card-main {
     background-color: #EEF9FB !important;
@@ -13,7 +14,6 @@
   <h4 class="fw-bold py-3 mb-4">
     <span class="text-muted fw-light">مواد غذایی/</span>مشاهده
   </h4>
-
   <!-- DataTable with Buttons -->
   <!-- <div class="card card-main">
     <div class="card-body"> -->
@@ -50,23 +50,23 @@
     </div>
   </div>
   <!-- / Content -->
-<!-- Content wrapper -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var dateInput = document.getElementById('date');
-    var submitBtn = document.getElementById('submitBtn');
+  <!-- Content wrapper -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var dateInput = document.getElementById('date');
+      var submitBtn = document.getElementById('submitBtn');
 
-    // چک کردن مقدار اولیه تاریخ و تنظیم مقدار پیش‌فرض اگر تاریخی انتخاب نشده باشد
-    if (!dateInput.value) {
-      dateInput.value = new Date().toISOString().slice(0, 10); // تنظیم مقدار امروز
-    }
+      // چک کردن مقدار اولیه تاریخ و تنظیم مقدار پیش‌فرض اگر تاریخی انتخاب نشده باشد
+      if (!dateInput.value) {
+        dateInput.value = new Date().toISOString().slice(0, 10); // تنظیم مقدار امروز
+      }
 
-    submitBtn.addEventListener('click', function () {
-      console.log('asdasdads')
-      var selectedDate = dateInput.value;
-      var url = "/foodstuff/price/" + selectedDate + "/";
-      window.location.href = url;
+      submitBtn.addEventListener('click', function () {
+        console.log('asdasdads')
+        var selectedDate = dateInput.value;
+        var url = "/foodstuff/price/" + selectedDate + "/";
+        window.location.href = url;
+      });
     });
-  });
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
