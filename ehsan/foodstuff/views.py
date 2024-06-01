@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import StuffsForm
-from .models import Stuffs
-from .models import Category
+from .forms import StuffsForm ,PriceForm
+from .models import Stuffs ,Category, Price
+from django.utils import timezone
 
 def foodstuffs(request):
     stuffs = Stuffs.objects.all()
@@ -29,3 +29,33 @@ def edit_stuff(request, pk):
     else:
         form = StuffsForm(instance=stuff)
     return render(request, 'foodstuff/edit_stuff.html', {'form': form})
+
+def add_price(request, date):
+    price_instance = None
+    try:
+        price_instance = Price.objects.get(date=date)
+        initial_data = {'prices': price_instance.prices}
+    except Price.DoesNotExist:
+        initial_data = None
+
+    if price_instance:
+        initial_data = {'stuff_' + str(stuff_id): price for stuff_id, price in price_instance.prices.items()}
+    
+    if request.method == 'POST':
+        form = PriceForm(request.POST, initial=initial_data)
+        if form.is_valid():
+            prices = form.cleaned_data['prices']
+            if price_instance:
+                price_instance.prices = prices
+                price_instance.save()
+            else:
+                price_instance = Price.objects.create(date=date, prices=prices)
+            return redirect('foodstuff:foodstuffs')
+    else:
+        form = PriceForm(initial=initial_data)
+    return render(request, 'add_price.html', {'form': form})
+
+
+
+def price_added(request):
+    return render(request, 'price_added.html')

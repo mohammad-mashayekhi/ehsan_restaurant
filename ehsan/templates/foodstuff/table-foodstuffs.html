@@ -11,57 +11,62 @@
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="fw-bold py-3 mb-4">
-    <span class="text-muted fw-light">مشاهده/</span> مواد غذایی
+    <span class="text-muted fw-light">مواد غذایی/</span>مشاهده
   </h4>
 
   <!-- DataTable with Buttons -->
   <!-- <div class="card card-main">
     <div class="card-body"> -->
-      <div class="card">
-        <div class="card-header">
-          <a href="{% url 'foodstuff:addfoodstuffs'%}" class="btn btn-primary" style="float:left;"> افزودن ماده غذایی جدید</a>
-        </div>
-        <div class="card-datatable table-responsive pt-0">
-          <table id="datatable " class="table-hover table">
-            <thead class="table-light">
-              <tr>
-                <th></th>
-                <th>عنوان</th>
-                <th>دسته بندی</th>
-                <th>مقیاس</th>
-                <th>ویرایش</th>
-              </tr>
-            </thead>
-            <tbody id="table-body">
-              {% for stuff in stuffs %}
-              <tr>
-                <td></td>
-                <td>{{ stuff.stuff_name }}</td>
-                <td>{{ stuff.stuff_category }}</td>
-                <td>{{ stuff.get_stuff_scale_display }}</td>
-                <td><a href="{% url 'foodstuff:edit_stuff' stuff.id %}">ویرایش</a></td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    <!-- </div>
-  </div> -->
-  <!-- Modal to add new record -->
-  <div class="offcanvas offcanvas-end" id="add-new-record">
-    <div class="offcanvas-header border-bottom">
-      <h5 class="offcanvas-title" id="exampleModalLabel">
-        افزودن ماده غذایی
-      </h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  <div class="card">
+    <div class="card-header">
+      <a href="{% url 'foodstuff:addfoodstuffs'%}" class="btn btn-primary" style="float:left;"> افزودن ماده غذایی
+        جدید</a>
+      <button class="btn btn-primary" id="submitBtn">برو به تاریخ</button>
+      <input type="date" id="date" name="date" value="{% now 'Y-m-d' %}">
     </div>
-    <div class="offcanvas-body flex-grow-1">
-
+    <div class="card-datatable table-responsive pt-0">
+      <table id="datatable " class="table-hover table">
+        <thead class="table-light">
+          <tr>
+            <th></th>
+            <th>عنوان</th>
+            <th>دسته بندی</th>
+            <th>مقیاس</th>
+            <th>ویرایش</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          {% for stuff in stuffs %}
+          <tr>
+            <td></td>
+            <td>{{ stuff.stuff_name }}</td>
+            <td>{{ stuff.stuff_category }}</td>
+            <td>{{ stuff.get_stuff_scale_display }}</td>
+            <td><a href="{% url 'foodstuff:edit_stuff' stuff.id %}">ویرایش</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
   <!-- / Content -->
-  <div class="content-backdrop fade"></div>
-</div>
 <!-- Content wrapper -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var dateInput = document.getElementById('date');
+    var submitBtn = document.getElementById('submitBtn');
+
+    // چک کردن مقدار اولیه تاریخ و تنظیم مقدار پیش‌فرض اگر تاریخی انتخاب نشده باشد
+    if (!dateInput.value) {
+      dateInput.value = new Date().toISOString().slice(0, 10); // تنظیم مقدار امروز
+    }
+
+    submitBtn.addEventListener('click', function () {
+      console.log('asdasdads')
+      var selectedDate = dateInput.value;
+      var url = "/foodstuff/price/" + selectedDate + "/";
+      window.location.href = url;
+    });
+  });
+</script>
 {% endblock %}

@@ -24,6 +24,8 @@ urlpatterns = [
     path('', foodstuffs , name='foodstuffs'),
     path('add', addfoodstuffs , name='addfoodstuffs'),
     path('edit-stuff/<str:pk>/', edit_stuff, name='edit_stuff'),
+    
+    path('price/<str:date>/', add_price, name='add_price'),
 
 
 ]
