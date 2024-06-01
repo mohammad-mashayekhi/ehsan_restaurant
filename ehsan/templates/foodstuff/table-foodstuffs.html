@@ -1,9 +1,6 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-<script src="https://cdn.jsdelivr.net/npm/persian-date@1.2.0/dist/persian-date.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
 <style>
   .card-main {
     background-color: #EEF9FB !important;
@@ -21,7 +18,9 @@
     <div class="card-header">
       <a href="{% url 'foodstuff:addfoodstuffs'%}" class="btn btn-primary" style="float:left;"> افزودن ماده غذایی
         جدید</a>
-      <button class="btn btn-primary" id="submitBtn">برو به تاریخ</button>
+        <button class="btn btn-secondry" style="float:left; margin-left: 5px;">آخرین به‌روزرسانی قیمت: {{ last_price_jalali }}</button>
+
+      <button class="btn btn-primary" id="submitBtn">برو به قیمت تاریخ</button>
       <input type="date" id="date" name="date" value="{% now 'Y-m-d' %}">
     </div>
     <div class="card-datatable table-responsive pt-0">

@@ -126,8 +126,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="cards-statistics.html" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'repository:repository' %} active {% endif %}">
+                    <a href="{% url 'repository:repository' %}" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/anbar.png' %}" alt="Dashboard Icon" width="20" height="20">
                             انبار

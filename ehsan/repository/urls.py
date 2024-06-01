@@ -17,19 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import *
-from django.conf.urls.static import static
-from django.conf import settings 
+
+app_name='repository'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', home, name='home'),
-    path('foodstuff/', include('foodstuff.urls')),
-    path('repository/', include('repository.urls')),
+    path('', repository , name='repository'),
+    path('in/<str:date>/', in_repository, name='in_repository'),
+    path('out/<str:date>/', out_repository, name='out_repository'),
 
 ]
-
-
-urlpatterns += static(settings.MEDIA_URL,
-                      document_root=settings.MEDIA_ROOT)  # media
-urlpatterns += static(settings.STATIC_URL,
-                      document_root=settings.STATIC_ROOT)  # static

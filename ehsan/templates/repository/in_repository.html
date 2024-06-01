@@ -1,0 +1,54 @@
+<!-- in_repository.html -->
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<style>
+    .table th{
+        background-color: #08E02B !important;
+    }
+</style>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">مواد غذایی/</span> ورودی انبار
+    </h4>
+    <!-- DataTable with Buttons -->
+    <!-- <div class="card card-main">
+      <div class="card-body"> -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>{{ date }}</h2>
+        </div>
+        <div class="card-body">
+            <form class="form" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="type" value="{{ form.initial.type }}">
+                <table id="datatable" class="table-hover table">
+                    <thead class="table-light">
+                        <tr>
+                            <th></th>
+                            <th>عنوان</th>
+                            <th>مقدار</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        {% for field in form %}
+                        <tr>
+                            <td></td>
+                            <td>{{ field.label }}</td>
+                            <td><input type="number" id="{{ field.id_for_label }}" name="{{ field.name }}"
+                                    value="{{ field.value }}" class="form-control"></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="card-footer text-muted">
+                    {{form.errors}}
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <a href="{% url 'foodstuff:foodstuffs' %}" class="btn btn-outline-secondary">انصراف</a>
+                  </div>
+            </form>
+        </div>
+    </div>
+    <!-- / Content -->
+    <!-- Content wrapper -->
+    {% endblock %}
