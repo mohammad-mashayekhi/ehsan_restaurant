@@ -39,67 +39,84 @@
     <script src="{% static 'js/config.js' %}"></script>
 </head>
 <style>
-.container-xxl .flex-grow-1 .container-p-y{
-    font-weight: bold !important;
-}
-.curved-border {
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    margin-top: 80px; /* Adjust margin-top as needed */
-    margin-bottom: 60px; /* Adjust margin-bottom as needed */
-    margin-left: 40px;
-    padding-right: 10px;
-    line-height: 2rem;
-    position: relative;
-    z-index: 10;
-}
-.app-brand{
-    justify-content: center;
-}
-.menu-link div {
-    color: #fff; 
-    font-weight: bold;
-}
-.menu-text{
-    color: #fff !important; 
-}
-.avatar-container {
-    text-align: center;
-    margin-top: -50px; /* Adjust the negative margin as needed */
-}
+    .container-xxl .flex-grow-1 .container-p-y {
+        font-weight: bold !important;
+    }
 
-.avatar {
-    width: 6rem; /* Adjust the width of the avatar */
-    height: 6rem; /* Adjust the height of the avatar */
-    border-radius: 50%; /* Make the avatar circular */
-}
-.logout-btn-wrapper {
-    position: absolute;
-    bottom: 0;
-    left: 0 !important;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-.logout-btn-wrapper button {
-    width: 120%;
-    height: 3rem;
-}
-.menu-link div img {
-    margin-left: 5px; 
-}
-.logout-btn-wrapper button a div img {
-    margin-right: 20px;
-}
+    .curved-border {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        margin-top: 80px;
+        /* Adjust margin-top as needed */
+        margin-bottom: 60px;
+        /* Adjust margin-bottom as needed */
+        margin-left: 40px;
+        padding-right: 10px;
+        line-height: 2rem;
+        position: relative;
+        z-index: 10;
+    }
+
+    .app-brand {
+        justify-content: center;
+    }
+
+    .menu-link div {
+        color: #fff;
+        font-weight: bold;
+    }
+
+    .menu-text {
+        color: #fff !important;
+    }
+
+    .avatar-container {
+        text-align: center;
+        margin-top: -50px;
+        /* Adjust the negative margin as needed */
+    }
+
+    .avatar {
+        width: 6rem;
+        /* Adjust the width of the avatar */
+        height: 6rem;
+        /* Adjust the height of the avatar */
+        border-radius: 50%;
+        /* Make the avatar circular */
+    }
+
+    .logout-btn-wrapper {
+        position: absolute;
+        bottom: 0;
+        left: 0 !important;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .logout-btn-wrapper button {
+        width: 120%;
+        height: 3rem;
+    }
+
+    .menu-link div img {
+        margin-left: 5px;
+    }
+
+    .logout-btn-wrapper button a div img {
+        margin-right: 20px;
+    }
 </style>
+
 <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         {% if user.is_authenticated %}
         <div class="layout-container">
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme curved-border" style="background: #69C0D7 !important;">
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme curved-border"
+                style="background: #69C0D7 !important;">
                 <div class="avatar-container">
                     <img src="{% static 'img/avatars/21.png' %}" class="avatar">
                 </div>
@@ -113,7 +130,8 @@
                 <li class="menu-item">
                     <a href="cards-basic.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             داشبورد
                         </div>
                     </a>
@@ -121,23 +139,27 @@
                 <li class="menu-item">
                     <a href="cards-advance.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             رسپی
                         </div>
                     </a>
                 </li>
-                <li class="menu-item {% if request.resolver_match.view_name == 'repository:repository' %} active {% endif %}">
-                    <a href="{% url 'repository:repository' %}" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'repository:in_repository' or request.resolver_match.view_name == 'repository:out_repository' %} active {% endif %}" id="menuSubmitBtn">
+                    <a href="#" class="menu-link" id="dynamicMenuLinkRepository">
                         <div>
-                            <img src="{% static 'img/icons/menu/anbar.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/anbar.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             انبار
                         </div>
                     </a>
                 </li>
-                <li class="menu-item {% if request.resolver_match.view_name == 'foodstuff:foodstuffs' %} active {% endif %}">
-                    <a href="{% url 'foodstuff:foodstuffs' %}" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'foodstuff:add_price' %} active {% endif %}"
+                    id="menuSubmitBtn">
+                    <a href="#" class="menu-link" id="dynamicMenuLinkFoodstuff">
                         <div>
-                            <img src="{% static 'img/icons/menu/commitdata.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/commitdata.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             ثبت اطلاعات اولیه
                         </div>
                     </a>
@@ -145,7 +167,8 @@
                 <li class="menu-item">
                     <a href="cards-gamifications.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
+                                width="20" height="20">
                             ثبت گزارشات حسابداری
                         </div>
                     </a>
@@ -153,7 +176,8 @@
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             ثبت فروش روزانه
                         </div>
                     </a>
@@ -161,15 +185,17 @@
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/moneybag.png' %}" alt="Dashboard Icon" width="20" height="20">
-                                ثبت مطالبات و بدهی
+                            <img src="{% static 'img/icons/menu/moneybag.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
+                            ثبت مطالبات و بدهی
                         </div>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/masrafreport.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/masrafreport.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             گزارش مصرف
                         </div>
                     </a>
@@ -177,7 +203,8 @@
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/mojodianbar.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/mojodianbar.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             گزارش موجودی انبار
                         </div>
                     </a>
@@ -185,15 +212,17 @@
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/sell.png' %}" alt="Dashboard Icon" width="20" height="20">
-                             گزارش فروش
+                            <img src="{% static 'img/icons/menu/sell.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
+                            گزارش فروش
                         </div>
                     </a>
                 </li>
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/briefcase.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/briefcase.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             اتوماسیون اداری
                         </div>
                     </a>
@@ -201,7 +230,8 @@
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/reserve.png' %}" alt="Dashboard Icon" width="20" height="20">
+                            <img src="{% static 'img/icons/menu/reserve.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
                             رزرو
                         </div>
                     </a>
@@ -211,7 +241,8 @@
                         <a href="cards-actions.html" class="menu-link">
                             <div>خروج از حساب کاربری</div>
                             <div>
-                                <img src="{% static 'img/icons/menu/logout.png' %}" alt="Dashboard Icon" width="20" height="20">
+                                <img src="{% static 'img/icons/menu/logout.png' %}" alt="Dashboard Icon" width="20"
+                                    height="20">
                             </div>
                         </a>
                     </button>
@@ -271,10 +302,34 @@
 
         <!-- Page JS -->
         <!-- <script src="{% static 'js/tables-datatables-basic.js' %}"></script> -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // دریافت تاریخ امروز
+                var today = new Date();
+                var year = today.getFullYear();
+                var month = ('0' + (today.getMonth() + 1)).slice(-2); // اضافه کردن صفر در صورت نیاز
+                var day = ('0' + today.getDate()).slice(-2); // اضافه کردن صفر در صورت نیاز
+        
+                // ساختن تاریخ به فرمتی که مورد نیاز است
+                var formattedDate = year + '-' + month + '-' + day;
+        
+                // ساختن URL جدید با تاریخ امروز
+                var newUrlFoodstufd = '{% url "foodstuff:add_price" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+                var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+        
+                // پیدا کردن المان لینک و به روزرسانی href آن
+                var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
+                var menuLinkRepository = document.getElementById('dynamicMenuLinkRepository');
 
-
-
-    </body>
+                if (menuLinkFoodstuff) {
+                    menuLinkFoodstuff.href = newUrlFoodstufd;
+                }
+                if(menuLinkRepository){
+                    menuLinkRepository.href = newUrlRepository;
+                }
+            });
+        </script>
+</body>
 
 </html>
 

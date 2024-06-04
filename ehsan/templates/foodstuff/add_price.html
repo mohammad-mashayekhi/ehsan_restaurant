@@ -1,48 +1,181 @@
-<!-- add_price.html -->
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
+<style>
+    .small-td {
+        width: 15%;
+    }
+
+    .th {
+        background-color: #6CC3DA !important;
+        color: white !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+    }
+
+    .customtable {
+        font-weight: bold !important;
+        font-size: large;
+    }
+
+    .price-input {
+        padding: 3px !important;
+        background-color: #E4F4F8;
+        border-color: #E4F4F8;
+        font-size: larger;
+    }
+
+    .table-responsive {
+        height: 500px;
+        /* تنظیم ارتفاع برای ایجاد اسکرول */
+        overflow-y: auto;
+        direction: ltr;
+        /* تنظیم جهت نوار اسکرول به چپ */
+    }
+
+    .table-responsive table {
+        direction: rtl;
+        /* تنظیم جهت محتویات جدول به راست */
+    }
+</style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">مواد غذایی/</span> بررسی قیمت
-    </h4>
-    <!-- DataTable with Buttons -->
-    <!-- <div class="card card-main">
-      <div class="card-body"> -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5>تاریخ : {{ date }}</h5>
+        <span class="text-muted fw-light">مواد غذایی/</span> بررسی قیمت روزانه</h4>
+    <div class="card mb-4" style="background-color: #EEF9FB; margin: 20px; box-shadow: none;">
+        <div class="card-header" style="margin-inline: 60px;">
+            <a href="{% url 'foodstuff:addfoodstuffs' %}" class="btn btn-primary" style="float: left;"> افزودن ماده
+                غذایی جدید</a>
+                <span class=""></span>
+
+            <button class=" mdi mdi-arrow-right" id="prevDayBtn"></button>
+            <input type="date" id="date" name="date" value="{{ date }}">
+            <button class=" mdi mdi-arrow-left" id="nextDayBtn"></button>
         </div>
         <div class="card-body">
-            <form class="form" method="post">
-                {% csrf_token %}
-                <table id="datatable" class="table-hover table">
-                    <thead class="table-light">
-                        <tr>
-                            <th></th>
-                            <th>عنوان</th>
-                            <th>مقدار</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        {% for field in form %}
-                        <tr>
-                            <td></td>
-                            <td>{{ field.label }}</td>
-                            <td><input type="number" id="{{ field.id_for_label }}" name="{{ field.name }}"
-                                    value="{{ field.value }}" class="form-control"></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div class="card-footer text-muted">
-                    {{form.errors}}
-                    <button type="submit" class="btn btn-primary">ذخیره</button>
-                    <a href="{% url 'foodstuff:foodstuffs' %}" class="btn btn-outline-secondary">انصراف</a>
-                  </div>
-            </form>
+            <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
+                <div class="card-body">
+                    <form class="form" method="post">
+                        {% csrf_token %}
+                        <div class="table-responsive">
+                            <table id="datatable" class="table table-striped text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="th">کد</th>
+                                        <th class="th">دسته بندی</th>
+                                        <th class="th">عنوان</th>
+                                        <th class="th">قیمت</th>
+                                        <th class="th">مقیاس</th>
+                                        <th class="th" style="border-left: 20px !important;">ویرایش</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    {% for field in form %}
+                                    {% for stuff in stuffs %}
+                                    {% if field.name == 'stuff_'|add:stuff.stuff_id %}
+                                    <tr>
+                                        <td class="small-td">{{ stuff.stuff_id }}</td>
+                                        <td class="small-td">{{ stuff.stuff_category.cat_name }}</td>
+                                        <td class="large-td customtable">{{ field.label }}</td>
+                                        <td class="large-td customtable">
+                                            <input type="text" id="{{ field.id_for_label }}" name="{{ field.name }}"
+                                                value="{{ field.value }}" class="form-control price-input">
+                                        </td>
+                                        <td class="small-td">{{ stuff.get_stuff_scale_display }}</td>
+                                        <td class="small-td">
+                                            <a href="{% url 'foodstuff:edit_stuff' stuff.id %}"><i
+                                                    class="mdi mdi-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer text-muted">
+                            {{ form.errors }}
+                            <button type="submit" class="btn btn-primary">ذخیره</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- / Content -->
-    <!-- Content wrapper -->
-    {% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var dateInput = document.getElementById('date');
+            var prevDayBtn = document.getElementById('prevDayBtn');
+            var nextDayBtn = document.getElementById('nextDayBtn');
+
+            // چک کردن مقدار اولیه تاریخ و تنظیم مقدار پیش‌فرض اگر تاریخی انتخاب نشده باشد
+            if (!dateInput.value) {
+                dateInput.value = new Date().toISOString().slice(0, 10); // تنظیم مقدار امروز
+            }
+
+            function goToSelectedDate() {
+                var selectedDate = dateInput.value;
+                var url = "/foodstuff/price/" + selectedDate + "/";
+                window.location.href = url;
+            }
+
+            prevDayBtn.addEventListener('click', function () {
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() - 1);
+                dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate();
+            });
+
+            nextDayBtn.addEventListener('click', function () {
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() + 1);
+                dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate();
+            });
+
+            dateInput.addEventListener('change', goToSelectedDate);
+
+
+            var currentUrl = window.location.href;
+            var currentDateStr = currentUrl.split('/').pop().slice(0, 10);
+            var dateParts = currentDateStr.split('-');
+            var currentDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+
+            nextDayBtn.addEventListener('click', function () {
+                currentDate.setDate(currentDate.getDate() + 1);
+                var nextDateStr = currentDate.toISOString().slice(0, 10);
+                var url = "/foodstuff/price/" + nextDateStr + "/";
+                window.location.href = url;
+            });
+
+
+            // Function to format the number
+            function formatNumber(input) {
+                var value = input.value.replace(/,/g, '');
+                if (value) {
+                    input.value = parseFloat(value).toLocaleString('en-US');
+                }
+            }
+
+            // Select all price input fields
+            var priceInputs = document.querySelectorAll('.price-input');
+
+            // Format the price inputs on page load
+            priceInputs.forEach(function (input) {
+                formatNumber(input);
+            });
+
+            // Add event listeners to format the numbers as the user types
+            priceInputs.forEach(function (input) {
+                input.addEventListener('input', function () {
+                    formatNumber(input);
+                });
+
+                input.addEventListener('blur', function () {
+                    formatNumber(input);
+                });
+            });
+        });
+
+    </script>
+</div>
+{% endblock %}

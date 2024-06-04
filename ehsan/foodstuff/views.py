@@ -34,6 +34,13 @@ def edit_stuff(request, pk):
         form = StuffsForm(instance=stuff)
     return render(request, 'foodstuff/edit_stuff.html', {'form': form})
 
+
+from django.shortcuts import render, redirect
+from .models import Price, Stuffs
+from .forms import PriceForm
+import jdatetime
+from datetime import datetime
+
 def add_price(request, date):
     price_instance = None
     try:
@@ -44,7 +51,7 @@ def add_price(request, date):
 
     if price_instance:
         initial_data = {'stuff_' + str(stuff_id): price for stuff_id, price in price_instance.prices.items()}
-    
+
     if request.method == 'POST':
         form = PriceForm(request.POST, initial=initial_data)
         if form.is_valid():
@@ -54,11 +61,22 @@ def add_price(request, date):
                 price_instance.save()
             else:
                 price_instance = Price.objects.create(date=date, prices=prices)
-            return redirect('foodstuff:foodstuffs')
+
+            # Get today's date
+            today_date = datetime.now().strftime('%Y-%m-%d')
+            return redirect(f'/foodstuff/price/{today_date}/')
     else:
         form = PriceForm(initial=initial_data)
 
     gregorian_date = datetime.strptime(date, '%Y-%m-%d')
     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
-  
-    return render(request, 'foodstuff/add_price.html', {'form': form, 'date': jalali_date})
+    
+    # Fetch all stuffs with related category and scale
+    stuffs = Stuffs.objects.select_related('stuff_category').all()
+
+    return render(request, 'foodstuff/add_price.html', {
+        'form': form,
+        'jalali_date': jalali_date,
+        'date':date,
+        'stuffs': stuffs
+    })

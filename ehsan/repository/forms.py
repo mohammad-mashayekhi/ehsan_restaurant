@@ -7,8 +7,9 @@ class RepositoryForm(forms.Form):
         super(RepositoryForm, self).__init__(*args, **kwargs)
         stuffs = Stuffs.objects.all()
         for stuff in stuffs:
-            self.fields[f'stuff_{stuff.stuff_id}'] = forms.IntegerField(label=stuff.stuff_name, required=False, min_value=0)
-
+            self.fields[f'stuff_{stuff.stuff_id}'] = forms.CharField(
+                label=stuff.stuff_name, required=False, widget=forms.TextInput(attrs={'class': 'price-input'})
+            )
     def clean(self):
         cleaned_data = super(RepositoryForm, self).clean()
         quantities = {}
