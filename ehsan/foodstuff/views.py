@@ -73,10 +73,12 @@ def add_price(request, date):
     
     # Fetch all stuffs with related category and scale
     stuffs = Stuffs.objects.select_related('stuff_category').all()
+    categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
 
     return render(request, 'foodstuff/add_price.html', {
         'form': form,
         'jalali_date': jalali_date,
         'date':date,
-        'stuffs': stuffs
+        'stuffs': stuffs,
+        'categories':categories,
     })

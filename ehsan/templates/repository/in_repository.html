@@ -68,13 +68,23 @@
         color: black !important;
     }
 
-    #categoryFilter {
+    /* #categoryFilter {
         float: left;
-    }
+    } */
 
     .search-container {
         display: inline-block;
         margin-left: 10px;
+    }
+    .form-control-sm{
+        border-color: white !important;
+    }
+    .btn-arrow{
+        background-color: #FF8A00;
+        color: white;
+        width: 1%;
+        height: 1%;
+        padding: 1%;
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -88,10 +98,10 @@
     </div>
     <div class="card mb-4" style="background-color: #e0f0f3; margin: 20px; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
-            <button class="mdi mdi-arrow-right" id="prevDayBtn"></button>
+            <button class="btn-arrow btn mdi mdi-arrow-right" id="prevDayBtn"></button>
             <input type="date" id="date" name="date" value="{{ date }}">
-            <button class="mdi mdi-arrow-left" id="nextDayBtn"></button>
-            <select id="categoryFilter">
+            <button class="btn-arrow btn mdi mdi-arrow-left" id="nextDayBtn"></button>
+            <select id="categoryFilter"  class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
                 {% for category in categories %}
                 <option value="{{ category.cat_name }}" {% if category.id in selected_category %}selected{% endif %}>
@@ -99,8 +109,7 @@
                 {% endfor %}
             </select>
             <div id="datatable_filter" class="search-container">
-                <label for="search-box">جستجو:</label>
-                <input type="search" id="search-box" class="form-control form-control-sm">
+                <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
             </div>
         </div>
         <div class="card-body">
