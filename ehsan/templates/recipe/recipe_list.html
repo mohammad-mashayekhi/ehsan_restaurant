@@ -7,8 +7,12 @@
     <h1>Recipes</h1>
     <ul>
         {% for recipe in recipes %}
-            <li>{{ recipe.name }}</li>
-        {% endfor %}
+    <div>
+        <h2>{{ recipe.name }}</h2>
+        <!-- دکمه برای هدایت کاربر به صفحه ویرایش -->
+        <a href="{% url 'recipe:edit_recipe' recipe.id %}" class="btn btn-primary">Edit</a>
+    </div>
+{% endfor %}
     </ul>
 </body>
 </html>

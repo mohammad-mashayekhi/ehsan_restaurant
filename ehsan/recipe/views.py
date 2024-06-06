@@ -40,15 +40,13 @@ def edit_recipe(request, recipe_id):
             return redirect('recipe:recipe_list')
     else:
         recipe_form = RecipeForm(instance=recipe)
-        initial_data = [{'stuff_name': Stuffs.objects.get(id=stuff_id), 'amount': amount} for stuff_id, amount in recipe.ingredients.items()]
+        initial_data = [{'stuff_name': Stuffs.objects.get(stuff_id=stuff_id), 'amount': amount} for stuff_id, amount in recipe.ingredients.items()]
         formset = IngredientFormSet(initial=initial_data, prefix='ingredients')
 
     return render(request, 'recipe/edit_recipe.html', {
         'recipe_form': recipe_form,
         'formset': formset,
     })
-
-from django.shortcuts import get_object_or_404
 
 def recipe_list(request):
     recipes = Recipe.objects.all()
