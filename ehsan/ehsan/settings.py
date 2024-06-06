@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'foodstuff',
     'repository',
+    'recipe',
     'django.contrib.postgres',
 ]
 

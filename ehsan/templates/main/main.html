@@ -37,6 +37,8 @@
     <!-- Helpers -->
     <script src="{% static 'vendor/js/helpers.js' %}"></script>
     <script src="{% static 'js/config.js' %}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 </head>
 <style>
     .container-xxl .flex-grow-1 .container-p-y {
@@ -145,7 +147,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item {% if request.resolver_match.view_name == 'repository:in_repository' or request.resolver_match.view_name == 'repository:out_repository' %} active {% endif %}" id="menuSubmitBtn">
+                <li class="menu-item {% if request.resolver_match.view_name == 'repository:in_repository' or request.resolver_match.view_name == 'repository:out_repository' %} active {% endif %}"
+                    id="menuSubmitBtn">
                     <a href="#" class="menu-link" id="dynamicMenuLinkRepository">
                         <div>
                             <img src="{% static 'img/icons/menu/anbar.png' %}" alt="Dashboard Icon" width="20"
@@ -301,22 +304,24 @@
         <script src="{% static 'js/main.js' %}"></script>
 
         <!-- Page JS -->
+        {% block pagejs %}
+        {% endblock %}
         <!-- <script src="{% static 'js/tables-datatables-basic.js' %}"></script> -->
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 // دریافت تاریخ امروز
                 var today = new Date();
                 var year = today.getFullYear();
                 var month = ('0' + (today.getMonth() + 1)).slice(-2); // اضافه کردن صفر در صورت نیاز
                 var day = ('0' + today.getDate()).slice(-2); // اضافه کردن صفر در صورت نیاز
-        
+
                 // ساختن تاریخ به فرمتی که مورد نیاز است
                 var formattedDate = year + '-' + month + '-' + day;
-        
+
                 // ساختن URL جدید با تاریخ امروز
                 var newUrlFoodstufd = '{% url "foodstuff:add_price" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
-        
+
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
                 var menuLinkRepository = document.getElementById('dynamicMenuLinkRepository');
@@ -324,7 +329,7 @@
                 if (menuLinkFoodstuff) {
                     menuLinkFoodstuff.href = newUrlFoodstufd;
                 }
-                if(menuLinkRepository){
+                if (menuLinkRepository) {
                     menuLinkRepository.href = newUrlRepository;
                 }
             });

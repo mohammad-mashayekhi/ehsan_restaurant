@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Recipe</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .ingredient-form {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Recipe</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ recipe_form.as_p }}
+            <h2>Ingredients</h2>
+            <div id="ingredient-forms">
+                {{ formset.management_form }}
+                {% for form in formset %}
+                    <div class="ingredient-form">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
+            </div>
+            <button type="button" id="add-ingredient" class="btn btn-secondary">Add Ingredient</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function initSelect2() {
+                $('.select2').select2({
+                    width: '100%'
+                });
+            }
+
+            initSelect2();
+
+            let form_idx = {{ formset.total_form_count }};
+            $('#add-ingredient').click(function() {
+                let new_form = $('#ingredient-forms .ingredient-form:first').clone();
+                new_form.find('select').select2('destroy');
+                new_form.find('input, select').each(function() {
+                    let name = $(this).attr('name').replace(/\d+/, form_idx);
+                    let id = $(this).attr('id').replace(/\d+/, form_idx);
+                    $(this).attr({'name': name, 'id': id}).val('');
+                });
+                new_form.appendTo('#ingredient-forms');
+                new_form.find('.select2').select2({
+                    width: '100%'
+                });
+                form_idx++;
+                updateManagementForm(form_idx);
+            });
+
+            function updateManagementForm(count) {
+                $('#id_ingredients-TOTAL_FORMS').val(count);
+            }
+        });
+    </script>
+</body>
+</html>
