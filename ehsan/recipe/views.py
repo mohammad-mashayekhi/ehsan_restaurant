@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect ,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RecipeForm, IngredientForm
 from .models import Recipe
 from django.forms import formset_factory
-from foodstuff.models import Stuffs
-import json
+from foodstuff.models import Category, Stuffs  # وارد کردن مدل‌های Category و Stuffs
 
 def add_recipe(request):
     IngredientFormSet = formset_factory(IngredientForm, extra=1)
@@ -20,9 +19,13 @@ def add_recipe(request):
         recipe_form = RecipeForm()
         formset = IngredientFormSet(prefix='ingredients')
 
+    # اضافه کردن دسته‌بندی‌ها برای نمایش در قالب
+    categories = Category.objects.all()
+
     return render(request, 'recipe/add_recipe.html', {
         'recipe_form': recipe_form,
         'formset': formset,
+        'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
     })
 
 
@@ -43,10 +46,15 @@ def edit_recipe(request, recipe_id):
         initial_data = [{'stuff_name': Stuffs.objects.get(stuff_id=stuff_id), 'amount': amount} for stuff_id, amount in recipe.ingredients.items()]
         formset = IngredientFormSet(initial=initial_data, prefix='ingredients')
 
+    # اضافه کردن دسته‌بندی‌ها برای نمایش در قالب
+    categories = Category.objects.all()
+
     return render(request, 'recipe/edit_recipe.html', {
         'recipe_form': recipe_form,
         'formset': formset,
+        'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
     })
+
 
 def recipe_list(request):
     recipes = Recipe.objects.all()

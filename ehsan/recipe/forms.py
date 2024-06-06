@@ -15,7 +15,7 @@ class RecipeForm(forms.ModelForm):
                 'recipe_id': 'شناسه رسپی',
                 'name': 'نام غذا',
             }
-        
+      
 class IngredientForm(forms.Form):
     stuff_name = forms.ModelChoiceField(
         queryset=Stuffs.objects.all(),
@@ -24,6 +24,6 @@ class IngredientForm(forms.Form):
         label='نام ماده اولیه'
     )
     amount = forms.FloatField(
-        widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'مقدار'}),
+        widget=forms.NumberInput(attrs={'class': 'form-control mt-1', 'placeholder': 'مقدار'}),
         label='مقدار'
     )

@@ -26,21 +26,17 @@
     }
 
     .table-responsive {
-        height: 550px;
-        /* تنظیم ارتفاع برای ایجاد اسکرول */
+        height: 600px;
         overflow-y: auto;
         direction: ltr;
-        /* تنظیم جهت نوار اسکرول به چپ */
     }
 
     .search-container {
         display: inline-block;
-        /* margin-left: 10px; */
     }
 
     .table-responsive table {
         direction: rtl;
-        /* تنظیم جهت محتویات جدول به راست */
     }
 
     .form-control-sm {
@@ -54,46 +50,61 @@
         height: 1%;
         padding: 1%;
     }
+
+    .form-group {
+        margin-bottom: 20px;
+        /* فاصله بین فیلدها */
+    }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">رسپی/</span> افزودن رسپی
     </h4>
     <div class="card mb-4" style="background-color: #EEF9FB; margin: 20px; box-shadow: none;">
-        <div class="card-header" style="margin-inline: 60px;">
-            <a href="{% url 'recipe:add_recipe' %}" class="btn btn-primary" style="float: left;"> افزودن رسپی جدید</a>
-        </div>
+        <div class="card-header" style="margin-inline: 60px;"></div>
         <div class="card-body">
             <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <form method="post">
-                            {% csrf_token %}
-                            {{ recipe_form.as_p }}
-                            <h3>مواد اولیه</h4>
-                                <div id="ingredient-forms">
-                                    {{ formset.management_form }}
-                                    {% for form in formset %}
-                                    <div class="ingredient-form row">
-                                        <div class="col-md-6">
-                                            {{ form.amount }}
-                                        </div>
-                                        <div class="col-md-6">
-                                            {{ form.stuff_name }}
-                                        </div>
-                                    </div>
-                                    {% endfor %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row" style="align-items: center;">
+                            <div class="col-md-1 form-group text-center">
+                                <span>آیدی:</span>
+                            </div>
+                            <div class="col-md-3 form-group" style="margin-right: -30px;">
+                                {{ recipe_form.recipe_id }}
+                            </div>
+                            <div class="col-md-1 form-group text-center">
+                                <span style="margin-left: -30px;">نام غذا:</span>
+                            </div>
+                            <div class="col-md-7 form-group">
+                                {{ recipe_form.name }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="ingredient-forms">
+                            {{ formset.management_form }}
+                            <div class="row">
+                                {% for form in formset %}
+                                <div class="col-md-3 ingredient-form form-group">
+                                    {{ form.stuff_name }}
+                                    {{ form.amount }}
                                 </div>
-                                <button type="button" id="add-ingredient" class="btn btn-secondary">افزودن ماده
-                                    اولیه</button>
-                                <div class="card-footer text-muted">
-                                    {{ form.errors }}
-                                    <a href="#" onclick="window.history.go(-1); return false;"
-                                        class="btn btn-outline-secondary">انصراف</a>
-                                    <button type="submit" class="btn btn-primary">ذخیره</button>
-                                </div>
-                        </form>
-                    </div>
+                                {% if forloop.counter|divisibleby:4 and not forloop.last %}
+                            </div>
+                            <div class="row">
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <button type="button" id="add-ingredient" class="btn btn-secondary">افزودن ماده اولیه</button>
+                        <div class="card-footer text-muted">
+                            {{ form.errors }}
+                            <a href="#" onclick="window.history.go(-1); return false;"
+                                class="btn btn-outline-secondary">انصراف</a>
+                            <button type="submit" class="btn btn-primary">ذخیره</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -128,49 +139,43 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
-        // ابتدا Select2 را برای همه فیلدهای انتخاب مواد اولیه اعمال می‌کنیم
-        $('.select2').select2({
-            width: '100%'
-        });
+        // $('.select2').select2({
+        //     width: '100%'
+        // });
 
-        // شمارنده فرم‌های اضافه شده را مقداردهی اولیه می‌کنیم
         let form_idx = {{ formset.total_form_count }};
 
-    // وقتی که دکمه "Add Ingredient" کلیک می‌شود
     $('#add-ingredient').click(function () {
-        // ردیف اول فرم مواد اولیه را کپی می‌کنیم
         let new_form = $('#ingredient-forms .ingredient-form:first').clone();
 
-        // اگر المان Select2 دارد، آن را حذف می‌کنیم
-        if (new_form.find('.select2').length) {
-            new_form.find('select').select2('destroy');
-        }
+        // if (new_form.find('.select2').length) {
+        //     new_form.find('select').select2('destroy');
+        // }
 
-        // همه فیلدهای ردیف جدید را پاک کرده و مقادیر آنها را صفر می‌کنیم
         new_form.find('input, select').each(function () {
             let name = $(this).attr('name').replace(/\d+/, form_idx);
             let id = $(this).attr('id').replace(/\d+/, form_idx);
             $(this).attr({ 'name': name, 'id': id }).val('');
         });
 
-        // ردیف جدید را به انتهای فرم اضافه می‌کنیم
-        new_form.appendTo('#ingredient-forms');
+        let current_row = $('#ingredient-forms .row').last();
+        if (current_row.children().length >= 4) {
+            current_row = $('<div class="row"></div>').appendTo('#ingredient-forms');
+        }
 
-        // Select2 را برای ردیف جدید فعال می‌کنیم
-        new_form.find('.select2').select2({
-            width: '100%'
-        });
+        new_form.appendTo(current_row);
 
-        // شمارنده فرم‌های اضافه شده را به‌روزرسانی می‌کنیم
+        // new_form.find('.select2').select2({
+        //     width: '100%'
+        // });
+
         form_idx++;
         updateManagementForm(form_idx);
     });
 
-    // تابعی برای به‌روزرسانی مقدار تعداد فرم‌ها
     function updateManagementForm(count) {
         $('#id_ingredients-TOTAL_FORMS').val(count);
     }
-});
-
+    });
 </script>
 {% endblock %}
