@@ -34,7 +34,7 @@ def edit_recipe(request, recipe_id):
         formset = IngredientFormSet(request.POST, prefix='ingredients')
         if recipe_form.is_valid() and formset.is_valid():
             recipe = recipe_form.save(commit=False)
-            ingredients = {form.cleaned_data['stuff_name'].id: form.cleaned_data['amount'] for form in formset}
+            ingredients = {form.cleaned_data['stuff_name'].stuff_id: form.cleaned_data['amount'] for form in formset}
             recipe.ingredients = ingredients
             recipe.save()
             return redirect('recipe:recipe_list')

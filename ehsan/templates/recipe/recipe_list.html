@@ -1,18 +1,129 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Recipe List</title>
-</head>
-<body>
-    <h1>Recipes</h1>
-    <ul>
-        {% for recipe in recipes %}
-    <div>
-        <h2>{{ recipe.name }}</h2>
-        <!-- دکمه برای هدایت کاربر به صفحه ویرایش -->
-        <a href="{% url 'recipe:edit_recipe' recipe.id %}" class="btn btn-primary">Edit</a>
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<style>
+    .small-td {
+        width: 15%;
+    }
+
+    .th {
+        background-color: #6CC3DA !important;
+        color: white !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+    }
+
+    .customtable {
+        font-weight: bold !important;
+        font-size: large;
+    }
+
+    .price-input {
+        padding: 3px !important;
+        background-color: #E4F4F8;
+        border-color: #E4F4F8;
+        font-size: larger;
+    }
+
+    .table-responsive {
+        height: 500px;
+        /* تنظیم ارتفاع برای ایجاد اسکرول */
+        overflow-y: auto;
+        direction: ltr;
+        /* تنظیم جهت نوار اسکرول به چپ */
+    }
+
+    .search-container {
+        display: inline-block;
+        /* margin-left: 10px; */
+    }
+
+    .table-responsive table {
+        direction: rtl;
+        /* تنظیم جهت محتویات جدول به راست */
+    }
+
+    .form-control-sm {
+        border-color: white !important;
+    }
+
+    .btn-arrow {
+        background-color: #FF8A00;
+        color: white;
+        width: 1%;
+        height: 1%;
+        padding: 1%;
+    }
+</style>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">رسپی/</span> غذاها
+    </h4>
+    <div class="card mb-4" style="background-color: #EEF9FB; margin: 20px; box-shadow: none;">
+        <div class="card-header" style="margin-inline: 60px;">
+            <a href="{% url 'recipe:add_recipe' %}" class="btn btn-primary" style="float: left;"> افزودن رسپی جدید</a>
+            <div id="datatable_filter" class="form-control-sm search-container">
+                <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="datatable" class="table table-striped text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="th">کد</th>
+                                    <th class="th">نام غذا</th>
+                                    <th class="th" style="border-left: 20px !important;">ویرایش</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                {% for recipe in recipes %}
+                                <tr>
+                                    <td>{{ recipe.recipe_id }}</td>
+                                    <td>{{ recipe.name }}</td>
+                                    <td>
+                                        <a href="{% url 'recipe:edit_recipe' recipe.id %}" class="mdi mdi-pencil"></a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-{% endfor %}
-    </ul>
-</body>
-</html>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#datatable').DataTable({
+                paging: false,
+                dom: 'lrtip', // remove the default search box
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 450
+            });
+            $('#categoryFilter').on('change', function () {
+                var category = $(this).val();
+                table.column(1).search(category).draw();
+            });
+            $('#search-box').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+            $('.dataTables_info').css('display', 'none');
+        });
+    </script>
+</div>
+{% endblock %}

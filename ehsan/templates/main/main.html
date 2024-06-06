@@ -138,8 +138,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="cards-advance.html" class="menu-link">
+                <li class="menu-item{% if request.resolver_match.view_name == 'recipe:recipe_list' %} active {% endif %}">
+                    <a href="{% url 'recipe:recipe_list' %}" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20"
                                 height="20">
