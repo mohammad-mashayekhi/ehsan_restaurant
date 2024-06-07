@@ -273,5 +273,32 @@
              $('.dataTables_info').css('display', 'none');
          });
      </script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // دریافت تاریخ امروز
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = ('0' + (today.getMonth() + 1)).slice(-2); // اضافه کردن صفر در صورت نیاز
+            var day = ('0' + today.getDate()).slice(-2); // اضافه کردن صفر در صورت نیاز
+
+            // ساختن تاریخ به فرمتی که مورد نیاز است
+            var formattedDate = year + '-' + month + '-' + day;
+
+            // ساختن URL جدید با تاریخ امروز
+            var newUrlRepositoryout = '{% url "repository:out_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+            var newUrlRepositoryin = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+
+            // پیدا کردن المان لینک و به روزرسانی href آن
+            var menuLinkRepositoryout = document.getElementById('outputBtn');
+            var menuLinkRepositoryin = document.getElementById('inputBtn');
+
+            if (menuLinkRepositoryout) {
+                menuLinkRepositoryout.href = newUrlRepositoryout;
+            }
+            if (menuLinkRepositoryin) {
+                menuLinkRepositoryin.href = newUrlRepositoryin;
+            }
+        });
+    </script>
 </div>
 {% endblock %}

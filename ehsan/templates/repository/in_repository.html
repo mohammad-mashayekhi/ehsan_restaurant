@@ -90,10 +90,10 @@
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="row mb-4" style="margin-right: 8px;justify-content: center;">
         <div class="bt-in">
-            <a href="http://127.0.0.1:8000/repository/in/2024-06-02/" id="inputBtn">ورودی</a>
+            <a href="#" id="inputBtn">ورودی</a>
         </div>
         <div class="bt-out">
-            <a href="http://127.0.0.1:8000/repository/out/2024-06-02/" id="outputBtn">خروجی</a>
+            <a href="#" id="outputBtn">خروجی</a>
         </div>
     </div>
     <div class="card mb-4" style="background-color: #e0f0f3; margin: 20px; box-shadow: none;">
@@ -257,6 +257,33 @@
                 table.search(this.value).draw();
             });
             $('.dataTables_info').css('display', 'none');
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // دریافت تاریخ امروز
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = ('0' + (today.getMonth() + 1)).slice(-2); // اضافه کردن صفر در صورت نیاز
+            var day = ('0' + today.getDate()).slice(-2); // اضافه کردن صفر در صورت نیاز
+
+            // ساختن تاریخ به فرمتی که مورد نیاز است
+            var formattedDate = year + '-' + month + '-' + day;
+
+            // ساختن URL جدید با تاریخ امروز
+            var newUrlRepositoryout = '{% url "repository:out_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+            var newUrlRepositoryin = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+
+            // پیدا کردن المان لینک و به روزرسانی href آن
+            var menuLinkRepositoryout = document.getElementById('outputBtn');
+            var menuLinkRepositoryin = document.getElementById('inputBtn');
+
+            if (menuLinkRepositoryout) {
+                menuLinkRepositoryout.href = newUrlRepositoryout;
+            }
+            if (menuLinkRepositoryin) {
+                menuLinkRepositoryin.href = newUrlRepositoryin;
+            }
         });
     </script>
 </div>
