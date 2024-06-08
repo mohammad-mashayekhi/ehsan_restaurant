@@ -46,7 +46,7 @@
     }
 
     .bt-in {
-        padding: 30px;
+        padding: 20px;
         margin-bottom: -30px;
         font-weight: bold;
         font-size: 1vw;
@@ -79,6 +79,9 @@
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">انبار/</span> خروجی
+    </h4>
     <div class="row mb-4" style="justify-content: center">
         <div class="col-md-6">
             <div class="bt-in">
@@ -91,7 +94,7 @@
             </div>
         </div>
     </div>
-    <div class="card mb-4" style="background-color: #e0f0f3; box-shadow: none;">
+    <div class="card mb-4" style="background-color: #e0f0f3; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <!-- <a href="{% url 'foodstuff:addfoodstuffs' %}" class="btn btn-primary" style="float: left;"> افزودن ماده
                 غذایی جدید</a> -->
@@ -246,7 +249,7 @@
                  paging: false,
                  scrollCollapse: true,
                  scrollX: true,
-                 scrollY: 450
+                 scrollY: 380
              });
              $('#categoryFilter').on('change', function () {
                  var category = $(this).val();

@@ -28,7 +28,7 @@
     }
     .bt-in {
         background-color: #e0f0f3;
-        padding: 30px;
+        padding: 20px;
         margin-bottom: -30px;
         font-weight: bold;
         font-size: 1vw;
@@ -74,6 +74,9 @@
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">انبار/</span> ورودی
+    </h4>
     <div class="row mb-4" style="justify-content: center;">
         <div class="col-md-6">
             <div class="bt-in">
@@ -86,7 +89,7 @@
             </div>
         </div>
     </div>
-    <div class="card mb-4" style="background-color: #e0f0f3; box-shadow: none;">
+    <div class="card mb-4" style="background-color: #e0f0f3; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <button class="btn-arrow btn" id="prevDayBtn"><<</button>
             <input class="form-control-sm" type="date" id="date" name="date" value="{{ date }}">
@@ -237,7 +240,7 @@
                 paging: false,
                 scrollCollapse: true,
                 scrollX: true,
-                scrollY: 450
+                scrollY: 380
             });
             $('#categoryFilter').on('change', function () {
                 var category = $(this).val();
