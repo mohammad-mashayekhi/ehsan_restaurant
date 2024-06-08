@@ -20,12 +20,15 @@ from .views import *
 from django.conf.urls.static import static
 from django.conf import settings 
 
+app_name='ehsan'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
+    path('', dashboard, name='dashboard'),
     path('foodstuff/', include('foodstuff.urls')),
     path('repository/', include('repository.urls')),
     path('recipe/', include('recipe.urls')),
+    path('login/', login_view, name='login'),
 
 ]
 

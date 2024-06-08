@@ -5,12 +5,13 @@ from django.utils import timezone
 import jdatetime
 from datetime import datetime
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-def foodstuffs(request):
-    stuffs = Stuffs.objects.all()
-    last_price = Price.objects.latest('date')
-    last_price_jalali = jdatetime.date.fromgregorian(date=last_price.date).strftime('%Y/%m/%d')
-    return render(request, 'foodstuff/table-foodstuffs.html', {'stuffs': stuffs, 'last_price_jalali': last_price_jalali})
+# def foodstuffs(request):
+#     stuffs = Stuffs.objects.all()
+#     last_price = Price.objects.latest('date')
+#     last_price_jalali = jdatetime.date.fromgregorian(date=last_price.date).strftime('%Y/%m/%d')
+#     return render(request, 'foodstuff/table-foodstuffs.html', {'stuffs': stuffs, 'last_price_jalali': last_price_jalali})
 
 def addfoodstuffs(request):
     today_date = datetime.today().strftime('%Y-%m-%d')

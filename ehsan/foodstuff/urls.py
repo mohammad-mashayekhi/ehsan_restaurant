@@ -21,7 +21,7 @@ from .views import *
 app_name='foodstuff'
 
 urlpatterns = [
-    path('', foodstuffs , name='foodstuffs'),
+    # path('', foodstuffs , name='foodstuffs'),
     path('add', addfoodstuffs , name='addfoodstuffs'),
     path('edit-stuff/<str:pk>/', edit_stuff, name='edit_stuff'),
     
