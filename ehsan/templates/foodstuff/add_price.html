@@ -10,13 +10,18 @@
         background-color: #6CC3DA !important;
         color: white !important;
         font-weight: bold !important;
-        font-size: 18px !important;
+        font-size: 1vw !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center;
     }
 
-    .customtable {
+    /* .customtable {
         font-weight: bold !important;
         font-size: large;
-    }
+    } */
 
     .price-input {
         padding: 3px !important;
@@ -24,23 +29,15 @@
         border-color: #E4F4F8;
         font-size: larger;
     }
-
-    .table-responsive {
-        height: 500px;
-        /* تنظیم ارتفاع برای ایجاد اسکرول */
-        overflow-y: auto;
-        direction: ltr;
-        /* تنظیم جهت نوار اسکرول به چپ */
+    #table-body{
+        font-size: 0.9vw !important;
     }
-
     .search-container {
         display: inline-block;
         /* margin-left: 10px; */
     }
-
-    .table-responsive table {
+    .table-responsive {
         direction: rtl;
-        /* تنظیم جهت محتویات جدول به راست */
     }
     .form-control-sm{
         border-color: white !important;
@@ -48,22 +45,23 @@
     .btn-arrow{
         background-color: #FF8A00;
         color: white;
-        width: 1%;
-        height: 1%;
-        padding: 1%;
+        width: 0.2vw;
+    }
+    #categoryFilter{
+        margin-right: 20px;
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">مواد غذایی/</span> بررسی قیمت روزانه
+        <span class="text-muted fw-light">مواد غذایی/</span> بروزرسانی قیمت مواد اولیه
     </h4>
-    <div class="card mb-4" style="background-color: #EEF9FB; margin: 20px; box-shadow: none;">
+    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
             <a href="{% url 'foodstuff:addfoodstuffs' %}" class="btn btn-primary" style="float: left;"> افزودن ماده
                 غذایی جدید</a>
-            <button class="btn mdi mdi-arrow-right btn-arrow" id="prevDayBtn"></button>
-            <input class="form-control-sm" type="date" id="date" name="date" value="{{ date }}">
-            <button class="btn mdi mdi-arrow-left btn-arrow" id="nextDayBtn"></button>
+                <button class="btn-arrow btn" id="prevDayBtn"><<</button>
+                <input class="form-control-sm" type="date" id="date" name="date" value="{{ date }}">
+                <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <select id="categoryFilter" class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
                 {% for category in categories %}
@@ -126,9 +124,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
 
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

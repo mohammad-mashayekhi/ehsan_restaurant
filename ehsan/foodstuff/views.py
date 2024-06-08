@@ -4,6 +4,7 @@ from .models import Stuffs ,Category, Price
 from django.utils import timezone
 import jdatetime
 from datetime import datetime
+from django.urls import reverse
 
 def foodstuffs(request):
     stuffs = Stuffs.objects.all()
@@ -12,24 +13,26 @@ def foodstuffs(request):
     return render(request, 'foodstuff/table-foodstuffs.html', {'stuffs': stuffs, 'last_price_jalali': last_price_jalali})
 
 def addfoodstuffs(request):
+    today_date = datetime.today().strftime('%Y-%m-%d')
     categories = Category.objects.all()
     if request.method == "POST":
         form = StuffsForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('foodstuff:foodstuffs')  # Redirect to a list view or another page
+            return redirect(reverse('foodstuff:add_price', kwargs={'date': today_date}))
     else:
         form = StuffsForm()
     
     return render(request, 'foodstuff/add-foodstuffs.html', {'categories': categories,'form': form})
 
 def edit_stuff(request, pk):
+    today_date = datetime.today().strftime('%Y-%m-%d')
     stuff = get_object_or_404(Stuffs, pk=pk)
     if request.method == "POST":
         form = StuffsForm(request.POST, instance=stuff)
         if form.is_valid():
             form.save()
-            return redirect('foodstuff:foodstuffs')
+            return redirect(reverse('foodstuff:add_price', kwargs={'date': today_date}))
     else:
         form = StuffsForm(instance=stuff)
     return render(request, 'foodstuff/edit_stuff.html', {'form': form})

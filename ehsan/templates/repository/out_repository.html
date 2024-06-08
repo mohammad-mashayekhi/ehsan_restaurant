@@ -10,18 +10,13 @@
         background-color: #f37575 !important;
         color: white !important;
         font-weight: bold !important;
-        font-size: 18px !important;
+        font-size: 1vw !important;
         position: -webkit-sticky;
         position: sticky;
         top: 0;
         z-index: 2;
         text-align-last: center;
-
-    }
-
-    .customtable {
-        font-weight: bold !important;
-        font-size: large;
+        letter-spacing:0px !important;
     }
 
     .price-input {
@@ -29,10 +24,6 @@
         background-color: #EEF9FB;
         border-color: #EEF9FB;
         font-size: larger;
-    }
-
-    .table-responsive {
-        direction: ltr;
     }
 
     .table-responsive table {
@@ -44,13 +35,12 @@
         padding: 30px;
         margin-bottom: -30px;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 1vw;
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
         border-bottom-left-radius: -15px;
-        width: 46.5%;
+        width: 100%;
         text-align: center;
-
     }
 
     .bt-out a {
@@ -61,10 +51,10 @@
         padding: 30px;
         margin-bottom: -30px;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 1vw;
         border-top-left-radius: 15px;
         border-top-right-radius: 15px;
-        width: 49%;
+        width: 100%;
         text-align: center;
     }
 
@@ -78,40 +68,38 @@
     .form-control-sm{
         border-color: white !important;
     }
-    .btn-arrow{
-        background-color: #FF8A00;
-        color: white;
-        width: 1%;
-        height: 1%;
-        padding: 1%;
-    }
     .form-control-sm{
         border-color: white !important;
     }
     .btn-arrow{
         background-color: #FF8A00;
         color: white;
-        width: 1%;
-        height: 1%;
-        padding: 1%;
+        width: 0.2vw;
+    }
+    #categoryFilter{
+        margin-right: 20px;
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row mb-4" style="margin-right: 8px;justify-content: center;">
-        <div class="bt-in">
-            <a href="http://127.0.0.1:8000/repository/in/2024-06-02/" id="inputBtn">ورودی</a>
+    <div class="row mb-4" style="justify-content: center">
+        <div class="col-md-6">
+            <div class="bt-in">
+                <a href="#" id="inputBtn">ورودی</a>
+            </div>
         </div>
-        <div class="bt-out">
-            <a href="http://127.0.0.1:8000/repository/out/2024-06-02/" id="outputBtn">خروجی</a>
+        <div class="col-md-6">
+            <div class="bt-out">
+                <a href="#" id="outputBtn">خروجی</a>
+            </div>
         </div>
     </div>
-    <div class="card mb-4" style="background-color: #e0f0f3; margin: 20px; box-shadow: none;">
+    <div class="card mb-4" style="background-color: #e0f0f3; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
             <!-- <a href="{% url 'foodstuff:addfoodstuffs' %}" class="btn btn-primary" style="float: left;"> افزودن ماده
                 غذایی جدید</a> -->
-            <button class="btn-arrow btn mdi mdi-arrow-right" id="prevDayBtn"></button>
+            <button class="btn-arrow btn" id="prevDayBtn"><<</button>
             <input class="form-control-sm" type="date" id="date" name="date" value="{{ date }}">
-            <button class="btn-arrow btn mdi mdi-arrow-left" id="nextDayBtn"></button>
+            <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <select id="categoryFilter" class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
                 {% for category in categories %}
@@ -245,10 +233,9 @@
             });
         });
     </script>
-     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
 
-     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
- 
+    <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
      <script>
          $(document).ready(function () {
              var table = $('#datatable').DataTable({

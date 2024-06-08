@@ -11,6 +11,12 @@
         color: white !important;
         font-weight: bold !important;
         font-size: 18px !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center; 
+        letter-spacing:0px !important;
     }
 
     .customtable {
@@ -23,14 +29,6 @@
         background-color: #E4F4F8;
         border-color: #E4F4F8;
         font-size: larger;
-    }
-
-    .table-responsive {
-        height: 500px;
-        /* تنظیم ارتفاع برای ایجاد اسکرول */
-        overflow-y: auto;
-        direction: ltr;
-        /* تنظیم جهت نوار اسکرول به چپ */
     }
 
     .search-container {
@@ -59,7 +57,7 @@
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">رسپی/</span> غذاها
     </h4>
-    <div class="card mb-4" style="background-color: #EEF9FB; margin: 20px; box-shadow: none;">
+    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
             <a href="{% url 'recipe:add_recipe' %}" class="btn btn-primary" style="float: left;"> افزودن رسپی جدید</a>
             <div id="datatable_filter" class="form-control-sm search-container">
@@ -96,9 +94,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
 
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
 
 
     <script>
