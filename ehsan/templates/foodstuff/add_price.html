@@ -9,7 +9,6 @@
     .th {
         background-color: #6CC3DA !important;
         color: white !important;
-        font-weight: bold !important;
         font-size: 1vw !important;
         position: -webkit-sticky;
         position: sticky;
@@ -48,6 +47,15 @@
     }
     #categoryFilter{
         margin-right: 20px;
+    }
+        /* Styles to reduce row height */
+    .table-striped td {
+        padding: 4px !important; /* Adjust the padding as needed */
+        font-size: 0.8vw; /* Adjust the font size if needed */
+    }
+
+    .table-striped tr {
+        line-height: 1 !important; /* Reduce the line height */
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -215,7 +223,7 @@
                 paging: false,
                 scrollCollapse: true,
                 scrollX: true,
-                scrollY: 450
+                scrollY: 470
             });
             $('#categoryFilter').on('change', function () {
                 var category = $(this).val();
