@@ -25,8 +25,7 @@
 
     .price-input {
         padding: 3px !important;
-        background-color: #E4F4F8;
-        border-color: #E4F4F8;
+        border-color: black 20px;
         font-size: larger;
     }
     #table-body{
@@ -95,10 +94,10 @@
                                     {% for stuff in stuffs %}
                                     {% if field.name == 'stuff_'|add:stuff.stuff_id %}
                                     <tr>
-                                        <td class="small-td">{{ stuff.stuff_id }}</td>
+                                        <td class="large">{{ stuff.stuff_id }}</td>
                                         <td class="small-td">{{ stuff.stuff_category.cat_name }}</td>
-                                        <td class="large-td customtable">{{ field.label }}</td>
-                                        <td class="large-td customtable">
+                                        <td class="large-td">{{ field.label }}</td>
+                                        <td class="small-td" style="text-align-last:center">
                                             <input type="text" id="{{ field.id_for_label }}" name="{{ field.name }}"
                                                 value="{{ field.value }}" class="form-control price-input">
                                         </td>
