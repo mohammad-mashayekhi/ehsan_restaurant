@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RecipeForm, IngredientForm
 from .models import Recipe
 from django.forms import formset_factory
-from foodstuff.models import Category, Stuffs  # وارد کردن مدل‌های Category و Stuffs
+from foodstuff.models import Category, Stuffs, Price # وارد کردن مدل‌های Category و Stuffs
+from django.db.models import F
 
 def add_recipe(request):
     IngredientFormSet = formset_factory(IngredientForm, extra=1)
@@ -29,8 +30,8 @@ def add_recipe(request):
     })
 
 
-def edit_recipe(request, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id)
+def edit_recipe(request, id):
+    recipe = get_object_or_404(Recipe, id=id)
     IngredientFormSet = formset_factory(IngredientForm, extra=0)
     if request.method == 'POST':
         recipe_form = RecipeForm(request.POST, instance=recipe)
@@ -54,10 +55,37 @@ def edit_recipe(request, recipe_id):
         'formset': formset,
         'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
     })
-
-
+    
+import json
 def recipe_list(request):
     recipes = Recipe.objects.all()
-    ingredients_dict = {}
-    print(ingredients_dict)
-    return render(request, 'recipe/recipe_list.html', {'recipes': recipes, 'ingredients_dict': ingredients_dict})
+    prices_list = []
+
+    # خواندن آخرین رکورد قیمت برای هر ماده اولیه و ایجاد یک دیکشنری
+    latest_price_record = Price.objects.latest('date')
+    latest_prices = latest_price_record.prices    
+    
+    for recipe in recipes:
+        total_price = 0
+        ingredients = recipe.ingredients
+        
+        # تبدیل رشته JSON به دیکشنری در صورت لزوم
+        if isinstance(ingredients, str):
+            ingredients = json.loads(ingredients)
+
+        for stuff_id, quantity in ingredients.items():
+            # بدست آوردن قیمت ماده اولیه از دیکشنری قیمت‌ها
+            ingredient_price = float(latest_prices.get(stuff_id, 0))
+
+            # محاسبه قیمت هر ماده اولیه با توجه به تعداد مورد استفاده
+            total_price += quantity * ingredient_price
+        
+        # اضافه کردن اطلاعات به لیست
+        prices_list.append({
+            'recipe_id': recipe.recipe_id,
+            'id': recipe.id,            
+            'name': recipe.name,
+            'total_price': total_price
+        })
+
+    return render(request, 'recipe/recipe_list.html', {'prices_list': prices_list})

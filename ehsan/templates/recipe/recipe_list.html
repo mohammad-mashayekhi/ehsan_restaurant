@@ -72,16 +72,18 @@
                                 <tr>
                                     <th class="th">کد</th>
                                     <th class="th">نام غذا</th>
+                                    <th class="th">قیمت</th> <!-- اضافه کردن ستون برای نمایش قیمت -->
                                     <th class="th" style="border-left: 20px !important;">ویرایش</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body">
-                                {% for recipe in recipes %}
+                                {% for price_entry in prices_list %}
                                 <tr>
-                                    <td>{{ recipe.recipe_id }}</td>
-                                    <td>{{ recipe.name }}</td>
+                                    <td>{{ price_entry.recipe_id }}</td>
+                                    <td>{{ price_entry.name }}</td>
+                                    <td>{{ price_entry.total_price }}</td> <!-- نمایش قیمت کل -->
                                     <td>
-                                        <a href="{% url 'recipe:edit_recipe' recipe.id %}" class="mdi mdi-pencil"></a>
+                                        <a href="{% url 'recipe:edit_recipe' price_entry.id %}" class="mdi mdi-pencil"></a>
                                     </td>
                                 </tr>
                                 {% endfor %}

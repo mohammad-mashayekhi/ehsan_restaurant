@@ -43,19 +43,31 @@ from django.shortcuts import render, redirect
 from .models import Price, Stuffs
 from .forms import PriceForm
 import jdatetime
+
+
 from datetime import datetime
+from django.shortcuts import render, redirect
+import jdatetime
+from .forms import PriceForm
+from .models import Price, Stuffs, Category
 
 def add_price(request, date):
-    price_instance = None
     try:
         price_instance = Price.objects.get(date=date)
-        initial_data = {'prices': price_instance.prices}
-    except Price.DoesNotExist:
-        initial_data = None
-
-    if price_instance:
-        initial_data = {'stuff_' + str(stuff_id): price for stuff_id, price in price_instance.prices.items()}
-
+        initial_data = {f'stuff_{stuff_id}': price for stuff_id, price in price_instance.prices.items()}
+        print(initial_data)
+    except:
+        price_instance = None  # اختصاص دادن مقدار پیش‌فرض به price_instance
+        initial_data = {}
+    
+    # Find the latest price record before the specified date
+    if initial_data == {}:
+        latest_price = Price.objects.filter(date__lt=date).order_by('-date').first()
+        if latest_price:
+            initial_data = {f'stuff_{stuff_id}': price for stuff_id, price in latest_price.prices.items()}
+        else :
+            initial_data = {f'stuff_{stuff.stuff_id}': '0' for stuff in Stuffs.objects.all()}
+    
     if request.method == 'POST':
         form = PriceForm(request.POST, initial=initial_data)
         if form.is_valid():
@@ -82,7 +94,7 @@ def add_price(request, date):
     return render(request, 'foodstuff/add_price.html', {
         'form': form,
         'jalali_date': jalali_date,
-        'date':date,
+        'date': date,
         'stuffs': stuffs,
-        'categories':categories,
+        'categories': categories,
     })
