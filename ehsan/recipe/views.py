@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RecipeForm, IngredientForm
-from .models import Recipe
+from .models import Recipe,RecipePrice
 from django.forms import formset_factory
 from foodstuff.models import Category, Stuffs, Price # وارد کردن مدل‌های Category و Stuffs
 from django.db.models import F
+from django.http import JsonResponse
+import json
+import jdatetime
+from datetime import datetime
 
 def add_recipe(request):
     IngredientFormSet = formset_factory(IngredientForm, extra=1)
@@ -56,7 +60,6 @@ def edit_recipe(request, id):
         'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
     })
     
-import json
 def recipe_list(request):
     recipes = Recipe.objects.all()
     prices_list = []
@@ -80,12 +83,41 @@ def recipe_list(request):
             # محاسبه قیمت هر ماده اولیه با توجه به تعداد مورد استفاده
             total_price += quantity * ingredient_price
         
+        recipe_prices_data = RecipePrice.objects.latest('created_at')
+        jalali_price_date = jdatetime.date.fromgregorian(date=latest_price_record.date).strftime('%Y/%m/%d')
+        jalali_standard_price_data = jdatetime.date.fromgregorian(date=recipe_prices_data.created_at).strftime('%Y/%m/%d')
+        percentage_difference = ((total_price - get_standard_price(recipe.id)) / get_standard_price(recipe.id)) * 100 if get_standard_price(recipe.id) else None
+
         # اضافه کردن اطلاعات به لیست
         prices_list.append({
             'recipe_id': recipe.recipe_id,
             'id': recipe.id,            
             'name': recipe.name,
-            'total_price': total_price
+            'total_price': total_price,
+            'standard_price': get_standard_price(recipe.id),  # اضافه کردن قیمت معیار
+            'percentage_difference': percentage_difference,
         })
 
-    return render(request, 'recipe/recipe_list.html', {'prices_list': prices_list})
+    return render(request, 'recipe/recipe_list.html', {'prices_list': prices_list,'jalali_price_date': jalali_price_date,'jalali_standard_price_data': jalali_standard_price_data,})
+
+def get_standard_price(recipe_id):
+    # اینجا قیمت معیار را از مدل RecipePrice بر اساس recipe_id بخوانید و برگردانید
+    try:
+        recipe_prices_data = RecipePrice.objects.latest('created_at').recipe_prices
+        recipe_prices_dict = json.loads(recipe_prices_data)
+        for recipe_price in recipe_prices_dict:
+            if recipe_price['id'] == recipe_id:
+                return recipe_price['total_price']
+        return None
+    except RecipePrice.DoesNotExist:
+        return None
+    
+def save_recipe_prices_ajax(request):
+    recipe_prices_data = request.POST.get('recipe_prices')
+    print(recipe_prices_data)
+    RecipePrice.objects.create(recipe_prices=recipe_prices_data)
+    return JsonResponse({'success': True})
+
+
+def recipe_calculator(request):
+    pass

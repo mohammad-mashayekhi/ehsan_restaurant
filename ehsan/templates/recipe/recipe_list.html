@@ -17,6 +17,9 @@
         text-align-last: center; 
         letter-spacing:0px !important;
     }
+    .th span{
+        font-size: 10px !important;
+    }
 
     .customtable {
         font-weight: bold !important;
@@ -51,14 +54,59 @@
         height: 1%;
         padding: 1%;
     }
+    .bt-in {
+        background-color: #EEF9FB;
+        padding: 20px;
+        margin-bottom: -30px;
+        font-weight: bold;
+        font-size: 1vw;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-left-radius: -15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .bt-in a {
+        color: black !important;
+    }
+
+    .bt-out {
+        padding: 30px;
+        margin-bottom: -30px;
+        font-weight: bold;
+        font-size: 1vw;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .bt-out a {
+        color: black !important;
+    }   
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">رسپی/</span> غذاها
     </h4>
+    <div class="row mb-4" style="justify-content: center;">
+        <div class="col-md-6">
+            <div class="bt-in">
+                <a href="{% url 'recipe:recipe_list'%}" id="inputBtn">گزارش رسپی</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bt-out">
+                <a href="{% url 'recipe:recipe_calculator'%}" id="outputBtn">محاسبه مواد اولیه</a>
+            </div>
+        </div>
+    </div>
     <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
             <a href="{% url 'recipe:add_recipe' %}" class="btn btn-primary" style="float: left;"> افزودن رسپی جدید</a>
+            <button id="save-recipe-prices-btn" class="btn btn-primary" style="float: left; margin-left: 0.5rem;">ثبت به عنوان معیار</button>
+
             <div id="datatable_filter" class="form-control-sm search-container">
                 <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
             </div>
@@ -72,7 +120,9 @@
                                 <tr>
                                     <th class="th">کد</th>
                                     <th class="th">نام غذا</th>
-                                    <th class="th">قیمت</th> <!-- اضافه کردن ستون برای نمایش قیمت -->
+                                    <th class="th">قیمت فعلی <span>{{jalali_price_date}}</span></th> <!-- اضافه کردن ستون برای نمایش قیمت -->
+                                    <th class="th">قیمت معیار<span>{{jalali_standard_price_data}}</span></th> <!-- اضافه کردن ستون برای نمایش قیمت -->
+                                    <th class="th">اختلاف</th> <!-- اضافه کردن ستون برای نمایش قیمت -->
                                     <th class="th" style="border-left: 20px !important;">ویرایش</th>
                                 </tr>
                             </thead>
@@ -81,7 +131,9 @@
                                 <tr>
                                     <td>{{ price_entry.recipe_id }}</td>
                                     <td>{{ price_entry.name }}</td>
-                                    <td>{{ price_entry.total_price }}</td> <!-- نمایش قیمت کل -->
+                                    <td>{{ price_entry.total_price|floatformat:0 }}</td> <!-- نمایش قیمت کل -->
+                                    <td>{{ price_entry.standard_price }}</td> <!-- نمایش قیمت معیار -->
+                                    <td style="direction:ltr">{{ price_entry.percentage_difference|floatformat:2 }}</td>
                                     <td>
                                         <a href="{% url 'recipe:edit_recipe' price_entry.id %}" class="mdi mdi-pencil"></a>
                                     </td>
@@ -124,5 +176,34 @@
             $('.dataTables_info').css('display', 'none');
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+        $('#save-recipe-prices-btn').on('click', function () {
+            var recipePricesData = JSON.stringify({{ prices_list|safe }});
+            $.ajax({
+                type: 'POST',
+                url: '{% url "recipe:save_recipe_prices_ajax" %}',
+                data: {
+                    'recipe_prices': recipePricesData,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        // صفحه را مجدداً بارگذاری کنید
+                        location.reload();
+                    } else {
+                        alert('Error occurred while saving recipe prices.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error occurred while saving recipe prices.');
+                }
+            });
+        });
+    });
+</script>
 </div>
 {% endblock %}
