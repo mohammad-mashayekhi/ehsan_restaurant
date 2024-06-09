@@ -27,3 +27,13 @@ class IngredientForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control mt-1', 'placeholder': 'مقدار'}),
         label='مقدار'
     )
+
+
+class RecipeSelectionForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(RecipeSelectionForm, self).__init__(*args, **kwargs)
+        recipes = Recipe.objects.all()
+        for recipe in recipes:
+            self.fields[f'recipe_{recipe.recipe_id}'] = forms.IntegerField(
+                label=recipe.name, required=False, min_value=0, widget=forms.NumberInput(attrs={'class': 'recipe-input'})
+            )

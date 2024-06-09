@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>انتخاب غذا</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>انتخاب غذا و تعداد</h1>
+    <form id="recipe-selection-form" method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">محاسبه مواد اولیه</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#recipe-selection-form').on('submit', function(event) {
+                event.preventDefault(); // جلوگیری از ارسال فرم به صورت معمول
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "recipe:recipe_selection" %}',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.success) {
+                            var resultHtml = '<h1>مواد اولیه مورد نیاز</h1><table><thead><tr><th>نام ماده اولیه</th><th>مقدار مورد نیاز</th></tr></thead><tbody>';
+                            $.each(response.ingredients_details, function(ingredient, amount) {
+                                resultHtml += '<tr><td>' + ingredient + '</td><td>' + amount + '</td></tr>';
+                            });
+                            resultHtml += '</tbody></table>';
+                            $('#result').html(resultHtml);
+                        } else {
+                            var errorHtml = '<ul>';
+                            $.each(response.errors, function(key, value) {
+                                errorHtml += '<li>' + key + ': ' + value + '</li>';
+                            });
+                            errorHtml += '</ul>';
+                            $('#result').html(errorHtml);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        alert('Error occurred while calculating ingredients.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

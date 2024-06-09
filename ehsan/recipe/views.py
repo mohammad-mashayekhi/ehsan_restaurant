@@ -119,5 +119,31 @@ def save_recipe_prices_ajax(request):
     return JsonResponse({'success': True})
 
 
-def recipe_calculator(request):
-    pass
+from .forms import RecipeSelectionForm
+
+def recipe_selection(request):
+    if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        form = RecipeSelectionForm(request.POST)
+        if form.is_valid():
+            selected_recipes = {key: value for key, value in form.cleaned_data.items() if value}
+            total_ingredients = {}
+
+            for recipe_id, quantity in selected_recipes.items():
+                recipe = Recipe.objects.get(recipe_id=recipe_id.split('_')[1])
+                ingredients = recipe.ingredients
+
+                for stuff_id, amount in ingredients.items():
+                    if stuff_id in total_ingredients:
+                        total_ingredients[stuff_id] += amount * quantity
+                    else:
+                        total_ingredients[stuff_id] = amount * quantity
+
+            ingredients_details = {Stuffs.objects.get(stuff_id=key).stuff_name: value for key, value in total_ingredients.items()}
+
+            return JsonResponse({'success': True, 'ingredients_details': ingredients_details})
+
+        return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        form = RecipeSelectionForm()
+
+    return render(request, 'recipe/recipe_selection.html', {'form': form})

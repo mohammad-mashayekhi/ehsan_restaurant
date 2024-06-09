@@ -13,16 +13,22 @@ def in_repository(request, date):
 
     repository_instance = None
     initial_data = None  # تعیین مقدار اولیه برای initial_data
+    all_stuff_ids = Stuffs.objects.values_list('id', flat=True)
 
     if Repository.objects.filter(date=gregorian_date, type='in').exists():  # بررسی وجود رکورد
-        try:
             repository_instance = Repository.objects.get(date=gregorian_date, type='in')
             initial_data = {'type': initial_type, **{'stuff_' + str(stuff_id): quantity for stuff_id, quantity in repository_instance.quantities.items()}}
-        except Repository.DoesNotExist:
-            pass  # اگر رکورد وجود ندارد، initial_data به صورت None باقی می‌ماند
-
-    # تعیین مقدار پیش‌فرض برای نوع (ورودی) برای فرم
-
+            
+    if initial_data is None:
+        initial_data = {
+            'type': initial_type,
+            **{'stuff_' + str(stuff_id): 0 for stuff_id in all_stuff_ids}
+        }        
+   
+    for key, value in initial_data.items():
+        if value is None:
+            initial_data[key] = 0
+            
     if request.method == 'POST':
         form = RepositoryForm(request.POST, initial=initial_data)
         if form.is_valid():

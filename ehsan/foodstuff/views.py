@@ -59,7 +59,7 @@ def add_price(request, date):
     except:
         price_instance = None  # اختصاص دادن مقدار پیش‌فرض به price_instance
         initial_data = {}
-    
+        
     # Find the latest price record before the specified date
     if initial_data == {}:
         latest_price = Price.objects.filter(date__lt=date).order_by('-date').first()

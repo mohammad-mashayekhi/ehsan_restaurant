@@ -132,7 +132,7 @@
                         <span class="menu-text ms-2">خوش آمدید!</span>
                     </a>
                 </div>
-                <li class="menu-item">
+                <li class="menu-item  {% if request.resolver_match.view_name == 'dashboard' %} active {% endif %}">
                     <a href="{% url 'dashboard' %}" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20"
