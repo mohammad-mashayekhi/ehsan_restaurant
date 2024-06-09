@@ -85,10 +85,10 @@ def recipe_list(request):
         try:
             recipe_prices_data = RecipePrice.objects.latest('created_at')
             jalali_standard_price_data = jdatetime.date.fromgregorian(date=recipe_prices_data.created_at).strftime('%Y/%m/%d')
-            percentage_difference = ((total_price - get_standard_price(recipe.id)) / get_standard_price(recipe.id)) * 100 if get_standard_price(recipe.id) else None
+            percentage_difference = ((total_price - get_standard_price(recipe.id)) / get_standard_price(recipe.id)) * 100 if get_standard_price(recipe.id) else 0
         except:
             jalali_standard_price_data =''
-            percentage_difference =''
+            percentage_difference = ''
             
         jalali_price_date = jdatetime.date.fromgregorian(date=latest_price_record.date).strftime('%Y/%m/%d')
 

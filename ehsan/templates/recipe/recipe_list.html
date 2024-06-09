@@ -98,7 +98,7 @@
         </div>
         <div class="col-md-6">
             <div class="bt-out">
-                <a href="{}" id="outputBtn">محاسبه مواد اولیه</a>
+                <a href="{% url 'recipe:recipe_selection'%}" id="outputBtn">محاسبه مواد اولیه</a>
             </div>
         </div>
     </div>
@@ -181,7 +181,6 @@
     $(document).ready(function () {
         $('#save-recipe-prices-btn').on('click', function () {
             var recipePricesData = JSON.stringify({{ prices_list|safe }});
-            console.log('aksndiansdinaisdn')
             $.ajax({
                 type: 'POST',
                 url: '{% url "recipe:save_recipe_prices_ajax" %}',
