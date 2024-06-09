@@ -82,11 +82,15 @@ def recipe_list(request):
 
             # محاسبه قیمت هر ماده اولیه با توجه به تعداد مورد استفاده
             total_price += quantity * ingredient_price
-        
-        recipe_prices_data = RecipePrice.objects.latest('created_at')
+        try:
+            recipe_prices_data = RecipePrice.objects.latest('created_at')
+            jalali_standard_price_data = jdatetime.date.fromgregorian(date=recipe_prices_data.created_at).strftime('%Y/%m/%d')
+            percentage_difference = ((total_price - get_standard_price(recipe.id)) / get_standard_price(recipe.id)) * 100 if get_standard_price(recipe.id) else None
+        except:
+            jalali_standard_price_data =''
+            percentage_difference =''
+            
         jalali_price_date = jdatetime.date.fromgregorian(date=latest_price_record.date).strftime('%Y/%m/%d')
-        jalali_standard_price_data = jdatetime.date.fromgregorian(date=recipe_prices_data.created_at).strftime('%Y/%m/%d')
-        percentage_difference = ((total_price - get_standard_price(recipe.id)) / get_standard_price(recipe.id)) * 100 if get_standard_price(recipe.id) else None
 
         # اضافه کردن اطلاعات به لیست
         prices_list.append({
@@ -108,9 +112,9 @@ def get_standard_price(recipe_id):
         for recipe_price in recipe_prices_dict:
             if recipe_price['id'] == recipe_id:
                 return recipe_price['total_price']
-        return None
+        return ''
     except RecipePrice.DoesNotExist:
-        return None
+        return ''
     
 def save_recipe_prices_ajax(request):
     recipe_prices_data = request.POST.get('recipe_prices')
