@@ -6,16 +6,32 @@
 </head>
 <body>
     <h1>انتخاب غذا و تعداد</h1>
-    <form id="recipe-selection-form" method="post" novalidate>
+    <form id="recipe-search-form" method="post" novalidate>
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">محاسبه مواد اولیه</button>
+        <button type="submit" class="btn btn-primary">اضافه کردن غذا</button>
     </form>
+    <div id="selected-recipes">
+        <h2>غذاهای انتخاب شده</h2>
+        <table id="recipes-table">
+            <thead>
+                <tr>
+                    <th>نام غذا</th>
+                    <th>تعداد</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- غذاهای انتخاب شده اینجا نمایش داده خواهند شد -->
+            </tbody>
+        </table>
+    </div>
     <div id="result"></div>
 
     <script>
         $(document).ready(function() {
-            $('#recipe-selection-form').on('submit', function(event) {
+            var totalIngredients = {};
+
+            $('#recipe-search-form').on('submit', function(event) {
                 event.preventDefault(); // جلوگیری از ارسال فرم به صورت معمول
                 $.ajax({
                     type: 'POST',
@@ -23,8 +39,22 @@
                     data: $(this).serialize(),
                     success: function(response) {
                         if (response.success) {
-                            var resultHtml = '<h1>مواد اولیه مورد نیاز</h1><table><thead><tr><th>نام ماده اولیه</th><th>مقدار مورد نیاز</th></tr></thead><tbody>';
+                            // اضافه کردن غذا به جدول
+                            var recipeRow = '<tr><td>' + response.recipe + '</td><td>' + response.quantity + '</td></tr>';
+                            $('#recipes-table tbody').append(recipeRow);
+
+                            // به‌روزرسانی مجموع مواد اولیه
                             $.each(response.ingredients_details, function(ingredient, amount) {
+                                if (ingredient in totalIngredients) {
+                                    totalIngredients[ingredient] += amount;
+                                } else {
+                                    totalIngredients[ingredient] = amount;
+                                }
+                            });
+
+                            // نمایش مواد اولیه مورد نیاز
+                            var resultHtml = '<h1>مواد اولیه مورد نیاز</h1><table><thead><tr><th>نام ماده اولیه</th><th>مقدار مورد نیاز</th></tr></thead><tbody>';
+                            $.each(totalIngredients, function(ingredient, amount) {
                                 resultHtml += '<tr><td>' + ingredient + '</td><td>' + amount + '</td></tr>';
                             });
                             resultHtml += '</tbody></table>';

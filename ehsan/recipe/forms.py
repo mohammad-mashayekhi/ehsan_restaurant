@@ -28,12 +28,15 @@ class IngredientForm(forms.Form):
         label='مقدار'
     )
 
-
-class RecipeSelectionForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super(RecipeSelectionForm, self).__init__(*args, **kwargs)
-        recipes = Recipe.objects.all()
-        for recipe in recipes:
-            self.fields[f'recipe_{recipe.recipe_id}'] = forms.IntegerField(
-                label=recipe.name, required=False, min_value=0, widget=forms.NumberInput(attrs={'class': 'recipe-input'})
-            )
+class RecipeSearchForm(forms.Form):
+    recipe_id = forms.ChoiceField(
+        choices=[(recipe.recipe_id, recipe.name) for recipe in Recipe.objects.all()],
+        label="انتخاب غذا",
+        widget=forms.Select(attrs={'class': 'recipe-select'})
+    )
+    quantity = forms.IntegerField(
+        label="تعداد",
+        min_value=1,
+        initial=1,
+        widget=forms.NumberInput(attrs={'class': 'recipe-quantity'})
+    )
