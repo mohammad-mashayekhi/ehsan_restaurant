@@ -27,16 +27,16 @@ class IngredientForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control mt-1', 'placeholder': 'مقدار'}),
         label='مقدار'
     )
-
+    
 class RecipeSearchForm(forms.Form):
     recipe_id = forms.ChoiceField(
         choices=[(recipe.recipe_id, recipe.name) for recipe in Recipe.objects.all()],
         label="انتخاب غذا",
-        widget=forms.Select(attrs={'class': 'recipe-select'})
+        widget=forms.Select(attrs={'class': 'form-control mt-1 recipe-select'})
     )
     quantity = forms.IntegerField(
         label="تعداد",
         min_value=1,
         initial=1,
-        widget=forms.NumberInput(attrs={'class': 'recipe-quantity'})
+        widget=forms.NumberInput(attrs={'class': 'form-control mt-1 recipe-quantity'})
     )

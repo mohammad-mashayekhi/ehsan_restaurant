@@ -1,80 +1,173 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>انتخاب غذا</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <h1>انتخاب غذا و تعداد</h1>
-    <form id="recipe-search-form" method="post" novalidate>
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">اضافه کردن غذا</button>
-    </form>
-    <div id="selected-recipes">
-        <h2>غذاهای انتخاب شده</h2>
-        <table id="recipes-table">
-            <thead>
-                <tr>
-                    <th>نام غذا</th>
-                    <th>تعداد</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- غذاهای انتخاب شده اینجا نمایش داده خواهند شد -->
-            </tbody>
-        </table>
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    .th {
+        background-color: #6CC3DA !important;
+        color: white !important;
+        font-size: 18px !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center;
+        letter-spacing: 0px !important;
+    }
+
+    .th span {
+        font-size: 10px !important;
+    }
+
+    .bt-out {
+        background-color: #EEF9FB;
+        padding: 20px;
+        margin-bottom: -30px;
+        font-weight: bold;
+        font-size: 1vw;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-left-radius: -15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .bt-out a {
+        color: black !important;
+    }
+
+    .bt-in {
+        padding: 30px;
+        margin-bottom: -30px;
+        font-weight: bold;
+        font-size: 1vw;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .bt-in a {
+        color: black !important;
+    }
+</style>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">رسپی/</span> محاسبه مواد اولیه
+    </h4>
+    <div class="row mb-4" style="justify-content: center;">
+        <div class="col-md-6">
+            <div class="bt-in">
+                <a href="{% url 'recipe:recipe_list'%}" id="inputBtn">گزارش رسپی</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bt-out">
+                <a href="{% url 'recipe:recipe_selection'%}" id="outputBtn">محاسبه مواد اولیه</a>
+            </div>
+        </div>
     </div>
-    <div id="result"></div>
+    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;">
+        <div class="card-header" style="margin-inline: 60px;"></div>
+        <div class="card-body">
+            <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
+                <form id="recipe-search-form" method="post" novalidate class="form-inline">
+                    <div class="row" style="text-align-last: center;align-items:center;margin:20px;;">
+                        {% csrf_token %}
+                        <div class="col-sm mb-2">
+                            {{ form.recipe_id.label_tag }}
+                            {{ form.recipe_id }}
+                        </div>
+                        <div class="col-sm mb-2">
+                            {{ form.quantity.label_tag }}
+                            {{ form.quantity }}
+                        </div>
+                        <div class="col-sm mb-2" style="margin-top: 20px;">
+                            <button type="submit" class="btn btn-primary mb-2">اضافه کردن غذا</button>
+                        </div>
+                        <div class="col-sm mb-2" style="margin-top: 20px;">
+                            <button type="button" id="refresh-btn" class="btn btn-primary mb-2">محاسبه مجدد</button>
+                        </div>
+                    </div>
+                </form>
+            </hr>
+                <div class="row" style="margin: 20px;">
+                    <!-- کارت سمت چپ -->
+                    <div class="col-md-6" style="float: right;text-align: center;">
+                        <div id="selected-recipes">
+                            <h4>غذاهای انتخاب شده</h4>
+                            <table id="recipes-table" class="table table-striped text-center">
+                                <thead>
+                                    <tr>
+                                        <th class="th">نام غذا</th>
+                                        <th class="th">تعداد</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- غذاهای انتخاب شده اینجا نمایش داده خواهند شد -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- کارت سمت راست -->
+                    <div class="col-md-6" id="result" style="float: left;text-align: center;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        $(document).ready(function() {
-            var totalIngredients = {};
+<script>
+    $(document).ready(function () {
+        var totalIngredients = {};
 
-            $('#recipe-search-form').on('submit', function(event) {
-                event.preventDefault(); // جلوگیری از ارسال فرم به صورت معمول
-                $.ajax({
-                    type: 'POST',
-                    url: '{% url "recipe:recipe_selection" %}',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            // اضافه کردن غذا به جدول
-                            var recipeRow = '<tr><td>' + response.recipe + '</td><td>' + response.quantity + '</td></tr>';
-                            $('#recipes-table tbody').append(recipeRow);
+        $('#recipe-search-form').on('submit', function (event) {
+            event.preventDefault(); // جلوگیری از ارسال فرم به صورت معمول
+            $.ajax({
+                type: 'POST',
+                url: '{% url "recipe:recipe_selection" %}',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        // اضافه کردن غذا به جدول
+                        var recipeRow = '<tr><td>' + response.recipe + '</td><td>' + response.quantity + '</td></tr>';
+                        $('#recipes-table tbody').append(recipeRow);
 
-                            // به‌روزرسانی مجموع مواد اولیه
-                            $.each(response.ingredients_details, function(ingredient, amount) {
-                                if (ingredient in totalIngredients) {
-                                    totalIngredients[ingredient] += amount;
-                                } else {
-                                    totalIngredients[ingredient] = amount;
-                                }
-                            });
+                        // به‌روزرسانی مجموع مواد اولیه
+                        $.each(response.ingredients_details, function (ingredient, amount) {
+                            if (ingredient in totalIngredients) {
+                                totalIngredients[ingredient] += amount;
+                            } else {
+                                totalIngredients[ingredient] = amount;
+                            }
+                        });
 
-                            // نمایش مواد اولیه مورد نیاز
-                            var resultHtml = '<h1>مواد اولیه مورد نیاز</h1><table><thead><tr><th>نام ماده اولیه</th><th>مقدار مورد نیاز</th></tr></thead><tbody>';
-                            $.each(totalIngredients, function(ingredient, amount) {
-                                resultHtml += '<tr><td>' + ingredient + '</td><td>' + amount + '</td></tr>';
-                            });
-                            resultHtml += '</tbody></table>';
-                            $('#result').html(resultHtml);
-                        } else {
-                            var errorHtml = '<ul>';
-                            $.each(response.errors, function(key, value) {
-                                errorHtml += '<li>' + key + ': ' + value + '</li>';
-                            });
-                            errorHtml += '</ul>';
-                            $('#result').html(errorHtml);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        alert('Error occurred while calculating ingredients.');
+                        // نمایش مواد اولیه مورد نیاز
+                        var resultHtml = '<h4>مواد اولیه مورد نیاز</h4><table class="table table-striped text-center"><thead><tr><th class="th">نام ماده اولیه</th><th class="th">مقدار مورد نیاز</th></tr></thead><tbody>';
+                        $.each(totalIngredients, function (ingredient, amount) {
+                            resultHtml += '<tr><td>' + ingredient + '</td><td>' + amount + '</td></tr>';
+                        });
+                        resultHtml += '</tbody></table>';
+                        $('#result').html(resultHtml);
+                    } else {
+                        var errorHtml = '<ul>';
+                        $.each(response.errors, function (key, value) {
+                            errorHtml += '<li>' + key + ': ' + value + '</li>';
+                        });
+                        errorHtml += '</ul>';
+                        $('#result').html(errorHtml);
                     }
-                });
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Error occurred while calculating ingredients.');
+                }
             });
         });
-    </script>
-</body>
-</html>
+        $('#refresh-btn').on('click', function() {
+            location.reload();
+        });
+    });
+</script>
+{% endblock %}
