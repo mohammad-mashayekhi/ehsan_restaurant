@@ -86,3 +86,63 @@ def out_repository(request, date):
     categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
     stuffs = Stuffs.objects.select_related('stuff_category').all()
     return render(request, 'repository/out_repository.html', {'form': form, 'date': date, 'stuffs': stuffs, 'categories': categories})
+
+from django.http import HttpResponse
+from .models import Repository
+
+from django.shortcuts import render
+from .models import Repository
+
+def TotalInventoryView(request):
+    # Define dictionaries to store the sum of quantities for each stuff_id for 'in' and 'out' types
+    quantities_sum_in = {}
+    quantities_sum_out = {}
+    categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
+
+    # Get repositories with type 'in'
+    repositories_in = Repository.objects.filter(type='in')
+    
+    # Get repositories with type 'out'
+    repositories_out = Repository.objects.filter(type='out')
+    
+    # Function to accumulate quantities for each stuff_id
+    def accumulate_quantities(repositories, quantities_sum):
+        for repo in repositories:
+            for stuff_id, quantity in repo.quantities.items():
+                # Remove commas from the quantity string and then convert to integer
+                quantity = quantity.replace(',', '')
+                quantities_sum[stuff_id] = quantities_sum.get(stuff_id, 0) + int(quantity)
+    
+    # Accumulate quantities for 'in' type repositories
+    accumulate_quantities(repositories_in, quantities_sum_in)
+    
+    # Accumulate quantities for 'out' type repositories
+    accumulate_quantities(repositories_out, quantities_sum_out)
+    
+    # Calculate net sum of quantities for each stuff_id
+    net_quantities = {}
+    for stuff_id, sum_quantity_in in quantities_sum_in.items():
+        sum_quantity_out = quantities_sum_out.get(stuff_id, 0)
+        net_quantity = sum_quantity_in - sum_quantity_out
+        net_quantities[stuff_id] = net_quantity
+
+    # Prepare data for rendering
+    data = []
+    for stuff_id, net_quantity in net_quantities.items():
+        sum_quantity_in = quantities_sum_in.get(stuff_id, 0)
+        sum_quantity_out = quantities_sum_out.get(stuff_id, 0)
+        # Get stuff_name from the database
+        stuff_name = Stuffs.objects.get(stuff_id=stuff_id).stuff_name  # Assuming you have a model for stuff
+        stuff_category = Stuffs.objects.get(stuff_id=stuff_id).stuff_category  # Assuming you have a model for stuff
+
+        data.append({
+            'stuff_id': stuff_id,
+            'stuff_name': stuff_name,
+            'stuff_category': stuff_category,
+            'sum_quantity_in': sum_quantity_in,
+            'sum_quantity_out': sum_quantity_out,
+            'net_quantity': net_quantity
+        })
+    
+    # Render the template with the data
+    return render(request, 'repository/total_inventory.html', {'data': data, 'categories': categories})

@@ -1,0 +1,218 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<style>
+    .small-td {
+        width: 15%;
+    }
+
+    .th {
+        background-color: #6CC3DA !important;
+        color: white !important;
+        font-size: 18px !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center; 
+        letter-spacing:0px !important;
+    }
+    .th span{
+        font-size: 10px !important;
+    }
+
+    .table-responsive table {
+        direction: rtl;
+    }
+
+    .search-container {
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+    .form-control-sm {
+        border-color: white !important;
+    }
+
+    .btn-arrow {
+        background-color: #FF8A00;
+        color: white;
+        width: 0.2vw;
+    }
+
+    #categoryFilter {
+        margin-right: 20px;
+    }
+
+    .table-striped td {
+        padding: 4px !important;
+        /* Adjust the padding as needed */
+        font-size: 0.8vw;
+        /* Adjust the font size if needed */
+    }
+
+    .table-striped tr {
+        line-height: 1.5vw !important;
+        /* Reduce the line height */
+    }
+</style>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">انبار/</span> ورودی
+    </h4>
+    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;margin-top:-20px">
+        <div class="card-header" style="margin-inline: 60px;">
+            <select id="categoryFilter" class="form-control-sm">
+                <option value="">همه دسته بندی ها</option>
+                {% for category in categories %}
+                <option value="{{ category.cat_name }}" {% if category.id in selected_category %}selected{% endif %}>
+                    {{ category.cat_name }}</option>
+                {% endfor %}
+            </select>
+            <div id="datatable_filter" class="search-container">
+                <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
+                <div class="card-body">
+                    {% csrf_token %}
+                    <input type="hidden" name="type" value="{{ form.initial.type }}">
+                    <div class="table-responsive">
+                        <table id="datatable" class="table table-striped text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="th">دسته بندی</th>
+                                    <th class="th">عنوان</th>
+                                    <th class="th">جمع مقادیر ورودی</th>
+                                    <th class="th">جمع مقادیر خروجی</th>
+                                    <th class="th">ورودی - خروجی</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                                {% for item in data %}
+                                <tr>
+                                    <td>{{ item.stuff_category }}</td>
+                                    <td>{{ item.stuff_name }}</td>
+                                    <td>{{ item.sum_quantity_in }}</td>
+                                    <td>{{ item.sum_quantity_out }}</td>
+                                    <td>{{ item.net_quantity }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#datatable').DataTable({
+                paging: false,
+                dom: 'lrtip', // remove the default search box
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 400
+            });
+            $('#categoryFilter').on('change', function () {
+                var category = $(this).val();
+                table.column(1).search(category).draw();
+            });
+            $('#search-box').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+            $('.dataTables_info').css('display', 'none');
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // دریافت تاریخ امروز
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = ('0' + (today.getMonth() + 1)).slice(-2); // اضافه کردن صفر در صورت نیاز
+            var day = ('0' + today.getDate()).slice(-2); // اضافه کردن صفر در صورت نیاز
+
+            // ساختن تاریخ به فرمتی که مورد نیاز است
+            var formattedDate = year + '-' + month + '-' + day;
+
+            // ساختن URL جدید با تاریخ امروز
+            var newUrlRepositoryout = '{% url "repository:out_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+            var newUrlRepositoryin = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+
+            // پیدا کردن المان لینک و به روزرسانی href آن
+            var menuLinkRepositoryout = document.getElementById('outputBtn');
+            var menuLinkRepositoryin = document.getElementById('inputBtn');
+
+            if (menuLinkRepositoryout) {
+                menuLinkRepositoryout.href = newUrlRepositoryout;
+            }
+            if (menuLinkRepositoryin) {
+                menuLinkRepositoryin.href = newUrlRepositoryin;
+            }
+        });
+    </script>
+</div>
+{% endblock %}
+
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Total Inventory</title>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th,
+    td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+
+<body>
+
+    <h2>Total Inventory</h2>
+
+    <table>
+        <tr>
+            <th>Stuff ID</th>
+            <th>Stuff Name</th>
+            <th>stuff_category</th>
+            <th>Sum of Quantities (In)</th>
+            <th>Sum of Quantities (Out)</th>
+            <th>Net Sum of Quantities (In - Out)</th>
+        </tr>
+        {% for item in data %}
+        <tr>
+            <td>{{ item.stuff_id }}</td>
+            <td>{{ item.stuff_name }}</td>
+            <td>{{ item.stuff_category }}</td>
+            <td>{{ item.sum_quantity_in }}</td>
+            <td>{{ item.sum_quantity_out }}</td>
+            <td>{{ item.net_quantity }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>

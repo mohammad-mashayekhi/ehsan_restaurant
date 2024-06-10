@@ -21,7 +21,7 @@ from .views import *
 app_name='repository'
 
 urlpatterns = [
-    path('', repository , name='repository'),
+    path('total-inventory/', TotalInventoryView, name='total_inventory'),
     path('in/<str:date>/', in_repository, name='in_repository'),
     path('out/<str:date>/', out_repository, name='out_repository'),
 
