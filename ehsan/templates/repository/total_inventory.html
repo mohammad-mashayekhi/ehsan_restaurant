@@ -39,6 +39,37 @@
         color: white;
         width: 0.2vw;
     }
+    .bt-in {
+        background-color: #EEF9FB;
+        padding: 20px;
+        margin-bottom: -30px;
+        font-weight: bold;
+        font-size: 1vw;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        border-bottom-left-radius: -15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .bt-in a {
+        color: black !important;
+    }
+
+    .bt-out {
+        padding: 30px;
+        margin-bottom: -30px;
+        font-weight: bold;
+        font-size: 1vw;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        width: 100%;
+        text-align: center;
+    }
+
+    .bt-out a {
+        color: black !important;
+    }
 
     #categoryFilter {
         margin-right: 20px;
@@ -58,8 +89,25 @@
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">انبار/</span> ورودی
+        <span class="text-muted fw-light">انبار/</span> گزارش
     </h4>
+    <div class="row mb-4" style="justify-content: center;">
+        <div class="col-md-4">
+            <div class="bt-out">
+                <a href="#" id="inputBtn">ورودی</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bt-in">
+                <a href="{% url 'repository:total_inventory' %}">گزارش موجودی</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bt-out">
+                <a href="#" id="outputBtn">خروجی</a>
+            </div>
+        </div>
+    </div>
     <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <select id="categoryFilter" class="form-control-sm">
@@ -96,7 +144,7 @@
                                     <td>{{ item.stuff_name }}</td>
                                     <td>{{ item.sum_quantity_in }}</td>
                                     <td>{{ item.sum_quantity_out }}</td>
-                                    <td>{{ item.net_quantity }}</td>
+                                    <td style="direction:ltr">{{ item.net_quantity }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

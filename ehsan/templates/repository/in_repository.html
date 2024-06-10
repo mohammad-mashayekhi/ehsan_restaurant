@@ -85,12 +85,17 @@
         <span class="text-muted fw-light">انبار/</span> ورودی
     </h4>
     <div class="row mb-4" style="justify-content: center;">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="bt-in">
                 <a href="#" id="inputBtn">ورودی</a>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="bt-out">
+                <a href="{% url 'repository:total_inventory' %}">گزارش موجودی</a>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="bt-out">
                 <a href="#" id="outputBtn">خروجی</a>
             </div>
