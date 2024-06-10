@@ -40,7 +40,6 @@ def in_repository(request, date):
         else:
             initial_data = {'type': initial_type,**{'stuff_' + str(stuff_id): 0 for stuff_id in all_stuff_ids}}
             initial_form_data.update(initial_data)  # فقط اگر initial_data موجود باشد، آن را به initial_form_data اضافه کنید
-        print(initial_form_data)
         form = RepositoryForm(initial=initial_form_data)  # استفاده از یک دیکشنری برای ارسال به عنوان initial
     
     categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
@@ -50,6 +49,7 @@ def in_repository(request, date):
 def out_repository(request, date):
     gregorian_date = datetime.strptime(date, '%Y-%m-%d').date()  # تبدیل تاریخ به فرمت میلادی
     initial_type = 'out'
+    all_stuff_ids = Stuffs.objects.values_list('stuff_id', flat=True)
 
     repository_instance = None
     initial_data = None
@@ -77,6 +77,9 @@ def out_repository(request, date):
     else:
         initial_form_data = {'date': gregorian_date, 'type': initial_type}
         if initial_data:
+            initial_form_data.update(initial_data)  # فقط اگر initial_data موجود باشد، آن را به initial_form_data اضافه کنید
+        else:
+            initial_data = {'type': initial_type,**{'stuff_' + str(stuff_id): 0 for stuff_id in all_stuff_ids}}
             initial_form_data.update(initial_data)  # فقط اگر initial_data موجود باشد، آن را به initial_form_data اضافه کنید
         form = RepositoryForm(initial=initial_form_data)  # استفاده از یک دیکشنری برای ارسال به عنوان initial
     
