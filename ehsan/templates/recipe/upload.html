@@ -1,0 +1,88 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<style>
+    .small-td {
+        width: 15%;
+    }
+
+    .th {
+        background-color: #6CC3DA !important;
+        color: white !important;
+        font-size: 1vw !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center;
+    }
+
+    /* .customtable {
+        font-weight: bold !important;
+        font-size: large;
+    } */
+
+    .price-input {
+        padding: 3px !important;
+        border-color: black 20px;
+        font-size: larger;
+    }
+
+    #table-body {
+        font-size: 0.9vw !important;
+    }
+
+    .search-container {
+        display: inline-block;
+        /* margin-left: 10px; */
+    }
+
+    .table-responsive {
+        direction: rtl;
+    }
+
+    .form-control-sm {
+        border-color: white !important;
+    }
+
+    .btn-arrow {
+        background-color: #FF8A00;
+        color: white;
+        width: 0.2vw;
+    }
+
+    /* Styles to reduce row height */
+    .table-striped td {
+        padding: 4px !important;
+        /* Adjust the padding as needed */
+        font-size: 0.8vw;
+        /* Adjust the font size if needed */
+    }
+
+    .table-striped tr {
+        line-height: 1 !important;
+        /* Reduce the line height */
+    }
+</style>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">رسپی/</span> آپلود فایل گزارش ثبت فروش
+    </h4>
+    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;">
+        <div class="card-header" style="margin-inline: 60px;">
+    
+        </div>
+        <div class="card-body">
+            <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn btn-primary mt-4" type="submit">بارگذاری</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

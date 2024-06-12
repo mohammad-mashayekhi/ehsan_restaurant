@@ -40,3 +40,8 @@ class RecipeSearchForm(forms.Form):
         initial=1,
         widget=forms.NumberInput(attrs={'class': 'form-control mt-1 recipe-quantity'})
     )
+
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField(widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))

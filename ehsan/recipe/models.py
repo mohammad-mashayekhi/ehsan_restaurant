@@ -17,3 +17,11 @@ class RecipePrice(models.Model):
 
     def __str__(self):
         return str(self.created_at)
+    
+    
+class RecipeSaleFile(models.Model):
+    created_at = models.DateField(auto_now_add=True)
+    recipe_prices = models.JSONField()
+
+    def __str__(self):
+        return str(self.created_at)    

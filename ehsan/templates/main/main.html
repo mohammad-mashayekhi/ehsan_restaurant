@@ -56,7 +56,7 @@
         /* Adjust margin-bottom as needed */
         margin-left: 40px;
         padding-right: 10px;
-        line-height:1.5vw;
+        line-height: 1.5vw;
         position: relative;
         z-index: 10;
     }
@@ -111,7 +111,8 @@
     .logout-btn-wrapper button a div img {
         margin-right: 20px;
     }
-    .layout-menu{
+
+    .layout-menu {
         overflow-y: auto;
     }
 </style>
@@ -141,7 +142,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item{% if request.resolver_match.view_name == 'recipe:recipe_list' %} active {% endif %}">
+                <li
+                    class="menu-item{% if request.resolver_match.view_name == 'recipe:recipe_list' %} active {% endif %}">
                     <a href="{% url 'recipe:recipe_list' %}" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/dashboard.png' %}" alt="Dashboard Icon" width="20"
@@ -170,21 +172,21 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="cards-gamifications.html" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'recipe:salereport' %} active {% endif %}">
+                    <a href="#" id="dynamicMenuLinkRecipeSale" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
-                                width="20" height="20">
-                            ثبت گزارشات حسابداری
+                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
+                            گزارش فروش روزانه
                         </div>
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="cards-actions.html" class="menu-link">
+                    <a href=".html" class="menu-link">
                         <div>
-                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
-                                height="20">
-                            ثبت فروش روزانه
+                            <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
+                                width="20" height="20">
+                            ثبت گزارشات حسابداری
                         </div>
                     </a>
                 </li>
@@ -206,21 +208,12 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="cards-actions.html" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'repository:total_inventory' %} active {% endif %}">
+                    <a href="{% url 'repository:total_inventory' %}" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/mojodianbar.png' %}" alt="Dashboard Icon" width="20"
                                 height="20">
                             گزارش موجودی انبار
-                        </div>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="cards-actions.html" class="menu-link">
-                        <div>
-                            <img src="{% static 'img/icons/menu/sell.png' %}" alt="Dashboard Icon" width="20"
-                                height="20">
-                            گزارش فروش
                         </div>
                     </a>
                 </li>
@@ -244,7 +237,7 @@
                 </li>
                 <div class="logout-btn-wrapper">
                     <button class="btn btn-primary">
-                        <a href="cards-actions.html" class="menu-link">
+                        <a href="{% url 'logout' %}" class="menu-link">
                             <div>خروج از حساب کاربری</div>
                             <div>
                                 <img src="{% static 'img/icons/menu/logout.png' %}" alt="Dashboard Icon" width="20"
@@ -319,16 +312,21 @@
                 // ساختن URL جدید با تاریخ امروز
                 var newUrlFoodstufd = '{% url "foodstuff:add_price" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+                var newUrlRecipeSale = '{% url "recipe:salereport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
 
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
                 var menuLinkRepository = document.getElementById('dynamicMenuLinkRepository');
+                var menuLinkRecipeSale = document.getElementById('dynamicMenuLinkRecipeSale');
 
                 if (menuLinkFoodstuff) {
                     menuLinkFoodstuff.href = newUrlFoodstufd;
                 }
                 if (menuLinkRepository) {
                     menuLinkRepository.href = newUrlRepository;
+                }
+                if (menuLinkRecipeSale) {
+                    menuLinkRecipeSale.href = newUrlRecipeSale;
                 }
             });
         </script>

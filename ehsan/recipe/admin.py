@@ -3,4 +3,5 @@ from .models import *
 
 admin.site.register(Recipe)
 admin.site.register(RecipePrice)
+admin.site.register(RecipeSaleFile)
 

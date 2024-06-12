@@ -29,6 +29,7 @@ urlpatterns = [
     path('repository/', include('repository.urls')),
     path('recipe/', include('recipe.urls')),
     path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
 
 ]
 

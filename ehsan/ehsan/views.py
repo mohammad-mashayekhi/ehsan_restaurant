@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from .forms import LoginForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -26,3 +26,7 @@ def login_view(request):
         form = AuthenticationForm()
     
     return render(request, 'main/login.html', {'form': form, 'next': request.GET.get('next', '')})
+
+def logout_view(request):
+    logout(request)
+    return redirect('dashboard')  # به صفحه اصلی یا هر صفحه دیگری که می‌خواهید کاربر بعد از خروج به آن هدایت شود.

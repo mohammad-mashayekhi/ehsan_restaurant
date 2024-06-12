@@ -153,3 +153,88 @@ def recipe_selection(request):
         form = RecipeSearchForm()
 
     return render(request, 'recipe/recipe_selection.html', {'form': form})
+
+
+import pandas as pd
+from django.core.files.storage import FileSystemStorage
+from .models import RecipeSaleFile
+from .forms import UploadFileForm
+from django.utils.timezone import now
+from django.contrib import messages
+from django.urls import reverse
+from django.shortcuts import render, redirect
+import numpy as np
+
+def upload_file(request):
+    today_date = datetime.today().strftime('%Y-%m-%d')
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES['file']
+            fs = FileSystemStorage()
+            filename = fs.save(file.name, file)
+            file_path = fs.path(filename)
+            
+            # خواندن فایل اکسل
+            try:
+                df = pd.read_excel(file_path, header=1)
+                messages.success(request, 'فایل با موفقیت بارگذاری شد.')
+            except Exception as e:
+                form.add_error(None, f"Error reading Excel file: {str(e)}")
+                return render(request, 'recipe/upload.html', {'form': form})
+
+            # بررسی و به‌روزرسانی یا ایجاد رکورد جدید با اعتبارسنجی
+            today = now().date()
+            extracted_data = []
+            for index, row in df.iterrows():
+                if not pd.isnull(row['كد كالا']) and not pd.isnull(row['نام كالا']) and not pd.isnull(row['تعداد']):
+                    item = {
+                        'code': row['كد كالا'],
+                        'product_name': row['نام كالا'],
+                        'count': row['تعداد']
+                    }
+                    extracted_data.append(item)
+
+            # بررسی اعتبارسنجی
+            if not extracted_data:
+                form.add_error(None, "هیچ داده معتبری در فایل یافت نشد.")
+                return render(request, 'recipe/upload.html', {'form': form})
+
+            # ذخیره یا به‌روزرسانی رکورد
+            RecipeSaleFile.objects.update_or_create(
+                created_at=today,
+                defaults={'recipe_prices': extracted_data}
+            )
+            return redirect(reverse('recipe:salereport', kwargs={'date': today_date}))
+    else:
+        form = UploadFileForm()
+    return render(request, 'recipe/upload.html', {'form': form})
+
+
+from django.http import Http404
+from django.utils.dateparse import parse_date
+
+def salereport(request, date):
+    try:
+        # تلاش برای تبدیل رشته تاریخ به فرمت تاریخ
+        parsed_date = parse_date(date)
+        if not parsed_date:
+            raise ValueError("Invalid date format")
+        data = []
+        # پیدا کردن فایل‌های بارگذاری شده در تاریخ مشخص شده
+        file = RecipeSaleFile.objects.get(created_at=parsed_date)
+        print(file.recipe_prices)
+       
+        context = {
+            'file': file,
+            'date': date,
+        }
+        return render(request, 'recipe/salereport.html', context)
+        
+    except RecipeSaleFile.DoesNotExist:
+        context = {
+            'date': date,
+        }
+        return render(request, 'recipe/salereport.html', context)
+    except ValueError:
+        raise Http404("Invalid date format. Please use YYYY-MM-DD.")
