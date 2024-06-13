@@ -77,6 +77,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ehsan.wsgi.application'
 
 
+
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE'),
@@ -88,9 +89,6 @@ DATABASES = {
         'OPTIONS': {
             'client_encoding': 'UTF-8',
         },
-        # 'OPTIONS': {
-        #     'sql_mode': 'STRICT_TRANS_TABLES',
-        # },
     }
 }
 
@@ -118,6 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'fa'
+DEFAULT_CHARSET = 'utf-8'
 
 TIME_ZONE = 'Asia/Tehran'
 

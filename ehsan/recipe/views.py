@@ -116,12 +116,40 @@ def get_standard_price(recipe_id):
     except RecipePrice.DoesNotExist:
         return ''
     
+import json
+from django.http import JsonResponse
+from .models import RecipePrice
+import json
+from django.http import JsonResponse
+from django.utils import timezone
+from .models import RecipePrice
+
 def save_recipe_prices_ajax(request):
     recipe_prices_data = request.POST.get('recipe_prices')
-    print(recipe_prices_data)
-    RecipePrice.objects.create(recipe_prices=recipe_prices_data)
-    return JsonResponse({'success': True})
+    try:
+        # Decode JSON data
+        recipe_prices_dict = json.loads(recipe_prices_data)
 
+        # Ensure the JSON data is properly encoded
+        recipe_prices_json = json.dumps(recipe_prices_dict, ensure_ascii=False)
+
+        # Get today's date
+        today = timezone.now().date()
+
+        # Check if a record for today exists
+        recipe_price_record = RecipePrice.objects.filter(created_at__date=today).first()
+
+        if recipe_price_record:
+            # Update the existing record
+            recipe_price_record.recipe_prices = recipe_prices_json
+            recipe_price_record.save()
+        else:
+            # Create a new record
+            RecipePrice.objects.create(recipe_prices=recipe_prices_json)
+
+        return JsonResponse({'success': True})
+    except json.JSONDecodeError as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 from .forms import RecipeSearchForm
 # views.py
