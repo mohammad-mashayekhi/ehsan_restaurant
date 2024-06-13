@@ -64,9 +64,6 @@
     box-shadow: none;
 }
 
-
-
-
     .curved-border {
         border-top-left-radius: 20px;
         border-top-right-radius: 20px;
@@ -195,7 +192,7 @@
                     </a>
                 </li>
                 <li class="menu-item {% if request.resolver_match.view_name == 'recipe:salereport' %} active {% endif %}">
-                    <a href="#" id="dynamicMenuLinkRecipeSale" class="menu-link">
+                    <a href="#" id="dynamicMenuLinkRecipeSale"  class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
                                 height="20">
@@ -203,8 +200,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href=".html" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'accounting:month_report_view' %} active {% endif %}">
+                    <a href="#"  id="dynamicMenuLinkMonthReport" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
                                 width="20" height="20">
@@ -330,16 +327,21 @@
 
                 // ساختن تاریخ به فرمتی که مورد نیاز است
                 var formattedDate = year + '-' + month + '-' + day;
+                var formattedDateMonthReport = year + '/' + month ;
+                var formattedDateMonthReport = '2023/08' ;
+                
 
                 // ساختن URL جدید با تاریخ امروز
                 var newUrlFoodstufd = '{% url "foodstuff:add_price" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRecipeSale = '{% url "recipe:salereport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+                var newUrlMonthReport = '/accounting/report/' + year + '/' + month + '/';
 
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
                 var menuLinkRepository = document.getElementById('dynamicMenuLinkRepository');
                 var menuLinkRecipeSale = document.getElementById('dynamicMenuLinkRecipeSale');
+                var menuLinkMonthReport = document.getElementById('dynamicMenuLinkMonthReport');
 
                 if (menuLinkFoodstuff) {
                     menuLinkFoodstuff.href = newUrlFoodstufd;
@@ -349,6 +351,9 @@
                 }
                 if (menuLinkRecipeSale) {
                     menuLinkRecipeSale.href = newUrlRecipeSale;
+                }
+                if (menuLinkMonthReport) {
+                    menuLinkMonthReport.href = newUrlMonthReport;
                 }
             });
         </script>

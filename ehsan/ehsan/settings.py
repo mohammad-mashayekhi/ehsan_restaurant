@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'repository',
     'recipe',
     'django.contrib.postgres',
+    'accounting'
 ]
 
 MIDDLEWARE = [

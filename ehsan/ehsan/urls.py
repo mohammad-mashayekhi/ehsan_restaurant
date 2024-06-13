@@ -28,9 +28,9 @@ urlpatterns = [
     path('foodstuff/', include('foodstuff.urls')),
     path('repository/', include('repository.urls')),
     path('recipe/', include('recipe.urls')),
+    path('accounting/', include('accounting.urls')),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
-
 ]
 
 

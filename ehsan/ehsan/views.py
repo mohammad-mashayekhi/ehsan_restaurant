@@ -30,3 +30,5 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('dashboard')  # به صفحه اصلی یا هر صفحه دیگری که می‌خواهید کاربر بعد از خروج به آن هدایت شود.
+
+
