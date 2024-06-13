@@ -77,26 +77,26 @@
             <div class="mt-3 p-4">
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.hall_sales.label_tag }}
+                  {{ form.sales_hall.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.hall_sales }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm text-center">
-                  {{ form.takeaway_sales.label_tag }}
-                </div>
-                <div class="col-sm text-center">
-                  {{ form.takeaway_sales }}
+                  {{ form.sales_hall }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.snapp_food_sales.label_tag }}
+                  {{ form.sales_takeaway.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.snapp_food_sales }}
+                  {{ form.sales_takeaway }}
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm text-center">
+                  {{ form.sales_snappfood.label_tag }}
+                </div>
+                <div class="col-sm text-center">
+                  {{ form.sales_snappfood }}
                 </div>
               </div>
               <div class="row mt-2">
@@ -109,34 +109,34 @@
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.company_orders.label_tag }}
+                  {{ form.sales_company.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.company_orders }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm text-center">
-                  {{ form.special_company.label_tag }}
-                </div>
-                <div class="col-sm text-center">
-                  {{ form.special_company }}
+                  {{ form.sales_company }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.charity_orders.label_tag }}
+                  {{ form.sales_special_company.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.charity_orders }}
+                  {{ form.sales_special_company }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.miscellaneous_sales.label_tag }}
+                  {{ form.sales_charity.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.miscellaneous_sales }}
+                  {{ form.sales_charity }}
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm text-center">
+                  {{ form.sales_misc.label_tag }}
+                </div>
+                <div class="col-sm text-center">
+                  {{ form.sales_misc }}
                 </div>
               </div>
               <div class="row mt-2">
@@ -164,10 +164,10 @@
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.salary.label_tag }}
+                  {{ form.salaries.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.salary }}
+                  {{ form.salaries }}
                 </div>
               </div>
               <div class="row mt-2">
@@ -196,26 +196,26 @@
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.current_expenses.label_tag }}
+                  {{ form.maintenance.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.current_expenses }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm text-center">
-                  {{ form.staff_meal.label_tag }}
-                </div>
-                <div class="col-sm text-center">
-                  {{ form.staff_meal }}
+                  {{ form.maintenance }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.miscellaneous_expenses.label_tag }}
+                  {{ form.staff_meals.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.miscellaneous_expenses }}
+                  {{ form.staff_meals }}
+                </div>
+              </div>
+              <div class="row mt-2">
+                <div class="col-sm text-center">
+                  {{ form.misc_expenses.label_tag }}
+                </div>
+                <div class="col-sm text-center">
+                  {{ form.misc_expenses }}
                 </div>
               </div>
               <div class="row mt-2">
@@ -257,17 +257,19 @@
             <div class="col-sm">
               <div class="row mt-2">
                 <div class="col-sm text-center">
-                  {{ form.material_to_sales_ratio.label_tag }}
+                  {{ form.cost_to_sales_ratio.label_tag }}
                 </div>
                 <div class="col-sm text-center">
-                  {{ form.material_to_sales_ratio }}
+                  {{ form.cost_to_sales_ratio }}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      {% if form.errors %}
+      <ul class="errorlist">{{ form.errors }}</ul>
+    {% endif %}    </div>
   </form>
 </div>
 

@@ -202,7 +202,7 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item {% if request.resolver_match.view_name == 'accounting:month_report_view' %} active {% endif %}">
+                <li class="menu-item {% if 'record/report' in request.path %} active {% endif %}">
                     <a href="#"  id="dynamicMenuLinkMonthReport" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
@@ -337,7 +337,7 @@
                 var newUrlFoodstufd = '{% url "foodstuff:add_price" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRecipeSale = '{% url "recipe:salereport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
-                var newUrlMonthReport = '/accounting/report/' + year + '/' + month + '/';
+                var newUrlMonthReport = '/record/report/' + year + '-' + month + '-01' ;
 
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
