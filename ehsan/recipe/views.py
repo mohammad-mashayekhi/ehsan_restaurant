@@ -250,7 +250,7 @@ def salereport(request, date):
             raise ValueError("Invalid date format")
     try:
         # پیدا کردن فایل‌های بارگذاری شده در تاریخ مشخص شده
-        file = RecipeSaleFile.objects.get(date_created=parsed_date)
+        file = RecipeSaleFile.objects.get(date_created=date)
         print(file.recipe_prices)
 
         context = {
