@@ -239,8 +239,12 @@ def upload_file(request):
     return render(request, 'recipe/upload.html', {'form': form})
 
 
+import logging
 from django.http import Http404
 from django.utils.dateparse import parse_date
+from .models import RecipeSaleFile
+
+logger = logging.getLogger(__name__)
 
 def salereport(request, date):
     try:
@@ -248,11 +252,11 @@ def salereport(request, date):
         parsed_date = parse_date(date)
         if not parsed_date:
             raise ValueError("Invalid date format")
-        data = []
+
         # پیدا کردن فایل‌های بارگذاری شده در تاریخ مشخص شده
         file = RecipeSaleFile.objects.get(created_at=parsed_date)
         print(file.recipe_prices)
-       
+
         context = {
             'file': file,
             'date': date,
@@ -264,5 +268,6 @@ def salereport(request, date):
             'date': date,
         }
         return render(request, 'recipe/salereport.html', context)
-    except ValueError:
+    except ValueError as e:
+        logger.error(f"Date parsing error: {e}")
         raise Http404("Invalid date format. Please use YYYY-MM-DD.")
