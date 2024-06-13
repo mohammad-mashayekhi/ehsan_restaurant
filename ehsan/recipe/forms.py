@@ -32,7 +32,7 @@ class RecipeSearchForm(forms.Form):
     recipe_id = forms.ChoiceField(
         choices=[(recipe.recipe_id, recipe.name) for recipe in Recipe.objects.all()],
         label="انتخاب غذا",
-        widget=forms.Select(attrs={'class': 'form-control mt-1 recipe-select'})
+        widget=forms.Select(attrs={'class': 'form-control p-4 mt-1 recipe-select select2'})
     )
     quantity = forms.IntegerField(
         label="تعداد",
@@ -41,6 +41,9 @@ class RecipeSearchForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control mt-1 recipe-quantity'})
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['recipe_id'].widget.attrs.update({'data-placeholder': 'انتخاب رسپی', 'dir': 'rtl'})
 
 
 class UploadFileForm(forms.Form):

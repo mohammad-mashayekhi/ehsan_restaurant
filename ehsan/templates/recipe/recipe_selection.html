@@ -1,7 +1,6 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style>
     .th {
@@ -75,7 +74,7 @@
                 <form id="recipe-search-form" method="post" novalidate class="form-inline">
                     <div class="row" style="text-align-last: center;align-items:center;margin:20px;;">
                         {% csrf_token %}
-                        <div class="col-sm mb-2">
+                        <div class="col-sm mb-2 text-center">
                             {{ form.recipe_id.label_tag }}
                             {{ form.recipe_id }}
                         </div>
@@ -119,8 +118,14 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    jQuery(document).ready(function($) {
         var totalIngredients = {};
+        
+        $('.select2').select2({
+            placeholder: $(this).data('placeholder'),
+            dir: 'rtl', // Right-to-left text direction
+            width: '100%'
+        });
 
         $('#recipe-search-form').on('submit', function (event) {
             event.preventDefault(); // جلوگیری از ارسال فرم به صورت معمول
