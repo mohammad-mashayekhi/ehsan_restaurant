@@ -106,7 +106,6 @@
         <div class="card-header" style="margin-inline: 60px;">
             <a href="{% url 'recipe:add_recipe' %}" class="btn btn-primary" style="float: left;"> افزودن رسپی جدید</a>
             <button id="save-recipe-prices-btn" class="btn btn-primary" style="float: left; margin-left: 0.5rem;">ثبت به عنوان معیار</button>
-
             <div id="datatable_filter" class="form-control-sm search-container">
                 <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
             </div>
@@ -179,7 +178,16 @@
 
 <script>
     $(document).ready(function () {
-        $('#save-recipe-prices-btn').on('click', function () {
+        $('#save-recipe-prices-btn').on('click', function (e) {
+            e.preventDefault(); // جلوگیری از ارسال فرم به صورت پیش‌فرض
+
+            // تایید از کاربر
+            var confirmation = confirm('آیا مطمئن هستید که می‌خواهید قیمت معیار را بروزرسانی کنید؟');
+            if (!confirmation) {
+                return; // اگر کاربر تایید نکرد، تابع را ترک کنید
+            }
+
+            // ادامه فرآیند اگر کاربر تایید کرد
             var recipePricesData = JSON.stringify({{ prices_list|safe }});
             $.ajax({
                 type: 'POST',
@@ -194,12 +202,12 @@
                         // صفحه را مجدداً بارگذاری کنید
                         location.reload();
                     } else {
-                        alert('Error occurred while saving recipe prices.');
+                        alert('خطایی در هنگام ثبت قیمت‌ها رخ داده است.');
                     }
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
-                    alert('Error occurred while saving recipe prices.');
+                    alert('خطایی در هنگام ثبت قیمت‌ها رخ داده است.');
                 }
             });
         });

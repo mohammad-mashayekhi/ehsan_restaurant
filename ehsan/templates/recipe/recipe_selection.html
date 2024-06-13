@@ -150,6 +150,7 @@
                         });
                         resultHtml += '</tbody></table>';
                         $('#result').html(resultHtml);
+                        $('#id_quantity').val(0);
                     } else {
                         var errorHtml = '<ul>';
                         $.each(response.errors, function (key, value) {

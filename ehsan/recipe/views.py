@@ -55,10 +55,17 @@ def edit_recipe(request, id):
     categories = Category.objects.all()
 
     return render(request, 'recipe/edit_recipe.html', {
+        'id':id,
         'recipe_form': recipe_form,
         'formset': formset,
         'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
     })
+    
+def delete_recipe(request, id):
+    recipe = get_object_or_404(Recipe, id=id)
+    recipe.delete()
+    return redirect('recipe:recipe_list')
+    
     
 def recipe_list(request):
     recipes = Recipe.objects.all()

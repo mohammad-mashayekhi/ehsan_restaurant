@@ -105,6 +105,10 @@
                             <button type="submit" class="btn btn-primary">ذخیره</button>
                         </div>
                     </form>
+                    <form method="post" action="{% url 'recipe:delete_recipe' id %}" style="display:inline;float: left;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('آیا مطمئن هستید که می‌خواهید این رسپی را حذف کنید؟');">حذف</button>
+                    </form>
                 </div>
             </div>
         </div>
