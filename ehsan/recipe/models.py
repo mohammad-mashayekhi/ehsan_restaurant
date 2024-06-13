@@ -21,6 +21,7 @@ class RecipePrice(models.Model):
     
 class RecipeSaleFile(models.Model):
     created_at = models.DateField(auto_now_add=True)
+    date_created = models.DateField(default=timezone.now)
     recipe_prices = models.JSONField()
 
     def __str__(self):
