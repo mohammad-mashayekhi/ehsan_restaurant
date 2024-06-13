@@ -9,7 +9,7 @@
     .th {
         background-color: #6CC3DA !important;
         color: white !important;
-        font-size: 18px !important;
+        font-size: 1vw !important;
         position: -webkit-sticky;
         position: sticky;
         top: 0;
@@ -40,8 +40,8 @@
         width: 0.2vw;
     }
     .bt-in {
-        background-color: #EEF9FB;
-        padding: 20px;
+        background-color: #d8f9ff;
+        padding: 30px;
         margin-bottom: -30px;
         font-weight: bold;
         font-size: 1vw;
@@ -98,17 +98,17 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="bt-in">
-                <a href="{% url 'repository:total_inventory' %}">گزارش موجودی</a>
-            </div>
-        </div>
-        <div class="col-md-4">
             <div class="bt-out">
                 <a href="#" id="outputBtn">خروجی</a>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="bt-in">
+                <a href="{% url 'repository:total_inventory' %}">گزارش موجودی</a>
+            </div>
+        </div>
     </div>
-    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;margin-top:-20px">
+    <div class="card mb-4" style="background-color: #d8f9ff; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <select id="categoryFilter" class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
@@ -171,7 +171,7 @@
                 paging: false,
                 scrollCollapse: true,
                 scrollX: true,
-                scrollY: 400
+                scrollY: 380
             });
             $('#categoryFilter').on('change', function () {
                 var category = $(this).val();

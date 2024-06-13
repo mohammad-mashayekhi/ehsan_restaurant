@@ -28,7 +28,7 @@
     }
 
     .bt-out {
-        background-color: #EEF9FB;
+        background-color: #d8f9ff;
         padding: 30px;
         margin-bottom: -30px;
         font-weight: bold;
@@ -45,7 +45,7 @@
     }
 
     .bt-in {
-        padding: 20px;
+        padding: 30px;
         margin-bottom: -30px;
         font-weight: bold;
         font-size: 1vw;
@@ -94,15 +94,10 @@
     <h4 class="fw-bold py-3 mb-4">
         <span class="text-muted fw-light">انبار/</span> خروجی
     </h4>
-    <div class="row mb-4" style="justify-content: center">
+    <div class="row mb-4" style="justify-content: center;">
         <div class="col-md-4">
             <div class="bt-in">
                 <a href="#" id="inputBtn">ورودی</a>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="bt-in">
-                <a href="{% url 'repository:total_inventory' %}">گزارش موجودی</a>
             </div>
         </div>
         <div class="col-md-4">
@@ -110,8 +105,13 @@
                 <a href="#" id="outputBtn">خروجی</a>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="bt-in">
+                <a href="{% url 'repository:total_inventory' %}">گزارش موجودی</a>
+            </div>
+        </div>
     </div>
-    <div class="card mb-4" style="background-color: #EEF9FB; box-shadow: none;margin-top:-20px">
+    <div class="card mb-4" style="background-color: #d8f9ff; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <!-- <a href="{% url 'foodstuff:addfoodstuffs' %}" class="btn btn-primary" style="float: left;"> افزودن ماده
                 غذایی جدید</a> -->
@@ -266,7 +266,7 @@
                  paging: false,
                  scrollCollapse: true,
                  scrollX: true,
-                 scrollY: 400
+                 scrollY: 380
              });
              $('#categoryFilter').on('change', function () {
                  var category = $(this).val();
