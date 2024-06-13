@@ -245,7 +245,7 @@ from .models import RecipeSaleFile
 
 
 def salereport(request, date):
-    parsed_date = parse_date(date)
+    parsed_date = parse_date(date).strftime('%Y-%m-%d')
     if not parsed_date:
             raise ValueError("Invalid date format")
     try:
