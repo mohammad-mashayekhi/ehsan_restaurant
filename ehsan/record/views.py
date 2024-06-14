@@ -73,8 +73,10 @@ def add_claimsdebts(request, date):
             claims.save()
             debts.save()
             
-            claims_ingredients = {form.cleaned_data['name']: form.cleaned_data['amount'] for form in claims_formset}
-            debts_ingredients = {form.cleaned_data['name']: form.cleaned_data['amount'] for form in debts_formset}
+            claims_ingredients = {form.cleaned_data.get('name'): form.cleaned_data.get('amount') for form in claims_formset
+                      if form.cleaned_data.get('name') and form.cleaned_data.get('amount') is not None}
+            debts_ingredients = {form.cleaned_data.get('name'): form.cleaned_data.get('amount') for form in debts_formset
+                      if form.cleaned_data.get('name') and form.cleaned_data.get('amount') is not None}
             
             claims.ingredients = claims_ingredients
             debts.ingredients = debts_ingredients
@@ -86,8 +88,19 @@ def add_claimsdebts(request, date):
     else:
         claims_form = ClaimsForm(instance=claims, prefix='claims')
         debts_form = DebtsForm(instance=debts, prefix='debts')
-        claims_formset = IngredientFormSet(prefix='claims_ingredients')
-        debts_formset = IngredientFormSet(prefix='debts_ingredients')
+        
+        if claims.id:
+            initial_data = [{'name': ingredient, 'amount': claims.ingredients.get(ingredient, 0)} for ingredient in claims.ingredients.keys()]
+            claims_formset = IngredientFormSet(initial=initial_data, prefix='claims_ingredients')
+        else:
+            claims_formset = IngredientFormSet(prefix='claims_ingredients')
+
+        if debts.id:
+            initial_data = [{'name': ingredient, 'amount': debts.ingredients.get(ingredient, 0)} for ingredient in debts.ingredients.keys()]
+            debts_formset = IngredientFormSet(initial=initial_data, prefix='debts_ingredients')
+        else:
+            debts_formset = IngredientFormSet(prefix='debts_ingredients')
+        
 
     return render(request, 'record/claimsdebts.html', {
         'claims_form': claims_form,

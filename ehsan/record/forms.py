@@ -68,9 +68,11 @@ class DebtsForm(forms.ModelForm):
 class IngredientForm(forms.Form):
     name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        label='نام'
+        label='نام',
+        initial=''  # مقدار اولیه را در اینجا تنظیم کنید
     )
     amount = forms.FloatField(
         widget=forms.NumberInput(attrs={'class': 'form-control mt-1', 'placeholder': 'مقدار'}),
-        label='مقدار'
+        label='مقدار',
+        initial=0.0  # مقدار اولیه را در اینجا تنظیم کنید
     )    

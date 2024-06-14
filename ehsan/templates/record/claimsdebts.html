@@ -54,6 +54,14 @@
     .form-group {
         margin-bottom: 20px;
     }
+
+    .card_head_title {
+        font-size: 1vw;
+        color: #d8f9ff;
+        padding: 5px;
+        background: #2CA9C9 !important;
+        border-radius: 15px;
+    }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4">
@@ -66,14 +74,15 @@
                 <div class="card-body">
                     <form method="post">
                         {% csrf_token %}
-                        
-                        <h5>افزودن طلب</h5>
-                        {{ claims_form.type }}
-                        <div class="row" style="align-items: center;">
-                            <div class="col-md-1 form-group text-center">
+                        <div class="row card_head_title p-1 mb-2" style="align-items: center;">
+                            <div class="col-md-7 text-center">
+                                <span style="font-weight: bold;">افزودن طلب</span>
+                                {{ claims_form.type }}
+                            </div>
+                            <div class="col-md-2 text-center">
                                 <span>آیدی طلب:</span>
                             </div>
-                            <div class="col-md-3 form-group" style="margin-right: -30px;">
+                            <div class="col-md-3 " style="margin-right: -30px;">
                                 {{ claims_form.claimsdebts_id }}
                             </div>
                         </div>
@@ -94,17 +103,19 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <button type="button" id="add-claims-ingredient" class="btn btn-secondary">افزودن ماده اولیه</button>
-                        
+                        <button type="button" id="add-claims-ingredient" class="btn btn-secondary">افزودن طلب
+                            جدید</button>
                         <hr>
-                        
-                        <h5>افزودن بدهی</h5>
-                        {{ debts_form.type }}
-                        <div class="row" style="align-items: center;">
-                            <div class="col-md-1 form-group text-center">
+
+                        <div class="row card_head_title p-1 mb-2" style="align-items: center;">
+                            <div class="col-md-7 text-center">
+                                <span style="font-weight: bold;">افزودن بدهی</span>
+                                {{ debts_form.type }}
+                            </div>
+                            <div class="col-md-2 text-center">
                                 <span>آیدی بدهی:</span>
                             </div>
-                            <div class="col-md-3 form-group" style="margin-right: -30px;">
+                            <div class="col-md-3 " style="margin-right: -30px;">
                                 {{ debts_form.claimsdebts_id }}
                             </div>
                         </div>
@@ -125,11 +136,13 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <button type="button" id="add-debts-ingredient" class="btn btn-secondary">افزودن ماده اولیه</button>
-                        
+                        <button type="button" id="add-debts-ingredient" class="btn btn-secondary">افزودن بدهی
+                            جدید</button>
+
                         <div class="card-footer text-muted">
                             {{ form.errors }}
-                            <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-outline-secondary">انصراف</a>
+                            <a href="#" onclick="window.history.go(-1); return false;"
+                                class="btn btn-outline-secondary">انصراف</a>
                             <button type="submit" class="btn btn-primary">ذخیره</button>
                         </div>
                     </form>
@@ -145,51 +158,51 @@
 <script>
     $(document).ready(function () {
         let claims_form_idx = {{ claims_formset.total_form_count }};
-        let debts_form_idx = {{ debts_formset.total_form_count }};
+    let debts_form_idx = {{ debts_formset.total_form_count }};
 
-        $('#add-claims-ingredient').click(function () {
-            let new_form = $('#claims-ingredient-forms .ingredient-form:first').clone();
+    $('#add-claims-ingredient').click(function () {
+        let new_form = $('#claims-ingredient-forms .ingredient-form:first').clone();
 
-            new_form.find('input, select').each(function () {
-                let name = $(this).attr('name').replace(/\d+/, claims_form_idx);
-                let id = $(this).attr('id').replace(/\d+/, claims_form_idx);
-                $(this).attr({ 'name': name, 'id': id }).val('');
-            });
-
-            let current_row = $('#claims-ingredient-forms .row').last();
-            if (current_row.children().length >= 4) {
-                current_row = $('<div class="row"></div>').appendTo('#claims-ingredient-forms');
-            }
-
-            new_form.appendTo(current_row);
-
-            claims_form_idx++;
-            updateManagementForm(claims_form_idx, 'claims_ingredients');
+        new_form.find('input, select').each(function () {
+            let name = $(this).attr('name').replace(/\d+/, claims_form_idx);
+            let id = $(this).attr('id').replace(/\d+/, claims_form_idx);
+            $(this).attr({ 'name': name, 'id': id }).val('');
         });
 
-        $('#add-debts-ingredient').click(function () {
-            let new_form = $('#debts-ingredient-forms .ingredient-form:first').clone();
-
-            new_form.find('input, select').each(function () {
-                let name = $(this).attr('name').replace(/\d+/, debts_form_idx);
-                let id = $(this).attr('id').replace(/\d+/, debts_form_idx);
-                $(this).attr({ 'name': name, 'id': id }).val('');
-            });
-
-            let current_row = $('#debts-ingredient-forms .row').last();
-            if (current_row.children().length >= 4) {
-                current_row = $('<div class="row"></div>').appendTo('#debts-ingredient-forms');
-            }
-
-            new_form.appendTo(current_row);
-
-            debts_form_idx++;
-            updateManagementForm(debts_form_idx, 'debts_ingredients');
-        });
-
-        function updateManagementForm(count, prefix) {
-            $('#id_' + prefix + '-TOTAL_FORMS').val(count);
+        let current_row = $('#claims-ingredient-forms .row').last();
+        if (current_row.children().length >= 4) {
+            current_row = $('<div class="row"></div>').appendTo('#claims-ingredient-forms');
         }
+
+        new_form.appendTo(current_row);
+
+        claims_form_idx++;
+        updateManagementForm(claims_form_idx, 'claims_ingredients');
+    });
+
+    $('#add-debts-ingredient').click(function () {
+        let new_form = $('#debts-ingredient-forms .ingredient-form:first').clone();
+
+        new_form.find('input, select').each(function () {
+            let name = $(this).attr('name').replace(/\d+/, debts_form_idx);
+            let id = $(this).attr('id').replace(/\d+/, debts_form_idx);
+            $(this).attr({ 'name': name, 'id': id }).val('');
+        });
+
+        let current_row = $('#debts-ingredient-forms .row').last();
+        if (current_row.children().length >= 4) {
+            current_row = $('<div class="row"></div>').appendTo('#debts-ingredient-forms');
+        }
+
+        new_form.appendTo(current_row);
+
+        debts_form_idx++;
+        updateManagementForm(debts_form_idx, 'debts_ingredients');
+    });
+
+    function updateManagementForm(count, prefix) {
+        $('#id_' + prefix + '-TOTAL_FORMS').val(count);
+    }
     });
 </script>
 {% endblock %}
