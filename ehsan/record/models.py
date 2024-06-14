@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from shortuuid.django_fields import ShortUUIDField
 
 class MonthlyReport(models.Model):
     date = models.DateField(unique=True)
@@ -37,3 +39,21 @@ class MonthlyReport(models.Model):
         if self.date:
             self.date = self.date.replace(day=1)
         super().save(*args, **kwargs)
+        
+
+class ClaimsDebts(models.Model):
+    CLAIM = 'claim'
+    DEBT = 'debt'
+    
+    TYPE_CHOICES = [
+        (CLAIM, 'طلب'),
+        (DEBT, 'بدهی'),
+    ]
+    
+    claimsdebts_id = ShortUUIDField(editable=True, unique=True, length=10, max_length=30, alphabet="abcdefgh12345")
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    ingredients = models.JSONField(default=dict, null=True, blank=True)
+    date_created = models.DateField(default=timezone.now)
+
+    def __str__(self):
+        return f"({self.get_type_display()}) {self.date_created}"

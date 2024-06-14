@@ -1,5 +1,5 @@
 from django import forms
-from . models import MonthlyReport
+from .models import ClaimsDebts,MonthlyReport
 
 class DailyReportForm(forms.ModelForm):
     sales_hall = forms.DecimalField(label='فروش سالن', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'فروش سالن', 'min': 0}), required=False, initial=0)
@@ -27,3 +27,50 @@ class DailyReportForm(forms.ModelForm):
     class Meta:
         model = MonthlyReport
         exclude = ['date']
+        
+
+class ClaimsForm(forms.ModelForm):
+    class Meta:
+        model = ClaimsDebts
+        fields = ['claimsdebts_id', 'type']
+        widgets = {
+            'claimsdebts_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'type': forms.HiddenInput(),
+        }
+        labels = {
+            'claimsdebts_id': 'عنوان طلب',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].initial = ClaimsDebts.CLAIM  # Set initial value for type
+        self.fields['type'].widget = forms.HiddenInput()  # Hide the field from user input
+
+
+class DebtsForm(forms.ModelForm):
+    class Meta:
+        model = ClaimsDebts
+        fields = ['claimsdebts_id', 'type']
+        widgets = {
+            'claimsdebts_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'type': forms.HiddenInput(),
+        }
+        labels = {
+            'claimsdebts_id': 'عنوان بدهی',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].initial = ClaimsDebts.DEBT  # Set initial value for type
+        self.fields['type'].widget = forms.HiddenInput()  # Hide the field from user input
+        
+
+class IngredientForm(forms.Form):
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label='نام'
+    )
+    amount = forms.FloatField(
+        widget=forms.NumberInput(attrs={'class': 'form-control mt-1', 'placeholder': 'مقدار'}),
+        label='مقدار'
+    )    
