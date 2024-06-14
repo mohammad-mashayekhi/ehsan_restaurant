@@ -1,0 +1,32 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<div class="container">
+    <h4>گزارش مصرف مواد اولیه برای تاریخ {{ date }}</h4>
+    <hr>
+    {% if report_data %}
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام ماده اولیه</th>
+                        <th>مقدار مصرف شده</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in report_data %}
+                    <tr>
+                        <td>{{ item.ingredient_name }}</td>
+                        <td>{{ item.amount }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% else %}
+    <p>هیچ اطلاعاتی برای نمایش وجود ندارد.</p>
+    {% endif %}
+</div>
+{% endblock %}

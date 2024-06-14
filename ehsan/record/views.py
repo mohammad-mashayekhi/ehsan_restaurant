@@ -111,3 +111,67 @@ def add_claimsdebts(request, date):
         'claims': claims,
         'debts': debts,
     })
+
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from recipe.models import Recipe, RecipeSaleFile
+from datetime import datetime
+from django.db.models import Sum
+from foodstuff.models import Stuffs
+
+from django.shortcuts import render, HttpResponse
+from django.utils import timezone
+from datetime import datetime
+from recipe.models import Recipe, RecipeSaleFile
+
+def consumptionreport(request, date):
+    try:
+        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+    except ValueError:
+        return HttpResponse('Invalid date format', status=400)
+
+    # Retrieve all RecipeSaleFile records for the given date
+    sales = RecipeSaleFile.objects.filter(created_at=date_obj)
+    report_data = []
+
+    for sale in sales:
+        # Parse recipe_prices JSON data
+        recipe_prices = sale.recipe_prices
+        for price in recipe_prices:
+            recipe_id = price.get('code')
+            count = price.get('count')
+
+            # Retrieve the recipe based on recipe_id
+            try:
+                recipe = Recipe.objects.get(recipe_id=recipe_id)
+            except Recipe.DoesNotExist:
+                continue
+        
+            # Calculate total ingredients needed based on the sales quantity
+            total_ingredients = {}
+            for ingredient_name, quantity in recipe.ingredients.items():
+                total_ingredients[ingredient_name] = quantity * count
+
+            # Iterate over total_ingredients and prepare data for report_data
+            for ingredient_name, amount in total_ingredients.items():
+                # Check if ingredient_name already exists in report_data
+                found = False
+                for item in report_data:
+                    if item['ingredient_name'] == ingredient_name:
+                        item['amount'] += amount
+                        found = True
+                        break
+                
+                if not found:
+                    # Add new entry for the ingredient
+                    report_data.append({
+                        'ingredient_name': ingredient_name,
+                        'amount': amount,
+                    })
+
+    context = {
+        'date': date_obj,
+        'report_data': report_data,
+    }
+
+    return render(request, 'record/consumptionreport.html', context)
