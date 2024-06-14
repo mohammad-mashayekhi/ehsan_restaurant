@@ -211,8 +211,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="cards-actions.html" class="menu-link">
+                <li class="menu-item {% if request.resolver_match.view_name == 'record:claimsdebts' %} active {% endif %}">
+                    <a href="#" id="dynamicMenuLinkClaimsDebts" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/moneybag.png' %}" alt="Dashboard Icon" width="20"
                                 height="20">
@@ -338,13 +338,15 @@
                 var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRecipeSale = '{% url "recipe:salereport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlMonthReport = '/record/report/' + year + '-' + month + '-01' ;
+                var newUrlClaimsDebts =  '{% url "record:claimsdebts" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
 
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
                 var menuLinkRepository = document.getElementById('dynamicMenuLinkRepository');
                 var menuLinkRecipeSale = document.getElementById('dynamicMenuLinkRecipeSale');
                 var menuLinkMonthReport = document.getElementById('dynamicMenuLinkMonthReport');
-
+                var menuLinkClaimsDebts = document.getElementById('dynamicMenuLinkClaimsDebts');
+                
                 if (menuLinkFoodstuff) {
                     menuLinkFoodstuff.href = newUrlFoodstufd;
                 }
@@ -356,6 +358,9 @@
                 }
                 if (menuLinkMonthReport) {
                     menuLinkMonthReport.href = newUrlMonthReport;
+                }
+                if (menuLinkClaimsDebts) {
+                    menuLinkClaimsDebts.href = newUrlClaimsDebts;
                 }
             });
         </script>

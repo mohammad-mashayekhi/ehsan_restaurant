@@ -63,10 +63,12 @@
     .form-control-sm{
         border-color: white !important;
     }
-    .btn-arrow{
+    .btn-arrow {
         background-color: #FF8A00;
         color: white;
-        width: 0.2vw;
+        width: 1%;
+        height: 1%;
+        padding: 1%;
     }
     #categoryFilter{
         margin-right: 20px;
@@ -104,7 +106,7 @@
     <div class="card mb-4" style="background-color: #d8f9ff; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-            <input class="form-control-sm" type="date" id="date" name="date" value="{{ date }}">
+            <input class="form-control-sm btn" type="date" id="date" name="date" value="{{ date }}">
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <select id="categoryFilter"  class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>

@@ -103,6 +103,7 @@ def add_claimsdebts(request, date):
         
 
     return render(request, 'record/claimsdebts.html', {
+        'date': date,
         'claims_form': claims_form,
         'debts_form': debts_form,
         'claims_formset': claims_formset,

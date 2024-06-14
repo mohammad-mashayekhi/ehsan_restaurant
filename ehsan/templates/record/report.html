@@ -51,17 +51,19 @@
   .bt-in a {
     color: black !important;
   }
-  .btn-arrow{
-        background-color: #FF8A00;
-        color: white;
-        width: 0.2vw;
-    }
-    .card_head_title{
-      font-size: 1vw;
-      color: #d8f9ff;
-      padding: 5px;
-      background: #2CA9C9 !important;
-    }
+  .btn-arrow {
+    background-color: #FF8A00;
+    color: white;
+    width: 1%;
+    height: 1%;
+    padding: 1%;
+  }
+  .card_head_title{
+    font-size: 1vw;
+    color: #d8f9ff;
+    padding: 5px;
+    background: #2CA9C9 !important;
+  }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="fw-bold py-3 mb-4">
@@ -73,8 +75,8 @@
       <div class="card-header" style="margin-inline: 60px;">
         <button class="btn btn-primary" style="float: left;" type="submit">ذخیره</button>
         <button class="btn-arrow btn" id="prevMonthBtn"><< </button>
-        <input class="form-control-sm" type="month" id="month" name="date" value="{{ date }}">
-        <button class="btn-arrow btn" id="nextMonthBtn">>></button>
+        <input class="form-control-sm btn" type="month" id="month" name="date" value="{{ date }}">
+        <button class="btn btn-arrow" id="nextMonthBtn">>></button>
       </div>
       <div class="row">
         <div class="col-sm text-center">

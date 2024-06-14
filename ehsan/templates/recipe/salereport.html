@@ -43,9 +43,10 @@
     .btn-arrow {
         background-color: #FF8A00;
         color: white;
-        width: 0.2vw;
+        width: 1%;
+        height: 1%;
+        padding: 1%;
     }
-
     /* Styles to reduce row height */
     .table-striped td {
         padding: 4px !important;
@@ -67,7 +68,7 @@
         <div class="card-header" style="margin-inline: 60px;">
             <a href="{% url 'recipe:upload_file' %}" class="btn btn-primary" style="float: left;"> آپلود فایل</a>
             <button class="btn-arrow btn" id="prevDayBtn"><< </button>
-            <input class="form-control-sm" type="date" id="date" name="date" value="{{ date }}">
+            <input class="form-control-sm btn" type="date" id="date" name="date" value="{{ date }}">
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <div id="datatable_filter" class="form-control-sm search-container">
                 <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">

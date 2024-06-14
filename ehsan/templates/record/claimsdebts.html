@@ -54,7 +54,11 @@
     .form-group {
         margin-bottom: 20px;
     }
-
+    .btn-arrow{
+        background-color: #FF8A00;
+        color: white;
+        width: 0.2vw;
+    }
     .card_head_title {
         font-size: 1vw;
         color: #d8f9ff;
@@ -68,7 +72,11 @@
         <span class="text-muted fw-light">مطالبات و بدهی‌ها/</span> افزودن مطالبات و بدهی‌ها
     </h4>
     <div class="card mb-4" style="background-color: #d8f9ff; margin: 20px; box-shadow: none;">
-        <div class="card-header" style="margin-inline: 60px;"></div>
+        <div class="card-header" style="margin-inline: 60px;">
+            <button class="btn-arrow btn" id="prevDayBtn"><<</button>
+            <input class="form-control-sm btn" type="date" id="date" name="date" value="{{ date }}">
+            <button class="btn-arrow btn" id="nextDayBtn">>></button>
+        </div>
         <div class="card-body">
             <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
                 <div class="card-body">
@@ -204,5 +212,52 @@
         $('#id_' + prefix + '-TOTAL_FORMS').val(count);
     }
     });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            var dateInput = document.getElementById('date');
+            var prevDayBtn = document.getElementById('prevDayBtn');
+            var nextDayBtn = document.getElementById('nextDayBtn');
+
+            // چک کردن مقدار اولیه تاریخ و تنظیم مقدار پیش‌فرض اگر تاریخی انتخاب نشده باشد
+            if (!dateInput.value) {
+                dateInput.value = new Date().toISOString().slice(0, 10); // تنظیم مقدار امروز
+            }
+
+            function goToSelectedDate() {
+                var selectedDate = dateInput.value;
+                var url = "/record/claimsdebts/" + selectedDate + "/";
+                window.location.href = url;
+            }
+
+            prevDayBtn.addEventListener('click', function () {
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() - 15);
+                dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate();
+            });
+
+            nextDayBtn.addEventListener('click', function () {
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() + 15);
+                dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate();
+            });
+
+            dateInput.addEventListener('change', goToSelectedDate);
+
+            var currentUrl = window.location.href;
+            var currentDateStr = currentUrl.split('/').pop().slice(0, 10);
+            var dateParts = currentDateStr.split('-');
+            var currentDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+
+            nextDayBtn.addEventListener('click', function () {
+                currentDate.setDate(currentDate.getDate() + 15);
+                var nextDateStr = currentDate.toISOString().slice(0, 10);
+                var url = "/record/claimsdebts/" + nextDateStr + "/";
+                window.location.href = url;
+            });
+        });
+
 </script>
 {% endblock %}
