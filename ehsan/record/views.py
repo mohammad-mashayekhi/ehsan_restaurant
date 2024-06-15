@@ -118,8 +118,12 @@ from datetime import datetime
 from recipe.models import Recipe, RecipeSaleFile
 from repository.models import Repository
 from foodstuff.models import Stuffs , Price
+import jdatetime
 
 def consumptionreport(request, date):
+    gregorian_date = datetime.strptime(date, '%Y-%m-%d')
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+    
     try:
         date_obj = datetime.strptime(date, '%Y-%m-%d').date()
     except ValueError:
@@ -217,6 +221,7 @@ def consumptionreport(request, date):
 
     context = {
         'date': date,
+        'jalali_date': jalali_date,
         'date_obj': date_obj,
         'report_data': report_data,
         'total_recipe_amount': total_recipe_amount,

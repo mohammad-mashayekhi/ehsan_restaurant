@@ -106,7 +106,7 @@
     <div class="card mb-4" style="background-color: #d8f9ff; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-            <input class="form-control-sm btn" type="date" id="date" name="date" value="{{ date }}">
+            <input class='form-control-sm btn date' type="text" id="date" value="{{ date }}"/>
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <select id="categoryFilter"  class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
@@ -169,6 +169,9 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
+    <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var dateInput = document.getElementById('date');
@@ -236,6 +239,16 @@
                 });
             });
         });
+        $("#date").persianDatepicker({
+                showGregorianDate: true,
+                formatDate: "YYYY-MM-DD",
+                onSelect: function () { 
+                    var selectedDate = document.getElementById('date').value;
+                    console.log(selectedDate)
+                    var url = "/repository/in/" + selectedDate + "/";
+                    window.location.href = url;            
+                }, 
+            });
     </script>
 
     <script src="{% static 'vendor/js/jquery.min.js' %}"></script>

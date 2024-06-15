@@ -42,7 +42,6 @@ def edit_stuff(request, pk):
 from django.shortcuts import render, redirect
 from .models import Price, Stuffs
 from .forms import PriceForm
-import jdatetime
 
 
 from datetime import datetime

@@ -88,7 +88,7 @@
     <div class="card mb-4" style="background-color: #d8f9ff; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
             <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-            <input class="form-control-sm btn " type="date" id="date" name="date" value="{{ date }}">
+            <input class='form-control-sm btn date' type="text" id="date" value="{{ date }}"/>
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <div id="datatable_filter" class="form-control-sm search-container">
                 <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
@@ -151,6 +151,9 @@
 
     <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
 
+    <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
+    <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var dateInput = document.getElementById('date');
@@ -164,6 +167,7 @@
 
             function goToSelectedDate() {
                 var selectedDate = dateInput.value;
+                console.log(selectedDate)
                 var url = "/record/consumptionreport/" + selectedDate + "/";
                 window.location.href = url;
             }
@@ -184,7 +188,9 @@
 
             dateInput.addEventListener('change', goToSelectedDate);
 
-
+            dateInput.addEventListener('input', function () {
+                goToSelectedDate();
+            });
             var currentUrl = window.location.href;
             var currentDateStr = currentUrl.split('/').pop().slice(0, 10);
             var dateParts = currentDateStr.split('-');
@@ -225,7 +231,16 @@
                 });
             });
         });
-
+        $("#date").persianDatepicker({
+                showGregorianDate: true,
+                formatDate: "YYYY-MM-DD",
+                onSelect: function () { 
+                    var selectedDate = document.getElementById('date').value;
+                    console.log(selectedDate)
+                    var url = "/record/consumptionreport/" + selectedDate + "/";
+                    window.location.href = url;            
+                }, 
+            });
     </script>
     <script>
         $(document).ready(function () {
