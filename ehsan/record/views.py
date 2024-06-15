@@ -112,17 +112,12 @@ def add_claimsdebts(request, date):
         'debts': debts,
     })
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from recipe.models import Recipe, RecipeSaleFile
-from datetime import datetime
-from django.db.models import Sum
-from foodstuff.models import Stuffs
-
 from django.shortcuts import render, HttpResponse
 from django.utils import timezone
 from datetime import datetime
 from recipe.models import Recipe, RecipeSaleFile
+from repository.models import Repository
+from foodstuff.models import Stuffs , Price
 
 def consumptionreport(request, date):
     try:
@@ -133,6 +128,19 @@ def consumptionreport(request, date):
     # Retrieve all RecipeSaleFile records for the given date
     sales = RecipeSaleFile.objects.filter(created_at=date_obj)
     report_data = []
+
+    # Retrieve the prices for the given date
+    try:
+        price_entry = Price.objects.get(date=date_obj)
+        prices = price_entry.prices
+    except Price.DoesNotExist:
+        prices = {}
+
+    total_recipe_amount = 0
+    total_out_quantity = 0
+    total_difference = 0
+    total_percentage_difference = 0
+    total_loss_amount = 0
 
     for sale in sales:
         # Parse recipe_prices JSON data
@@ -149,29 +157,73 @@ def consumptionreport(request, date):
         
             # Calculate total ingredients needed based on the sales quantity
             total_ingredients = {}
-            for ingredient_name, quantity in recipe.ingredients.items():
-                total_ingredients[ingredient_name] = quantity * count
+            for ingredient_id, quantity in recipe.ingredients.items():
+                total_ingredients[ingredient_id] = quantity * count
 
             # Iterate over total_ingredients and prepare data for report_data
-            for ingredient_name, amount in total_ingredients.items():
+            for ingredient_id, amount in total_ingredients.items():
+                ingredient = get_object_or_404(Stuffs, stuff_id=ingredient_id)
+                ingredient_name = ingredient.stuff_name
+                category_name = ingredient.stuff_category.cat_name
+
+                # Initialize out_quantity as 0
+                out_quantity = 0
+
+                # Retrieve the repository out entries for the ingredient on the given date
+                out_entries = Repository.objects.filter(date=date_obj, type='out')
+                for entry in out_entries:
+                    out_quantity += int(entry.quantities.get(str(ingredient_id), 0))
+
+                # Calculate the difference and percentage difference
+                difference = out_quantity - amount
+                percentage_difference = (difference / amount) * 100 if amount != 0 else 0
+
+                # Retrieve the price for the ingredient and convert to float
+                price_per_unit = float(prices.get(str(ingredient_id), 0))
+                loss_amount = difference * price_per_unit
+
+                # Aggregate totals
+                total_recipe_amount += amount
+                total_out_quantity += out_quantity
+                total_difference += difference
+                total_loss_amount += loss_amount
+
                 # Check if ingredient_name already exists in report_data
                 found = False
                 for item in report_data:
                     if item['ingredient_name'] == ingredient_name:
                         item['amount'] += amount
+                        item['out_quantity'] += out_quantity
+                        item['difference'] += difference
+                        item['loss_amount'] += loss_amount
+                        item['percentage_difference'] = (item['difference'] / item['amount']) * 100 if item['amount'] != 0 else 0
                         found = True
                         break
-                
+
                 if not found:
                     # Add new entry for the ingredient
                     report_data.append({
                         'ingredient_name': ingredient_name,
+                        'category_name': category_name,
                         'amount': amount,
+                        'out_quantity': out_quantity,
+                        'difference': difference,
+                        'percentage_difference': percentage_difference,
+                        'loss_amount': loss_amount,
                     })
 
+    # Calculate total percentage difference
+    total_percentage_difference = (total_difference / total_recipe_amount) * 100 if total_recipe_amount != 0 else 0
+
     context = {
-        'date': date_obj,
+        'date': date,
+        'date_obj': date_obj,
         'report_data': report_data,
+        'total_recipe_amount': total_recipe_amount,
+        'total_out_quantity': total_out_quantity,
+        'total_difference': total_difference,
+        'total_percentage_difference': total_percentage_difference,
+        'total_loss_amount': total_loss_amount,
     }
 
     return render(request, 'record/consumptionreport.html', context)

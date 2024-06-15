@@ -1,32 +1,255 @@
 {% extends 'main/main.html' %}
 {% load static %}
+{% load humanizelib %}
 {% block contant %}
-<div class="container">
-    <h4>گزارش مصرف مواد اولیه برای تاریخ {{ date }}</h4>
-    <hr>
-    {% if report_data %}
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>نام ماده اولیه</th>
-                        <th>مقدار مصرف شده</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in report_data %}
-                    <tr>
-                        <td>{{ item.ingredient_name }}</td>
-                        <td>{{ item.amount }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<style>
+    .small-td {
+        width: 15%;
+    }
+
+    .th {
+        background-color: #6CC3DA !important;
+        color: white !important;
+        font-size: 1vw !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center;
+    }
+    .thnew {
+        background-color: #FF8A00 !important;
+        color: white !important;
+        font-size: 1vw !important;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        text-align-last: center;
+    }
+
+    /* .customtable {
+        font-weight: bold !important;
+        font-size: large;
+    } */
+
+    .price-input {
+        padding: 3px !important;
+        border-color: black 20px;
+        font-size: larger;
+    }
+
+    #table-body {
+        font-size: 0.9vw !important;
+    }
+
+    .search-container {
+        display: inline-block;
+        /* margin-left: 10px; */
+    }
+
+    .table-responsive {
+        direction: rtl;
+    }
+
+    .form-control-sm {
+        border-color: white !important;
+    }
+
+    .btn-arrow {
+        background-color: #FF8A00;
+        color: white;
+        width: 1%;
+        height: 1%;
+        padding: 1%;
+    }
+
+    #categoryFilter {
+        margin-right: 20px;
+    }
+
+    /* Styles to reduce row height */
+    .table-striped td {
+        padding: 4px !important;
+        /* Adjust the padding as needed */
+        font-size: 0.8vw;
+        /* Adjust the font size if needed */
+    }
+
+    .table-striped tr {
+        line-height: 1.5 !important;
+        /* Reduce the line height */
+    }
+</style>
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold py-3 mb-4">
+        <span class="text-muted fw-light">گزارش/</span> مصرف روزانه 
+    </h4>
+    <div class="card mb-4" style="background-color: #d8f9ff; box-shadow: none;">
+        <div class="card-header" style="margin-inline: 60px;">
+            <button class="btn-arrow btn" id="prevDayBtn"><<</button>
+            <input class="form-control-sm btn " type="date" id="date" name="date" value="{{ date }}">
+            <button class="btn-arrow btn" id="nextDayBtn">>></button>
+            <div id="datatable_filter" class="form-control-sm search-container">
+                <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
+                <div class="card-body">
+                    {% if report_data %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="datatable" class="table table-striped text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="th">عنوان</th>
+                                        <th class="th">دسته بندی</th>
+                                        <th class="th">رسپی</th>
+                                        <th class="th">خروجی انبار</th>
+                                        <th class="th">اختلاف</th>
+                                        <th class="th">درصد</th>
+                                        <th class="th">قیمت</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    {% for item in report_data %}
+                                    <tr>
+                                        <td class="large">{{ item.ingredient_name }}</td>
+                                        <td>{{ item.category_name }}</td>
+                                        <td>{{ item.amount|floatformat:"0"|intcomma }}</td>
+                                        <td>{{ item.out_quantity }}</td>
+                                        <td style="direction:ltr;">{{ item.difference|floatformat:"0" }}</td>
+                                        <td style="direction:ltr;">{{ item.percentage_difference|floatformat:"0" }}%</td>
+                                        <td style="direction:ltr;">{{ item.loss_amount|floatformat:"0"|intcomma }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th class="thnew large">جمع مقادیر</th>
+                                        <th class="thnew"></th>
+                                        <th class="thnew">{{ total_recipe_amount|floatformat:"0"|intcomma }}</th>
+                                        <th class="thnew">{{ total_out_quantity }}</th>
+                                        <th class="thnew" style="direction:ltr;">{{ total_difference|floatformat:"0"|intcomma }}</th>
+                                        <th class="thnew" style="direction:ltr;">{{ total_percentage_difference|floatformat:"0"|intcomma }}%</th>
+                                        <th class="thnew" style="direction:ltr;">{{ total_loss_amount|floatformat:"0"|intcomma }}</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p>هیچ اطلاعاتی برای نمایش وجود ندارد.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-    {% else %}
-    <p>هیچ اطلاعاتی برای نمایش وجود ندارد.</p>
-    {% endif %}
+
+    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
+
+    <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var dateInput = document.getElementById('date');
+            var prevDayBtn = document.getElementById('prevDayBtn');
+            var nextDayBtn = document.getElementById('nextDayBtn');
+
+            // چک کردن مقدار اولیه تاریخ و تنظیم مقدار پیش‌فرض اگر تاریخی انتخاب نشده باشد
+            if (!dateInput.value) {
+                dateInput.value = new Date().toISOString().slice(0, 10); // تنظیم مقدار امروز
+            }
+
+            function goToSelectedDate() {
+                var selectedDate = dateInput.value;
+                var url = "/record/consumptionreport/" + selectedDate + "/";
+                window.location.href = url;
+            }
+
+            prevDayBtn.addEventListener('click', function () {
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() - 1);
+                dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate();
+            });
+
+            nextDayBtn.addEventListener('click', function () {
+                var currentDate = new Date(dateInput.value);
+                currentDate.setDate(currentDate.getDate() + 1);
+                dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate();
+            });
+
+            dateInput.addEventListener('change', goToSelectedDate);
+
+
+            var currentUrl = window.location.href;
+            var currentDateStr = currentUrl.split('/').pop().slice(0, 10);
+            var dateParts = currentDateStr.split('-');
+            var currentDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+
+            nextDayBtn.addEventListener('click', function () {
+                currentDate.setDate(currentDate.getDate() + 1);
+                var nextDateStr = currentDate.toISOString().slice(0, 10);
+                var url = "/record/consumptionreport/" + nextDateStr + "/";
+                window.location.href = url;
+            });
+
+
+            // Function to format the number
+            function formatNumber(input) {
+                var value = input.value.replace(/,/g, '');
+                if (value) {
+                    input.value = parseFloat(value).toLocaleString('en-US');
+                }
+            }
+
+            // Select all price input fields
+            var priceInputs = document.querySelectorAll('.price-input');
+
+            // Format the price inputs on page load
+            priceInputs.forEach(function (input) {
+                formatNumber(input);
+            });
+
+            // Add event listeners to format the numbers as the user types
+            priceInputs.forEach(function (input) {
+                input.addEventListener('input', function () {
+                    formatNumber(input);
+                });
+
+                input.addEventListener('blur', function () {
+                    formatNumber(input);
+                });
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#datatable').DataTable({
+                paging: false,
+                dom: 'lrtip', // remove the default search box
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 380
+            });
+            $('#categoryFilter').on('change', function () {
+                var category = $(this).val();
+                table.column(1).search(category).draw();
+            });
+            $('#search-box').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+            $('.dataTables_info').css('display', 'none');
+        });
+    </script>
 </div>
 {% endblock %}

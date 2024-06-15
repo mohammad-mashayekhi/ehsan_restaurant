@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'recipe',
     'django.contrib.postgres',
     'record',
+    'django_humanize',
 ]
 
 MIDDLEWARE = [
