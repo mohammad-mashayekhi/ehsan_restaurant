@@ -3,6 +3,7 @@ from .models import Repository
 from .forms import RepositoryForm
 from datetime import datetime
 from foodstuff.models import Stuffs,Category
+import jdatetime
 
 def repository(request):
     return render(request, 'repository/repository.html')
@@ -42,9 +43,11 @@ def in_repository(request, date):
             initial_form_data.update(initial_data)  # فقط اگر initial_data موجود باشد، آن را به initial_form_data اضافه کنید
         form = RepositoryForm(initial=initial_form_data)  # استفاده از یک دیکشنری برای ارسال به عنوان initial
     
+    
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
     categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
     stuffs = Stuffs.objects.select_related('stuff_category').all()
-    return render(request, 'repository/in_repository.html', {'form': form, 'date': date, 'stuffs': stuffs, 'categories': categories})
+    return render(request, 'repository/in_repository.html', {'form': form,'jalali_date':jalali_date ,'date': date, 'stuffs': stuffs, 'categories': categories})
 
 def out_repository(request, date):
     gregorian_date = datetime.strptime(date, '%Y-%m-%d').date()  # تبدیل تاریخ به فرمت میلادی
