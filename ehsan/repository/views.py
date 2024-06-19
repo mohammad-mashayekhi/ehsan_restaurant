@@ -45,7 +45,7 @@ def in_repository(request, date):
     
     
     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
-    categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
+    categories = Category.objects.all().order_by('cat_id')  # اضافه کردن دسته بندی‌ها
     stuffs = Stuffs.objects.select_related('stuff_category').all()
     return render(request, 'repository/in_repository.html', {'form': form,'jalali_date':jalali_date ,'date': date, 'stuffs': stuffs, 'categories': categories})
 
@@ -85,10 +85,11 @@ def out_repository(request, date):
             initial_data = {'type': initial_type,**{'stuff_' + str(stuff_id): 0 for stuff_id in all_stuff_ids}}
             initial_form_data.update(initial_data)  # فقط اگر initial_data موجود باشد، آن را به initial_form_data اضافه کنید
         form = RepositoryForm(initial=initial_form_data)  # استفاده از یک دیکشنری برای ارسال به عنوان initial
-    
-    categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
+        
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+    categories = Category.objects.all().order_by('cat_id')  # اضافه کردن دسته بندی‌ها
     stuffs = Stuffs.objects.select_related('stuff_category').all()
-    return render(request, 'repository/out_repository.html', {'form': form, 'date': date, 'stuffs': stuffs, 'categories': categories})
+    return render(request, 'repository/out_repository.html', {'form': form,'jalali_date':jalali_date,'date': date, 'stuffs': stuffs, 'categories': categories})
 
 from django.http import HttpResponse
 from .models import Repository

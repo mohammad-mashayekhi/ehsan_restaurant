@@ -118,7 +118,7 @@
             <!-- <a href="{% url 'foodstuff:addfoodstuffs' %}" class="btn btn-primary" style="float: left;"> افزودن ماده
                 غذایی جدید</a> -->
             <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-            <input class='form-control-sm btn date' type="text" id="date" value="{{ jalali_date }}"/>
+            <input class='form-control-sm date' style="text-align: center;" type="text" id="date" value="{{ jalali_date }}"/>
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <select id="categoryFilter" class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
@@ -255,8 +255,8 @@
             });
         });
         $("#date").persianDatepicker({
-                showGregorianDate: true,
-                formatDate: "YYYY-MM-DD",
+            showGregorianDate: true,
+            formatDate: "YYYY-MM-DD",
                 onSelect: function () { 
                     var selectedDate = document.getElementById('date').value;
                     console.log(selectedDate)
