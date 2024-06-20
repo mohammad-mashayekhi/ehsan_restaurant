@@ -143,18 +143,18 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
-        // $('.select2').select2({
-        //     width: '100%'
-        // });
+        $('.select2').select2({
+            width: '100%'
+        });
 
         let form_idx = {{ formset.total_form_count }};
 
     $('#add-ingredient').click(function () {
         let new_form = $('#ingredient-forms .ingredient-form:first').clone();
 
-        // if (new_form.find('.select2').length) {
-        //     new_form.find('select').select2('destroy');
-        // }
+        if (new_form.find('.select2').length) {
+            new_form.find('select').select2('destroy');
+        }
 
         new_form.find('input, select').each(function () {
             let name = $(this).attr('name').replace(/\d+/, form_idx);
@@ -169,9 +169,9 @@
 
         new_form.appendTo(current_row);
 
-        // new_form.find('.select2').select2({
-        //     width: '100%'
-        // });
+        new_form.find('.select2').select2({
+            width: '100%'
+        });
 
         form_idx++;
         updateManagementForm(form_idx);
