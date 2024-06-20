@@ -20,7 +20,7 @@ class IngredientForm(forms.Form):
     stuff_name = forms.ModelChoiceField(
         queryset=Stuffs.objects.all(),
         empty_label=None,
-        widget=forms.Select(attrs={'class': 'form-control'}),
+        widget=forms.Select(attrs={'class': 'form-control select2'}),
         label='نام ماده اولیه'
     )
     amount = forms.FloatField(

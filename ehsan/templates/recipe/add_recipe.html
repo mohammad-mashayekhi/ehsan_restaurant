@@ -1,6 +1,8 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <style>
     .small-td {
         width: 15%;
@@ -87,7 +89,7 @@
                             <div class="row">
                                 {% for form in formset %}
                                 <div class="col-md-3 ingredient-form form-group">
-                                    <select name="ingredients-{{ forloop.counter0 }}-stuff_name" class="form-control" id="id_ingredients-{{ forloop.counter0 }}-stuff_name">
+                                    <select name="ingredients-{{ forloop.counter0 }}-stuff_name" class="form-control select2" id="id_ingredients-{{ forloop.counter0 }}-stuff_name">
                                         <option value="" disabled selected>انتخاب کنید</option>
                                         {% for category in categories %}
                                             <optgroup label="{{ category.cat_name }}">
@@ -123,8 +125,13 @@
 {% block pagejs %}
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     $(document).ready(function () {
+        $('.select2').select2({
+            width: '100%'
+        });
         let form_idx = {{ formset.total_form_count }};
 
     $('#add-ingredient').click(function () {
@@ -142,7 +149,10 @@
         }
 
         new_form.appendTo(current_row);
-
+        new_form.find('.select2').select2({
+                width: '100%'
+            });
+            
         form_idx++;
         console.log(form_idx)
         updateManagementForm(form_idx);
