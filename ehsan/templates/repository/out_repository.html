@@ -134,7 +134,7 @@
         <div class="card-body">
             <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
                 <div class="card-body">
-                    <form class="form" method="post">
+                    <form id="formrepo" class="form" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="type" value="{{ form.initial.type }}">
                         <div class="table-responsive">
@@ -281,6 +281,17 @@
                  table.search(this.value).draw();
              });
              $('.dataTables_info').css('display', 'none');
+             $('#formrepo').on('submit', function (e) {
+                $('#search-box').val(''); // پاک کردن محتوای فیلد جستجو
+                table.search('').columns().search('').draw(); // پاک کردن فیلترها
+                table.rows().every(function () {
+                    this.nodes().to$().show();
+                });
+                table.columns().every(function () {
+                    this.search('');
+                });
+                table.draw();
+            });
          });
      </script>
      <script>
