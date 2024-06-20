@@ -4,7 +4,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
 
 <style>
-    
     .small-td {
         width: 15%;
     }
@@ -108,7 +107,7 @@
     <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
             <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-            <input class='form-control-sm date' style="text-align: center;" type="text" id="date" value="{{ jalali_date }}"/>
+            <input class='form-control-sm date' style="text-align: center;"  type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <select id="categoryFilter"  class="form-control-sm">
                 <option value="">همه دسته بندی ها</option>
@@ -176,71 +175,45 @@
     <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
 
     <script>
+        var dateInput = document.getElementById('date');
+        var prevDayBtn = document.getElementById('prevDayBtn');
+        var nextDayBtn = document.getElementById('nextDayBtn');
+
         document.addEventListener('DOMContentLoaded', function () {
-            var dateInput = document.getElementById('date');
-            var prevDayBtn = document.getElementById('prevDayBtn');
-            var nextDayBtn = document.getElementById('nextDayBtn');
-
+        
             if (!dateInput.value) {
-                dateInput.value = new Date().toISOString().slice(0, 10);
-            }
-
-            function goToSelectedDate(currentDate) {
-                var selectedDate = currentDate;
-                console.log("Selected Date (Jalali):", selectedDate);
-
-                // Check if jalaali is loaded
-                if (typeof jalaali !== 'undefined') {
-                    console.log("jalaali-js is loaded");
-                } else {
-                    console.error("jalaali-js is not loaded");
-                    return;
-                }
-
-                // Convert Jalali date to Gregorian
-                var parts = selectedDate.split('-');
-                if (parts.length !== 3) {
-                    console.error("Invalid date format");
-                    return;
-                }
-
-                var jYear = parseInt(parts[0], 10);
-                var jMonth = parseInt(parts[1], 10);
-                var jDay = parseInt(parts[2], 10);
-
-                console.log("Jalali Date Parts:", jYear, jMonth, jDay);
-
-                var gDate = jalaali.toGregorian(jYear, jMonth, jDay);
-
-                var gYear = gDate.gy;
-                var gMonth = ('0' + gDate.gm).slice(-2);  // Ensure month is 2 digits
-                var gDay = ('0' + gDate.gd).slice(-2);    // Ensure day is 2 digits
-
-                var gregorianDate = `${gYear}-${gMonth}-${gDay}`;
-                console.log("Converted Date (Gregorian):", gregorianDate);
-
-                var url = "/repository/in/" + gregorianDate + "/";
-                // window.location.href = url;
+                dateInput.value = '{{date}}';
             }
 
             prevDayBtn.addEventListener('click', function () {
-                var currentDate = new Date(dateInput.value);
-                console.log("currentDate:", currentDate);
-                currentDate.setDate(currentDate.getDate() - 1);
-                // dateInput.value = currentDate.toISOString().slice(0, 10);
-                goToSelectedDate(currentDate.toISOString().slice(0, 10));
+                var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
+                var dateObject = new Date(placeholderValue); // تبدیل به Date object
+                dateObject.setDate(dateObject.getDate() - 1);
+                var year = dateObject.getFullYear();
+                var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
+                var day = dateObject.getDate();
+                var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+
+                var url = "/repository/in/" + formattedDate + "/";
+                window.location.href = url;
             });
 
             nextDayBtn.addEventListener('click', function () {
-                var currentDate = new Date(dateInput.value);
-                console.log("currentDate:", currentDate);
-                currentDate.setDate(currentDate.getDate() + 1);
-                // dateInput.value = currentDate.toISOString().slice(0, 10);
-                goToSelectedDate();
+                var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
+                var dateObject = new Date(placeholderValue); // تبدیل به Date object
+                dateObject.setDate(dateObject.getDate() + 1);
+                var year = dateObject.getFullYear();
+                var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
+                var day = dateObject.getDate();
+                var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+
+                var url = "/repository/in/" + formattedDate + "/";
+                window.location.href = url;
             });
 
             dateInput.addEventListener('change', goToSelectedDate);
 
+           
             function formatNumber(input) {
                 var value = input.value.replace(/,/g, '');
                 if (value) {

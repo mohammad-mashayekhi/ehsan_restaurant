@@ -253,6 +253,8 @@ from .models import RecipeSaleFile
 
 def salereport(request, date):
     parsed_date = parse_date(date).strftime('%Y-%m-%d')
+    gregorian_date = datetime.strptime(date, '%Y-%m-%d').date()  # تبدیل تاریخ به فرمت میلادی
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
     if not parsed_date:
             raise ValueError("Invalid date format")
     try:
@@ -261,12 +263,14 @@ def salereport(request, date):
         context = {
             'file': file,
             'date': date,
+            'jalali_date':jalali_date,
         }
         return render(request, 'recipe/salereport.html', context)
         
     except RecipeSaleFile.DoesNotExist:
         context = {
             'date': date,
+            'jalali_date':jalali_date,
         }
         return render(request, 'recipe/salereport.html', context)
     except ValueError as e:

@@ -44,8 +44,6 @@ def in_repository(request, date):
         form = RepositoryForm(initial=initial_form_data)  # استفاده از یک دیکشنری برای ارسال به عنوان initial
     
     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
-    print(jalali_date)
-
     categories = Category.objects.all().order_by('cat_id')  # اضافه کردن دسته بندی‌ها
     stuffs = Stuffs.objects.select_related('stuff_category').all()
     return render(request, 'repository/in_repository.html', {'form': form,'jalali_date':jalali_date ,'date': date, 'stuffs': stuffs, 'categories': categories})
