@@ -7,6 +7,7 @@
     .small-td {
         width: 15%;
     }
+
     .th {
         background-color: #479054c8 !important;
         color: white !important;
@@ -16,16 +17,19 @@
         top: 0;
         z-index: 2;
         text-align-last: center;
-        letter-spacing:0px !important;
+        letter-spacing: 0px !important;
     }
+
     .price-input {
         padding: 3px !important;
         border-color: black 20px;
         font-size: larger;
     }
+
     .table-responsive table {
         direction: rtl;
     }
+
     .bt-in {
         background-color: #c1e4ea;
         padding: 30px;
@@ -57,13 +61,16 @@
     .bt-out a {
         color: black !important;
     }
+
     .search-container {
         display: inline-block;
         margin-left: 10px;
     }
-    .form-control-sm{
+
+    .form-control-sm {
         border-color: white !important;
     }
+
     .btn-arrow {
         background-color: #FF8A00;
         color: white;
@@ -71,16 +78,21 @@
         height: 1%;
         padding: 1%;
     }
-    #categoryFilter{
+
+    #categoryFilter {
         margin-right: 20px;
     }
+
     .table-striped td {
-        padding: 4px !important; /* Adjust the padding as needed */
-        font-size: 0.8vw; /* Adjust the font size if needed */
+        padding: 4px !important;
+        /* Adjust the padding as needed */
+        font-size: 0.8vw;
+        /* Adjust the font size if needed */
     }
 
     .table-striped tr {
-        line-height: 1 !important; /* Reduce the line height */
+        line-height: 1 !important;
+        /* Reduce the line height */
     }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -106,19 +118,20 @@
     </div>
     <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;margin-top:-20px">
         <div class="card-header" style="margin-inline: 60px;">
-            <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-            <input class='form-control-sm date' style="text-align: center;"  type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
-            <button class="btn-arrow btn" id="nextDayBtn">>></button>
-            <select id="categoryFilter"  class="form-control-sm">
-                <option value="">همه دسته بندی ها</option>
-                {% for category in categories %}
-                <option value="{{ category.cat_name }}" {% if category.id in selected_category %}selected{% endif %}>
-                    {{ category.cat_name }}</option>
-                {% endfor %}
-            </select>
-            <div id="datatable_filter" class="search-container">
-                <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
-            </div>
+            <button class="btn-arrow btn" id="prevDayBtn"><< </button>
+                    <input class='form-control-sm date' style="text-align: center;" type="text" id="date"
+                        value="{{jalali_date}}" placeholder="{{date}}" />
+                    <button class="btn-arrow btn" id="nextDayBtn">>></button>
+                    <select id="categoryFilter" class="form-control-sm">
+                        <option value="">همه دسته بندی ها</option>
+                        {% for category in categories %}
+                        <option value="{{ category.cat_name }}" {% if category.id in selected_category %}selected{% endif %}>
+                            {{ category.cat_name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div id="datatable_filter" class="search-container">
+                        <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
+                    </div>
         </div>
         <div class="card-body">
             <div class="card mb-4" style="margin-inline: 60px; box-shadow: none;">
@@ -180,7 +193,7 @@
         var nextDayBtn = document.getElementById('nextDayBtn');
 
         document.addEventListener('DOMContentLoaded', function () {
-        
+
             if (!dateInput.value) {
                 dateInput.value = '{{date}}';
             }
@@ -213,7 +226,7 @@
 
             dateInput.addEventListener('change', goToSelectedDate);
 
-           
+
             function formatNumber(input) {
                 var value = input.value.replace(/,/g, '');
                 if (value) {
@@ -238,15 +251,15 @@
             });
         });
         $("#date").persianDatepicker({
-                showGregorianDate: true,
-                formatDate: "YYYY-MM-DD",
-                onSelect: function () { 
-                    var selectedDate = document.getElementById('date').value;
-                    console.log(selectedDate)
-                    var url = "/repository/in/" + selectedDate + "/";
-                    window.location.href = url;            
-                }, 
-            });
+            showGregorianDate: true,
+            formatDate: "YYYY-MM-DD",
+            onSelect: function () {
+                var selectedDate = document.getElementById('date').value;
+                console.log(selectedDate)
+                var url = "/repository/in/" + selectedDate + "/";
+                window.location.href = url;
+            },
+        });
     </script>
 
     <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
@@ -265,7 +278,18 @@
                 paging: false,
                 scrollCollapse: true,
                 scrollX: true,
-                scrollY: 380
+                scrollY: 380,
+                layout: {
+                    topStart: {
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: 'Print current page',
+                                autoPrint: false
+                            }
+                        ]
+                    }
+                }
             });
             $('#categoryFilter').on('change', function () {
                 var category = $(this).val();
