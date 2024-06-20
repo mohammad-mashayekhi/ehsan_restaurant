@@ -4,8 +4,9 @@ from .models import Stuffs, Category,Price
 class StuffsForm(forms.ModelForm):
     class Meta:
         model = Stuffs
-        fields = ['stuff_name', 'stuff_category', 'stuff_scale']
+        fields = ['stuff_id','stuff_name', 'stuff_category', 'stuff_scale']
         widgets = {
+            'stuff_id':forms.TextInput(attrs={'class': 'form-control'}), 
             'stuff_name': forms.TextInput(attrs={'class': 'form-control'}),
             'stuff_category': forms.Select(attrs={'class': 'form-select'}),
             'stuff_scale': forms.Select(attrs={'class': 'form-select'}),

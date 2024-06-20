@@ -13,7 +13,14 @@
         <div class="card mb-4">
           <div class="card-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-3">
+                <div class="mt-2 mb-3">
+                  <label for="stuff_name" class="stuff_name">نام
+                  </label>
+                  {{ form.stuff_id }}
+                </div>
+              </div>
+              <div class="col-md-3">
                 <div class="mt-2 mb-3">
                   <label for="defaultFormControlInput" class="form-label">نام
                   </label>
@@ -21,7 +28,7 @@
                     placeholder="ماده غذایی" aria-describedby="defaultFormControlHelp">
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="mt-2 mb-3">
                   <label for="largeSelect1" class="form-label">دسته بندی</label>
                   <select name="stuff_category" id="largeSelect1" class="form-select">
@@ -31,7 +38,7 @@
                   </select>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <div class="mt-2 mb-3">
                   <label for="largeSelect2" class="form-label">واحد اندازه‌گیری</label>
                   <select name="stuff_scale" id="largeSelect2" class="form-select">

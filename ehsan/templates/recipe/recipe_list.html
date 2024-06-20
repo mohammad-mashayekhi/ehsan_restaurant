@@ -1,5 +1,6 @@
 {% extends 'main/main.html' %}
 {% load static %}
+{% load humanizelib %}
 {% block contant %}
 <style>
     .small-td {
@@ -130,9 +131,9 @@
                                 <tr>
                                     <td class="small-td">{{ price_entry.recipe_id }}</td>
                                     <td class="larege">{{ price_entry.name }}</td>
-                                    <td class="large">{{ price_entry.total_price|floatformat:0 }}</td> <!-- نمایش قیمت کل -->
-                                    <td class="larege">{{ price_entry.standard_price }}</td> <!-- نمایش قیمت معیار -->
-                                    <td class="small-td" style="direction:ltr">{{ price_entry.percentage_difference|floatformat:2 }}</td>
+                                    <td class="large">{{ price_entry.total_price|floatformat:0|intcomma }}</td> <!-- نمایش قیمت کل -->
+                                    <td class="larege">{{ price_entry.standard_price|intcomma }}</td> <!-- نمایش قیمت معیار -->
+                                    <td class="small-td" style="direction:ltr">{{ price_entry.percentage_difference|floatformat:2|intcomma }}</td>
                                     <td class="small-td">
                                         <a href="{% url 'recipe:edit_recipe' price_entry.id %}" class="mdi mdi-pencil"></a>
                                     </td>

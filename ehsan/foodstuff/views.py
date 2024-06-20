@@ -26,9 +26,9 @@ def addfoodstuffs(request):
     
     return render(request, 'foodstuff/add-foodstuffs.html', {'categories': categories,'form': form})
 
-def edit_stuff(request, pk):
+def edit_stuff(request, id):
     today_date = datetime.today().strftime('%Y-%m-%d')
-    stuff = get_object_or_404(Stuffs, pk=pk)
+    stuff = get_object_or_404(Stuffs, id=id)
     if request.method == "POST":
         form = StuffsForm(request.POST, instance=stuff)
         if form.is_valid():
@@ -36,7 +36,7 @@ def edit_stuff(request, pk):
             return redirect(reverse('foodstuff:add_price', kwargs={'date': today_date}))
     else:
         form = StuffsForm(instance=stuff)
-    return render(request, 'foodstuff/edit_stuff.html', {'form': form})
+    return render(request, 'foodstuff/edit_stuff.html', {'form': form ,'id':id})
 
 
 from django.shortcuts import render, redirect
@@ -97,3 +97,11 @@ def add_price(request, date):
         'stuffs': stuffs,
         'categories': categories,
     })
+    
+    
+def delete_stuff(request, id):
+    today_date = datetime.today().strftime('%Y-%m-%d')
+    stuff = get_object_or_404(Stuffs, id=id)
+    stuff.delete()
+    return redirect(reverse('foodstuff:add_price', kwargs={'date': today_date}))
+        

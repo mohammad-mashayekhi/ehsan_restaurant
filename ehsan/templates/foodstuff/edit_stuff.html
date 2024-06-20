@@ -7,25 +7,32 @@
   </h4>
   <div class="row">
     <!-- برچسب شناور (طرح حاشیه دار) -->
-    <form method="post">
-        {% csrf_token %}
+   
         <div class="container mt-4">
             <div class="card mb-4">
                 <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            <div class="mt-2 mb-3">
+                                <label for="stuff_id" class="form-label">آیدی ماده غذایی</label>
+                                {{ form.stuff_id }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
                             <div class="mt-2 mb-3">
                                 <label for="defaultFormControlInput" class="form-label">نام</label>
                                 {{ form.stuff_name }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mt-2 mb-3">
                                 <label for="largeSelect1" class="form-label">دسته بندی</label>
                                 {{ form.stuff_category }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mt-2 mb-3">
                                 <label for="largeSelect2" class="form-label">واحد اندازه‌گیری</label>
                                 {{ form.stuff_scale }}
@@ -33,14 +40,23 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-muted">
-                    {{ form.errors }}
-                    <button type="submit" class="btn btn-primary">ذخیره</button>
-                    <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-outline-secondary">انصراف</a>
+                <div class="card-footer text-muted row">
+                    <div class="col-11">
+                        {{ form.errors }}
+                        <button type="submit" class="btn btn-primary">ذخیره</button>
+                        <a href="#" onclick="window.history.go(-1); return false;" class="btn btn-outline-secondary">انصراف</a>    
+                    </div>
+                    
+                </form>
+                <div class="col-1">
+                    <form method="post" action="{% url 'foodstuff:delete_stuff' id %}" >
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('آیا مطمئن هستید که می‌خواهید این ماده غذایی را حذف کنید؟');">حذف</button>
+                    </form>    
+                </div>
                 </div>
             </div>
         </div>
-    </form>
   </div>
 </div>
 <!-- / Content -->

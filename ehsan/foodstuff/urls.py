@@ -23,7 +23,9 @@ app_name='foodstuff'
 urlpatterns = [
     # path('', foodstuffs , name='foodstuffs'),
     path('add', addfoodstuffs , name='addfoodstuffs'),
-    path('edit-stuff/<str:pk>/', edit_stuff, name='edit_stuff'),
+    path('edit-stuff/<str:id>/', edit_stuff, name='edit_stuff'),
     
     path('price/<str:date>/', add_price, name='add_price'),
+    path('delete/<int:id>/', delete_stuff, name='delete_stuff'),
+
 ]
