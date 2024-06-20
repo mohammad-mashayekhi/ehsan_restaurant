@@ -5,6 +5,7 @@ from .forms import DailyReportForm ,IngredientForm
 
 def report(request, date):
     date_object = datetime.strptime(date, '%Y-%m-%d').replace(day=1)
+    jalali_date = jdatetime.date.fromgregorian(date=date_object).strftime('%Y/%m/%d')
 
     # Get or create MonthlyReport instance for the given date
     report_instance, created = MonthlyReport.objects.get_or_create(date=date_object)
@@ -15,6 +16,7 @@ def report(request, date):
             form.save()
             return render(request, 'record/report.html', {
                 'form': form,
+                'jalali_date': jalali_date,
                 'date': date,
             })
     else:
@@ -22,6 +24,7 @@ def report(request, date):
 
     return render(request, 'record/report.html', {
         'form': form,
+        'jalali_date': jalali_date,
         'date': date,
     })
 
@@ -32,6 +35,9 @@ from .forms import ClaimsForm, DebtsForm, IngredientForm
 from .models import ClaimsDebts
 
 def add_claimsdebts(request, date):
+    gregorian_date = datetime.strptime(date, '%Y-%m-%d')
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+
     try:
         date_obj = datetime.strptime(date, '%Y-%m-%d').date()
     except ValueError:
@@ -104,6 +110,7 @@ def add_claimsdebts(request, date):
 
     return render(request, 'record/claimsdebts.html', {
         'date': date,
+        'jalali_date': jalali_date,
         'claims_form': claims_form,
         'debts_form': debts_form,
         'claims_formset': claims_formset,

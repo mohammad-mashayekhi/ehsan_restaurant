@@ -1,6 +1,8 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
+<script src="https://cdn.jsdelivr.net/npm/jalaali-js/dist/jalaali.min.js"></script>
+
 <style>
     
     .small-td {
@@ -172,6 +174,7 @@
     <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
     <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var dateInput = document.getElementById('date');
@@ -182,39 +185,61 @@
                 dateInput.value = new Date().toISOString().slice(0, 10);
             }
 
-            function goToSelectedDate() {
-                var selectedDate = dateInput.value;
-                var url = "/repository/in/" + selectedDate + "/";
-                window.location.href = url;
+            function goToSelectedDate(currentDate) {
+                var selectedDate = currentDate;
+                console.log("Selected Date (Jalali):", selectedDate);
+
+                // Check if jalaali is loaded
+                if (typeof jalaali !== 'undefined') {
+                    console.log("jalaali-js is loaded");
+                } else {
+                    console.error("jalaali-js is not loaded");
+                    return;
+                }
+
+                // Convert Jalali date to Gregorian
+                var parts = selectedDate.split('-');
+                if (parts.length !== 3) {
+                    console.error("Invalid date format");
+                    return;
+                }
+
+                var jYear = parseInt(parts[0], 10);
+                var jMonth = parseInt(parts[1], 10);
+                var jDay = parseInt(parts[2], 10);
+
+                console.log("Jalali Date Parts:", jYear, jMonth, jDay);
+
+                var gDate = jalaali.toGregorian(jYear, jMonth, jDay);
+
+                var gYear = gDate.gy;
+                var gMonth = ('0' + gDate.gm).slice(-2);  // Ensure month is 2 digits
+                var gDay = ('0' + gDate.gd).slice(-2);    // Ensure day is 2 digits
+
+                var gregorianDate = `${gYear}-${gMonth}-${gDay}`;
+                console.log("Converted Date (Gregorian):", gregorianDate);
+
+                var url = "/repository/in/" + gregorianDate + "/";
+                // window.location.href = url;
             }
 
             prevDayBtn.addEventListener('click', function () {
                 var currentDate = new Date(dateInput.value);
+                console.log("currentDate:", currentDate);
                 currentDate.setDate(currentDate.getDate() - 1);
-                dateInput.value = currentDate.toISOString().slice(0, 10);
-                goToSelectedDate();
+                // dateInput.value = currentDate.toISOString().slice(0, 10);
+                goToSelectedDate(currentDate.toISOString().slice(0, 10));
             });
 
             nextDayBtn.addEventListener('click', function () {
                 var currentDate = new Date(dateInput.value);
+                console.log("currentDate:", currentDate);
                 currentDate.setDate(currentDate.getDate() + 1);
-                dateInput.value = currentDate.toISOString().slice(0, 10);
+                // dateInput.value = currentDate.toISOString().slice(0, 10);
                 goToSelectedDate();
             });
 
             dateInput.addEventListener('change', goToSelectedDate);
-
-            var currentUrl = window.location.href;
-            var currentDateStr = currentUrl.split('/').pop().slice(0, 10);
-            var dateParts = currentDateStr.split('-');
-            var currentDate = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
-
-            nextDayBtn.addEventListener('click', function () {
-                currentDate.setDate(currentDate.getDate() + 1);
-                var nextDateStr = currentDate.toISOString().slice(0, 10);
-                var url = "/repository/in/" + nextDateStr + "/";
-                window.location.href = url;
-            });
 
             function formatNumber(input) {
                 var value = input.value.replace(/,/g, '');

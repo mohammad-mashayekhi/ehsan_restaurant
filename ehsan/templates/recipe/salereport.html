@@ -68,7 +68,7 @@
         <div class="card-header" style="margin-inline: 60px;">
             <a href="{% url 'recipe:upload_file' %}" class="btn btn-primary" style="float: left;"> آپلود فایل</a>
             <button class="btn-arrow btn" id="prevDayBtn"><< </button>
-            <input class="form-control-sm btn" type="date" id="date" name="date" value="{{ date }}">
+            <input class='form-control-sm date' style="text-align: center;" type="text" id="date" value="{{ jalali_date }}"/>
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
             <div id="datatable_filter" class="form-control-sm search-container">
                 <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
@@ -111,6 +111,9 @@
     <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
 
     <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
+    
+    <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
+    <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -186,7 +189,16 @@
                 });
             });
         });
-
+        $("#date").persianDatepicker({
+                showGregorianDate: true,
+                formatDate: "YYYY-MM-DD",
+                onSelect: function () { 
+                    var selectedDate = document.getElementById('date').value;
+                    console.log(selectedDate)
+                    var url = "/record/consumptionreport/" + selectedDate + "/";
+                    window.location.href = url;            
+                }, 
+            });
     </script>
     <script>
         $(document).ready(function () {
