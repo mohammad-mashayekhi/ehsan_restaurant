@@ -203,7 +203,7 @@
                     text: 'Excel',
                     className: 'custom-excel-button',
                     exportOptions: {
-                        columns: ':visible',
+                        columns: [0, 1, 2, 3, 4], // Include columns except the last one
                         format: {
                             body: function (data, row, column, node) {
                                 if ($(node).find('input').length > 0) {
@@ -219,7 +219,7 @@
                     text: 'Print',
                     className: 'custom-print-button',
                     exportOptions: {
-                        columns: ':visible',
+                        columns: [0, 1, 2, 3, 4], // Include columns except the last one
                         format: {
                             body: function (data, row, column, node) {
                                 if ($(node).find('input').length > 0) {
