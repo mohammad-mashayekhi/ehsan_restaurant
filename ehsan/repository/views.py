@@ -2,8 +2,9 @@ from django.shortcuts import render , redirect
 from .models import Repository
 from .forms import RepositoryForm
 from datetime import datetime
-from foodstuff.models import Stuffs,Category
+from foodstuff.models import Stuffs,Category,Price
 import jdatetime
+from django.db.models import Max
 
 def repository(request):
     return render(request, 'repository/repository.html')
@@ -114,7 +115,7 @@ def TotalInventoryView(request):
             for stuff_id, quantity in repo.quantities.items():
                 # Remove commas from the quantity string and then convert to integer
                 quantity = quantity.replace(',', '')
-                quantities_sum[stuff_id] = quantities_sum.get(stuff_id, 0) + int(quantity)
+                quantities_sum[stuff_id] = quantities_sum.get(stuff_id, 0) + float(quantity)
     
     # Accumulate quantities for 'in' type repositories
     accumulate_quantities(repositories_in, quantities_sum_in)
@@ -137,6 +138,16 @@ def TotalInventoryView(request):
         # Get stuff_name from the database
         stuff_name = Stuffs.objects.get(stuff_id=stuff_id).stuff_name  # Assuming you have a model for stuff
         stuff_category = Stuffs.objects.get(stuff_id=stuff_id).stuff_category  # Assuming you have a model for stuff
+       
+        # Fetch latest price for the stuff
+        latest_price = Price.objects.filter(prices__has_key=stuff_id).aggregate(latest_date=Max('date'))
+        if latest_price['latest_date']:
+            latest_price_obj = Price.objects.get(date=latest_price['latest_date'])
+            latest_price_value = latest_price_obj.prices.get(stuff_id, None)
+            last_price = float(latest_price_value) * float(net_quantity)
+        else:
+            latest_price_value = None
+            last_price = None
 
         data.append({
             'stuff_id': stuff_id,
@@ -144,7 +155,9 @@ def TotalInventoryView(request):
             'stuff_category': stuff_category,
             'sum_quantity_in': sum_quantity_in,
             'sum_quantity_out': sum_quantity_out,
-            'net_quantity': net_quantity
+            'net_quantity': net_quantity,
+            'latest_price': latest_price_value,
+            'last_price':last_price
         })
     
     # Render the template with the data

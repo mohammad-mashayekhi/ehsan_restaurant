@@ -135,7 +135,10 @@
                                     <th class="th">عنوان</th>
                                     <th class="th">جمع مقادیر ورودی</th>
                                     <th class="th">جمع مقادیر خروجی</th>
-                                    <th class="th">ورودی - خروجی</th>
+                                    <th class="th">موجودی</th>
+                                    <th class="th">آخرین قیمت</th>
+                                    <th class="th">قیمت تمام شده</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody id="table-body">
@@ -146,6 +149,8 @@
                                     <td>{{ item.sum_quantity_in }}</td>
                                     <td>{{ item.sum_quantity_out }}</td>
                                     <td style="direction:ltr">{{ item.net_quantity }}</td>
+                                    <td style="direction:ltr">{{ item.latest_price }}</td>
+                                    <td style="direction:ltr">{{ item.last_price }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

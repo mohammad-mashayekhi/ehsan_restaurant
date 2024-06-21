@@ -16,7 +16,16 @@ def add_recipe(request):
         formset = IngredientFormSet(request.POST, prefix='ingredients')
         if recipe_form.is_valid() and formset.is_valid():
             recipe = recipe_form.save(commit=False)
-            ingredients = {form.cleaned_data['stuff_name'].stuff_id: form.cleaned_data['amount'] for form in formset}
+            
+            # Processing ingredients data
+            ingredients = {}
+            for form in formset:
+                stuff_name = form.cleaned_data.get('stuff_name')
+                amount = form.cleaned_data.get('amount')
+                if stuff_name and amount:
+                    ingredients[stuff_name.stuff_id] = amount
+                # You may add additional handling if stuff_name or amount is missing
+            
             recipe.ingredients = ingredients
             recipe.save()
             return redirect('recipe:recipe_list')
@@ -24,13 +33,12 @@ def add_recipe(request):
         recipe_form = RecipeForm()
         formset = IngredientFormSet(prefix='ingredients')
 
-    # اضافه کردن دسته‌بندی‌ها برای نمایش در قالب
     categories = Category.objects.all()
 
     return render(request, 'recipe/add_recipe.html', {
         'recipe_form': recipe_form,
         'formset': formset,
-        'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
+        'categories': categories,
     })
 
 
