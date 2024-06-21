@@ -195,35 +195,51 @@
         $(document).ready(function () {
             // Initialize DataTable
             var table = $('#datatable').DataTable({
-                paging: false,
-                dom: 'lrtip', // تغییر تنظیمات dom
-                buttons: [
-                    {
-                        extend: 'excel',
-                        text: 'Excel',
-                        className: 'custom-excel-button',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        text: 'Print',
-                        className: 'custom-print-button',
-                        exportOptions: {
-                            columns: ':visible'
+            paging: false,
+            dom: 'lrtip', // تغییر تنظیمات dom
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Excel',
+                    className: 'custom-excel-button',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                if ($(node).find('input').length > 0) {
+                                    return $(node).find('input').val(); // Use the input value instead of '1'
+                                }
+                                return data; // Use the default data if no input is found
+                            }
                         }
                     }
-                ],
-                fixedHeader: {
-                    header: true,
-                    footer: true
                 },
-                paging: false,
-                scrollCollapse: true,
-                scrollX: true,
-                scrollY: 380,
-            });
+                {
+                    extend: 'print',
+                    text: 'Print',
+                    className: 'custom-print-button',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                if ($(node).find('input').length > 0) {
+                                    return $(node).find('input').val(); // Use the input value instead of '1'
+                                }
+                                return data; // Use the default data if no input is found
+                            }
+                        }
+                    }
+                }
+            ],
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+            scrollCollapse: true,
+            scrollX: true,
+            scrollY: 380,
+        
+        });
 
             $('#categoryFilter').on('change', function () {
                 var category = $(this).val();
