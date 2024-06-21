@@ -85,16 +85,14 @@
 
     .table-striped td {
         padding: 4px !important;
-        /* Adjust the padding as needed */
         font-size: 0.8vw;
-        /* Adjust the font size if needed */
     }
 
     .table-striped tr {
         line-height: 1 !important;
-        /* Reduce the line height */
     }
 </style>
+
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold pt-3 mb-4">
         <span class="text-muted fw-light">انبار/</span> ورودی
@@ -178,32 +176,104 @@
                         </div>
                         {{ form.errors }}
                         <button type="submit" class="btn btn-primary" style="margin-top:15px">ذخیره</button>
+                        <button class="btn btn-secondary mx-2" id="excelButton" style="margin-top:15px; float: left;">اکسل</button>
+                        <button class="btn btn-secondary" id="printButton" style="margin-top:15px; float: left;">پرینت</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
+
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    
     <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
     <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
 
     <script>
-        var dateInput = document.getElementById('date');
-        var prevDayBtn = document.getElementById('prevDayBtn');
-        var nextDayBtn = document.getElementById('nextDayBtn');
+        $(document).ready(function () {
+            // Initialize DataTable
+            var table = $('#datatable').DataTable({
+                paging: false,
+                dom: 'lrtip', // تغییر تنظیمات dom
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        className: 'custom-excel-button',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'custom-print-button',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                fixedHeader: {
+                    header: true,
+                    footer: true
+                },
+                paging: false,
+                scrollCollapse: true,
+                scrollX: true,
+                scrollY: 380,
+            });
+
+            $('#categoryFilter').on('change', function () {
+                var category = $(this).val();
+                table.column(1).search(category).draw();
+            });
+
+            $('#search-box').on('keyup', function () {
+                table.search(this.value).draw();
+            });
+
+            $('.dataTables_info').css('display', 'none');
+
+            $('#formrepo').on('submit', function (e) {
+                $('#search-box').val(''); // Clear the search box
+                table.search('').columns().search('').draw(); // Clear the filters
+                table.rows().every(function () {
+                    this.nodes().to$().show();
+                });
+                table.columns().every(function () {
+                    this.search('');
+                });
+                table.draw();
+            });
+            // Custom button click events
+            $('#excelButton').on('click', function () {
+                table.button('.custom-excel-button').trigger();
+            });
+            $('#printButton').on('click', function () {
+                table.button('.custom-print-button').trigger();
+            });
+
+            // Hide default buttons
+            $('.dt-buttons').hide();
+        });
 
         document.addEventListener('DOMContentLoaded', function () {
+            var dateInput = document.getElementById('date');
+            var prevDayBtn = document.getElementById('prevDayBtn');
+            var nextDayBtn = document.getElementById('nextDayBtn');
 
             if (!dateInput.value) {
                 dateInput.value = '{{date}}';
             }
 
             prevDayBtn.addEventListener('click', function () {
-                var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
-                var dateObject = new Date(placeholderValue); // تبدیل به Date object
+                var placeholderValue = dateInput.getAttribute('placeholder');
+                var dateObject = new Date(placeholderValue);
                 dateObject.setDate(dateObject.getDate() - 1);
                 var year = dateObject.getFullYear();
-                var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
+                var month = dateObject.getMonth() + 1;
                 var day = dateObject.getDate();
                 var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
 
@@ -212,11 +282,11 @@
             });
 
             nextDayBtn.addEventListener('click', function () {
-                var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
-                var dateObject = new Date(placeholderValue); // تبدیل به Date object
+                var placeholderValue = dateInput.getAttribute('placeholder');
+                var dateObject = new Date(placeholderValue);
                 dateObject.setDate(dateObject.getDate() + 1);
                 var year = dateObject.getFullYear();
-                var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
+                var month = dateObject.getMonth() + 1;
                 var day = dateObject.getDate();
                 var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
 
@@ -224,8 +294,11 @@
                 window.location.href = url;
             });
 
-            dateInput.addEventListener('change', goToSelectedDate);
-
+            dateInput.addEventListener('change', function () {
+                var selectedDate = dateInput.value;
+                var url = "/repository/in/" + selectedDate + "/";
+                window.location.href = url;
+            });
 
             function formatNumber(input) {
                 var value = input.value.replace(/,/g, '');
@@ -250,84 +323,27 @@
                 });
             });
         });
+
         $("#date").persianDatepicker({
             showGregorianDate: true,
             formatDate: "YYYY-MM-DD",
             onSelect: function () {
                 var selectedDate = document.getElementById('date').value;
-                console.log(selectedDate)
                 var url = "/repository/in/" + selectedDate + "/";
                 window.location.href = url;
             },
         });
-    </script>
 
-    <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
-
-    <script src="{% static 'vendor/js/dataTables.min.js' %}"></script>
-
-    <script>
-        $(document).ready(function () {
-            var table = $('#datatable').DataTable({
-                paging: false,
-                dom: 'lrtip', // remove the default search box
-                fixedHeader: {
-                    header: true,
-                    footer: true
-                },
-                paging: false,
-                scrollCollapse: true,
-                scrollX: true,
-                scrollY: 380,
-                layout: {
-                    topStart: {
-                        buttons: [
-                            {
-                                extend: 'print',
-                                text: 'Print current page',
-                                autoPrint: false
-                            }
-                        ]
-                    }
-                }
-            });
-            $('#categoryFilter').on('change', function () {
-                var category = $(this).val();
-                table.column(1).search(category).draw();
-            });
-            $('#search-box').on('keyup', function () {
-                table.search(this.value).draw();
-            });
-            $('.dataTables_info').css('display', 'none');
-            $('#formrepo').on('submit', function (e) {
-                $('#search-box').val(''); // پاک کردن محتوای فیلد جستجو
-                table.search('').columns().search('').draw(); // پاک کردن فیلترها
-                table.rows().every(function () {
-                    this.nodes().to$().show();
-                });
-                table.columns().every(function () {
-                    this.search('');
-                });
-                table.draw();
-            });
-        });
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // دریافت تاریخ امروز
             var today = new Date();
             var year = today.getFullYear();
-            var month = ('0' + (today.getMonth() + 1)).slice(-2); // اضافه کردن صفر در صورت نیاز
-            var day = ('0' + today.getDate()).slice(-2); // اضافه کردن صفر در صورت نیاز
-
-            // ساختن تاریخ به فرمتی که مورد نیاز است
+            var month = ('0' + (today.getMonth() + 1)).slice(-2);
+            var day = ('0' + today.getDate()).slice(-2);
             var formattedDate = year + '-' + month + '-' + day;
 
-            // ساختن URL جدید با تاریخ امروز
             var newUrlRepositoryout = '{% url "repository:out_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
             var newUrlRepositoryin = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
 
-            // پیدا کردن المان لینک و به روزرسانی href آن
             var menuLinkRepositoryout = document.getElementById('outputBtn');
             var menuLinkRepositoryin = document.getElementById('inputBtn');
 
