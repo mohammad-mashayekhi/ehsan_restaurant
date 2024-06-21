@@ -224,28 +224,28 @@
             dateInput.addEventListener('change', goToSelectedDate);
 
            
-            function formatNumber(input) {
-                var value = input.value.replace(/,/g, '');
-                if (value) {
-                    input.value = parseFloat(value).toLocaleString('en-US');
-                }
-            }
+            // function formatNumber(input) {
+            //     var value = input.value.replace(/,/g, '');
+            //     if (value) {
+            //         input.value = parseFloat(value).toLocaleString('en-US');
+            //     }
+            // }
 
-            var priceInputs = document.querySelectorAll('.price-input');
+            // var priceInputs = document.querySelectorAll('.price-input');
 
-            priceInputs.forEach(function (input) {
-                formatNumber(input);
-            });
+            // priceInputs.forEach(function (input) {
+            //     formatNumber(input);
+            // });
 
-            priceInputs.forEach(function (input) {
-                input.addEventListener('input', function () {
-                    formatNumber(input);
-                });
+            // priceInputs.forEach(function (input) {
+            //     input.addEventListener('input', function () {
+            //         formatNumber(input);
+            //     });
 
-                input.addEventListener('blur', function () {
-                    formatNumber(input);
-                });
-            });
+            //     input.addEventListener('blur', function () {
+            //         formatNumber(input);
+            //     });
+            // });
         });
         $("#date").persianDatepicker({
                 showGregorianDate: true,
