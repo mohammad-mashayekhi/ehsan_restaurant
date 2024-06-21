@@ -127,6 +127,8 @@
                         <div class="card-footer text-muted">
                             {{ form.errors }}
                             <button type="submit" class="btn btn-primary">ذخیره</button>
+                            <button class="btn btn-secondary mx-2" id="excelButton" style="margin-top:15px; float: left;">اکسل</button>
+                            <button class="btn btn-secondary" id="printButton" style="margin-top:15px; float: left;">پرینت</button>    
                         </div>
                     </form>
                 </div>
@@ -230,6 +232,40 @@
             var table = $('#datatable').DataTable({
                 paging: false,
                 dom: 'lrtip', // remove the default search box
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        className: 'custom-excel-button',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4], // Include columns except the last one
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if ($(node).find('input').length > 0) {
+                                        return $(node).find('input').val(); // Use the input value instead of '1'
+                                    }
+                                    return data; // Use the default data if no input is found
+                                }
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'custom-print-button',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4], // Include columns except the last one
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if ($(node).find('input').length > 0) {
+                                        return $(node).find('input').val(); // Use the input value instead of '1'
+                                    }
+                                    return data; // Use the default data if no input is found
+                                }
+                            }
+                        }
+                    }
+                ],
                 fixedHeader: {
                     header: true,
                     footer: true
@@ -258,6 +294,16 @@
                 });
                 table.draw();
             });
+            // Custom button click events
+            $('#excelButton').on('click', function () {
+                table.button('.custom-excel-button').trigger();
+            });
+            $('#printButton').on('click', function () {
+                table.button('.custom-print-button').trigger();
+            });
+
+            // Hide default buttons
+            $('.dt-buttons').hide();
         });
     </script>
 </div>
