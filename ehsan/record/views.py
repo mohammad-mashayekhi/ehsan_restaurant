@@ -139,7 +139,6 @@ def consumptionreport(request, date):
     # Retrieve all RecipeSaleFile records for the given date
     sales = RecipeSaleFile.objects.filter(date_created=date_obj)
     report_data = []
-    print(sales)
     # Retrieve the prices for the given date
     try:
         price_entry = Price.objects.get(date=date_obj)
