@@ -1,5 +1,6 @@
 {% extends 'main/main.html' %}
 {% load static %}
+{% load humanizelib %}
 {% block contant %}
 <style>
     .small-td {
@@ -148,11 +149,15 @@
                                     <td>{{ item.stuff_name }}</td>
                                     <td>{{ item.sum_quantity_in }}</td>
                                     <td>{{ item.sum_quantity_out }}</td>
-                                    <td style="direction:ltr">{{ item.net_quantity }}</td>
-                                    <td style="direction:ltr">{{ item.latest_price }}</td>
-                                    <td style="direction:ltr">{{ item.last_price }}</td>
+                                    <td style="direction:ltr">{{ item.net_quantity|intcomma }}</td>
+                                    <td style="direction:ltr">{{ item.latest_price|intcomma }}</td>
+                                    <td style="direction:ltr">{{ item.last_price|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
+                                <tfoot>
+                                    <td colspan="6" style="text-align:right;"><strong>مجموع ارزش انبار:</strong></td>
+                                    <td><strong>{{ total_inventory_value }}</strong></td>
+                                </tfoot> 
                             </tbody>
                         </table>
                     </div>

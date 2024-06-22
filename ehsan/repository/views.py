@@ -132,6 +132,8 @@ def TotalInventoryView(request):
 
     # Prepare data for rendering
     data = []
+    total_inventory_value = 0  # Initialize total inventory value
+
     for stuff_id, net_quantity in net_quantities.items():
         sum_quantity_in = quantities_sum_in.get(stuff_id, 0)
         sum_quantity_out = quantities_sum_out.get(stuff_id, 0)
@@ -146,8 +148,10 @@ def TotalInventoryView(request):
             latest_price_value = latest_price_obj.prices.get(stuff_id, None)
             last_price = float(latest_price_value) * float(net_quantity)
         else:
-            latest_price_value = None
-            last_price = None
+            latest_price_value = 0
+            last_price = 0
+
+        total_inventory_value += last_price
 
         data.append({
             'stuff_id': stuff_id,
@@ -161,4 +165,8 @@ def TotalInventoryView(request):
         })
     
     # Render the template with the data
-    return render(request, 'repository/total_inventory.html', {'data': data, 'categories': categories})
+    return render(request, 'repository/total_inventory.html', {
+        'data': data,
+        'categories': categories,
+        'total_inventory_value': total_inventory_value
+    })
