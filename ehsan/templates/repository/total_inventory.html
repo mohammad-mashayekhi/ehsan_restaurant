@@ -156,7 +156,7 @@
                                 {% endfor %}
                                 <tfoot>
                                     <td colspan="6" style="text-align:right;"><strong>مجموع ارزش انبار:</strong></td>
-                                    <td><strong>{{ total_inventory_value }}</strong></td>
+                                    <td><strong>{{ total_inventory_value|intcomma }}</strong></td>
                                 </tfoot> 
                             </tbody>
                         </table>
