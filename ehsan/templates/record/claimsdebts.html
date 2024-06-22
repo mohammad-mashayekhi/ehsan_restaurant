@@ -169,7 +169,8 @@
 
 <script>
     $(document).ready(function () {
-        let claims_form_idx = {{ claims_formset.total_form_count }};
+    
+    let claims_form_idx = {{ claims_formset.total_form_count }};
     let debts_form_idx = {{ debts_formset.total_form_count }};
 
     $('#add-claims-ingredient').click(function () {
@@ -231,12 +232,12 @@
         prevDayBtn.addEventListener('click', function () {
             var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
             var dateObject = new Date(placeholderValue); // تبدیل به Date object
-            dateObject.setDate(dateObject.getDate() - 15);
+            dateObject.setMonth(dateObject.getMonth() - 1); // یک ماه به عقب
+            dateObject.setDate(1); // تنظیم روز به 1
             var year = dateObject.getFullYear();
             var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
-            var day = dateObject.getDate();
-            var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
-
+            var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + '01';
+    
             var url = "/record/claimsdebts/" + formattedDate + "/";
             window.location.href = url;
         });
@@ -244,14 +245,15 @@
         nextDayBtn.addEventListener('click', function () {
             var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
             var dateObject = new Date(placeholderValue); // تبدیل به Date object
-            dateObject.setDate(dateObject.getDate() + 15);
+            dateObject.setMonth(dateObject.getMonth() + 1); // یک ماه به جلو
+            dateObject.setDate(1); // تنظیم روز به 1
             var year = dateObject.getFullYear();
             var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
-            var day = dateObject.getDate();
-            var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
-
+            var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + '01';
+    
             var url = "/record/claimsdebts/" + formattedDate + "/";
-            window.location.href = url;
+            console.log(url)
+            // window.location.href = url;
         });
 
         dateInput.addEventListener('change', goToSelectedDate);

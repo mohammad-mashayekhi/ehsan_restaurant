@@ -243,3 +243,73 @@ def consumptionreport(request, date):
     }
 
     return render(request, 'record/consumptionreport.html', context)
+
+
+from django.shortcuts import render
+from .models import MonthlyReport
+from datetime import datetime
+
+def reportchart(request, date):
+    gregorian_date = datetime.strptime(date, '%Y-%m-%d')
+    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+    
+    # تبدیل تاریخ از رشته به آبجکت datetime و تنظیم به ابتدای ماه
+    report_date = datetime.strptime(date, '%Y-%m-%d')
+    report_date = report_date.replace(day=1)
+    
+    # پیدا کردن گزارش برای ماه و سال مورد نظر
+    report = MonthlyReport.objects.filter(date=report_date).first()
+    
+    # در صورتی که گزارشی یافت نشد، یک گزارش خالی ایجاد می‌کنیم
+    if not report:
+        sales_report = {
+            "sales_hall": 0.0,
+            "sales_takeaway": 0.0,
+            "sales_snappfood": 0.0,
+            "sales_company": 0.0,
+            "sales_special_company": 0.0,
+            "sales_charity": 0.0,
+            "sales_charity1": 0.0,
+            "sales_misc": 0.0,
+            "total_sales": 0.0,
+        }
+        expenses_report = {
+            "rent": 0.0,
+            "salaries": 0.0,
+            "hall": 0.0,
+            "raw_materials": 0.0,
+            "consumables": 0.0,
+            "maintenance": 0.0,
+            "delivery": 0.0,
+            "misc_expenses": 0.0,
+            "total_expenses": 0.0,
+        }
+    else:
+        sales_report = {
+            "sales_hall": float(report.sales_hall),
+            "sales_takeaway": float(report.sales_takeaway),
+            "sales_snappfood": float(report.sales_snappfood),
+            "sales_company": float(report.sales_company),
+            "sales_special_company": float(report.sales_special_company),
+            "sales_charity": float(report.sales_charity),
+            "sales_charity1": float(report.sales_charity1),
+            "sales_misc": float(report.sales_misc),
+            "total_sales": float(report.total_sales),
+        }
+        expenses_report = {
+            "rent": float(report.rent),
+            "salaries": float(report.salaries),
+            "hall": float(report.hall),
+            "raw_materials": float(report.raw_materials),
+            "consumables": float(report.consumables),
+            "maintenance": float(report.maintenance),
+            "delivery": float(report.delivery),
+            "misc_expenses": float(report.misc_expenses),
+            "total_expenses": float(report.total_expenses),
+        }
+    
+    # ارسال داده‌ها به قالب
+    return render(request, 'record/report-chart.html', {'sales_report': sales_report
+                                                        , 'expenses_report': expenses_report
+                                                        ,'jalali_date':jalali_date
+                                                        ,'date':date,})

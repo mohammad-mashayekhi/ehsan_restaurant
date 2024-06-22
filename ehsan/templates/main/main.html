@@ -154,17 +154,6 @@
                         <span class="menu-text ms-2">خوش آمدید!</span>
                     </a>
                 </div>
-                <div class="app-brand">
-                    {% if user.groups.exists %}
-                        <div>
-                            {% for group in user.groups.all %}
-                                <span> سطح دسترسی : {{ group.name }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <span>هیچ گروهی</span>
-                    {% endif %}
-                </div>
                 <li class="menu-item  {% if request.resolver_match.view_name == 'dashboard' %} active {% endif %}">
                     <a href="{% url 'dashboard' %}" class="menu-link">
                         <div>
@@ -244,8 +233,8 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item {% if 'record/report' in request.path %} active {% endif %}">
-                    <a href="#"  id="dynamicMenuLinkMonthReport" class="menu-link">
+                <li class="menu-item {% if 'record/chart' in request.path %} active {% endif %}">
+                    <a href="#"  id="dynamicMenuLinkreportchart" class="menu-link">
                         <div>
                             <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
                                 width="20" height="20">
@@ -365,6 +354,7 @@
                 var newUrlMonthReport = '/record/report/' + year + '-' + month + '-01' ;
                 var newUrlClaimsDebts =  '{% url "record:claimsdebts" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlConsumptionReport =  '{% url "record:consumptionreport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+                var newUrlReportchart =  '{% url "record:reportchart" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
@@ -373,6 +363,7 @@
                 var menuLinkMonthReport = document.getElementById('dynamicMenuLinkMonthReport');
                 var menuLinkClaimsDebts = document.getElementById('dynamicMenuLinkClaimsDebts');
                 var menuLinkConsumptionReport = document.getElementById('dynamicMenuLinkConsumptionReport');
+                var menuLinkReportChart = document.getElementById('dynamicMenuLinkreportchart');
                 
                 
                 if (menuLinkFoodstuff) {
@@ -392,6 +383,9 @@
                 }
                 if (menuLinkConsumptionReport) {
                     menuLinkConsumptionReport.href = newUrlConsumptionReport;
+                }
+                if (menuLinkReportChart) {
+                    menuLinkReportChart.href = newUrlReportchart;
                 }
             });
         </script>

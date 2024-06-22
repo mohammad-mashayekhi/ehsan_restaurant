@@ -1,0 +1,291 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<style>
+
+#chart-sale, #chart-cost {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+  .th {
+    background-color: #6CC3DA !important;
+    color: white !important;
+    font-size: 1vw !important;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align-last: center;
+    letter-spacing: 0px !important;
+  }
+
+  .th span {
+    font-size: 10px !important;
+  }
+
+  .bt-out {
+    background-color: #c1e4ea;
+    padding: 30px;
+    margin-bottom: -30px;
+    font-weight: bold;
+    font-size: 1vw;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: -15px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .bt-out a {
+    color: black !important;
+  }
+
+  .bt-in {
+    padding: 30px;
+    margin-bottom: -30px;
+    font-weight: bold;
+    font-size: 1vw;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .bt-in a {
+    color: black !important;
+  }
+
+  .btn-arrow {
+    background-color: #FF8A00;
+    color: white;
+    width: 1%;
+    height: 1%;
+    padding: 1%;
+  }
+
+  .card_head_title {
+    font-size: 1vw;
+    color: #c1e4ea;
+    padding: 5px;
+    background: #2CA9C9 !important;
+  }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+  <h4 class="fw-bold pt-3 mb-4">
+    <span class="text-muted fw-light">گزارشات/</span> مشاهده
+  </h4>
+  <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;margin-top:-20px">
+    <div class="card-header" style="margin-inline: 60px;">
+      <button class="btn-arrow btn" id="prevDayBtn"><<</button>
+      <input class='form-control-sm date' style="text-align: center;"  type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
+      <button class="btn-arrow btn" id="nextDayBtn">>></button>
+  </div>
+    <div class="row">
+      <div class="col-sm text-center">
+        <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
+          <div class="card_head_title">
+            فروش
+          </div>
+          <div class="mt-3 p-4">
+            <div id="chart-sale"></div>
+            <script src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm text-center">
+        <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
+          <div class="card_head_title">هزینه</div>
+          <div class="mt-3 p-4">
+            <div id="chart-cost"></div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="card mb-4 p-3 text-center" style="margin-inline: 60px; box-shadow: none;">
+      <div class="card_head_title">سود و زیان</div>
+      <div class="mt-3 p-4">
+      asd
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
+  <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
+  <script>
+    var dateInput = document.getElementById('date');
+    var prevDayBtn = document.getElementById('prevDayBtn');
+    var nextDayBtn = document.getElementById('nextDayBtn');
+  
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!dateInput.value) {
+        dateInput.value = '{{date}}';
+      }
+  
+      prevDayBtn.addEventListener('click', function () {
+        var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
+        var dateObject = new Date(placeholderValue); // تبدیل به Date object
+        dateObject.setMonth(dateObject.getMonth() - 1); // یک ماه به عقب
+        dateObject.setDate(1); // تنظیم روز به 1
+        var year = dateObject.getFullYear();
+        var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
+        var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + '01';
+  
+        var url = "/record/chart/" + formattedDate + "/";
+        window.location.href = url;
+      });
+  
+      nextDayBtn.addEventListener('click', function () {
+        var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
+        var dateObject = new Date(placeholderValue); // تبدیل به Date object
+        dateObject.setMonth(dateObject.getMonth() + 1); // یک ماه به جلو
+        dateObject.setDate(1); // تنظیم روز به 1
+        var year = dateObject.getFullYear();
+        var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
+        var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + '01';
+  
+        var url = "/record/chart/" + formattedDate + "/";
+        window.location.href = url;
+      });
+  
+      dateInput.addEventListener('change', goToSelectedDate);
+    });
+  
+    $("#date").persianDatepicker({
+      showGregorianDate: true,
+      formatDate: "YYYY-MM-DD",
+      onSelect: function () { 
+        var selectedDate = document.getElementById('date').value;
+        console.log(selectedDate)
+        var url = "/record/chart/" + selectedDate + "/";
+        window.location.href = url;            
+      }, 
+    });
+  </script>
+  
+  <script>
+    var salesReportData = {{ sales_report|safe }};
+    var expensesReportData = {{ expenses_report|safe }};
+
+    // نمودار فروش
+    var domSales = document.getElementById('chart-sale');
+    var myChartSales = echarts.init(domSales, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var optionSales = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: 'فروش',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: salesReportData.sales_hall, name: 'سالن' },
+            { value: salesReportData.sales_takeaway, name: 'بیرون‌بر' },
+            { value: salesReportData.sales_snappfood, name: 'اسنپ‌فود' },
+            { value: salesReportData.sales_company, name: 'شرکتی' },
+            { value: salesReportData.sales_special_company, name: 'شرکت خاص' },
+            { value: salesReportData.sales_charity, name: 'خیریه' },
+            { value: salesReportData.sales_charity1, name: 'هیات' },
+            { value: salesReportData.sales_misc, name: 'متفرقه' }
+          ]
+        }
+      ]
+    };
+
+    if (optionSales && typeof optionSales === 'object') {
+      myChartSales.setOption(optionSales);
+    }
+
+    window.addEventListener('resize', myChartSales.resize);
+
+    // نمودار هزینه‌ها
+    var domCost = document.getElementById('chart-cost');
+    var myChartCost = echarts.init(domCost, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var optionCost = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: 'هزینه',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 40,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: expensesReportData.rent, name: 'اجاره' },
+            { value: expensesReportData.salaries, name: 'حقوق' },
+            { value: expensesReportData.hall, name: 'هزینه سالن' },
+            { value: expensesReportData.raw_materials, name: 'مواد خام' },
+            { value: expensesReportData.consumables, name: 'مصرفی' },
+            { value: expensesReportData.maintenance, name: 'تعمیر و نگهداری' },
+            { value: expensesReportData.delivery, name: 'هزینه ارسال' },
+            { value: expensesReportData.misc_expenses, name: 'هزینه‌های متفرقه' }
+          ]
+        }
+      ]
+    };
+
+    if (optionCost && typeof optionCost === 'object') {
+      myChartCost.setOption(optionCost);
+    }
+
+    window.addEventListener('resize', myChartCost.resize);
+  </script>
+{% endblock %}
