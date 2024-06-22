@@ -22,7 +22,7 @@ def add_recipe(request):
             for form in formset:
                 stuff_name = form.cleaned_data.get('stuff_name')
                 amount = form.cleaned_data.get('amount')
-                if stuff_name and amount:
+                if stuff_name and amount and amount > 0:  # Check if amount is greater than 0
                     ingredients[stuff_name.stuff_id] = amount
                 # You may add additional handling if stuff_name or amount is missing
             
@@ -41,33 +41,42 @@ def add_recipe(request):
         'categories': categories,
     })
 
-
 def edit_recipe(request, id):
     recipe = get_object_or_404(Recipe, id=id)
     IngredientFormSet = formset_factory(IngredientForm, extra=0)
+    
     if request.method == 'POST':
         recipe_form = RecipeForm(request.POST, instance=recipe)
         formset = IngredientFormSet(request.POST, prefix='ingredients')
+        
         if recipe_form.is_valid() and formset.is_valid():
             recipe = recipe_form.save(commit=False)
-            ingredients = {form.cleaned_data['stuff_name'].stuff_id: form.cleaned_data['amount'] for form in formset}
+            ingredients = {}
+            
+            for form in formset:
+                stuff_name = form.cleaned_data.get('stuff_name')
+                amount = form.cleaned_data.get('amount')
+                
+                if stuff_name and amount and amount > 0:  # Check if amount is greater than 0
+                    ingredients[stuff_name.stuff_id] = amount
+            
             recipe.ingredients = ingredients
             recipe.save()
             return redirect('recipe:recipe_list')
     else:
         recipe_form = RecipeForm(instance=recipe)
-        initial_data = [{'stuff_name': Stuffs.objects.get(stuff_id=stuff_id), 'amount': amount} for stuff_id, amount in recipe.ingredients.items()]
+        initial_data = [{'stuff_name': Stuffs.objects.get(stuff_id=stuff_id), 'amount': amount} for stuff_id, amount in recipe.ingredients.items() if amount > 0]
         formset = IngredientFormSet(initial=initial_data, prefix='ingredients')
 
-    # اضافه کردن دسته‌بندی‌ها برای نمایش در قالب
     categories = Category.objects.all()
 
     return render(request, 'recipe/edit_recipe.html', {
-        'id':id,
+        'id': id,
         'recipe_form': recipe_form,
         'formset': formset,
-        'categories': categories,  # ارسال دسته‌بندی‌ها به قالب
+        'categories': categories,
     })
+
     
 def delete_recipe(request, id):
     recipe = get_object_or_404(Recipe, id=id)
