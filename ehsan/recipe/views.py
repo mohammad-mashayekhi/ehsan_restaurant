@@ -93,8 +93,7 @@ def recipe_list(request):
 
         for stuff_id, quantity in ingredients.items():
             # بدست آوردن قیمت ماده اولیه از دیکشنری قیمت‌ها
-            ingredient_price = float(latest_prices.get(stuff_id, 0))
-
+            ingredient_price = int(latest_prices.get(stuff_id, 0))
             # محاسبه قیمت هر ماده اولیه با توجه به تعداد مورد استفاده
             total_price += quantity * ingredient_price
         try:
