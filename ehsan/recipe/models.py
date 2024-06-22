@@ -25,4 +25,4 @@ class RecipeSaleFile(models.Model):
     recipe_prices = models.JSONField()
 
     def __str__(self):
-        return str(self.created_at)    
+        return str(self.date_created)    

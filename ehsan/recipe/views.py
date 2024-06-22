@@ -213,11 +213,12 @@ from .forms import UploadFileForm
 from django.utils.timezone import now
 from django.contrib import messages
 from django.urls import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,HttpResponse
 import numpy as np
 
-def upload_file(request):
-    today_date = datetime.today().strftime('%Y-%m-%d')
+def upload_file(request, date):
+    date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+    
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
@@ -228,21 +229,22 @@ def upload_file(request):
             
             # خواندن فایل اکسل
             try:
-                df = pd.read_excel(file_path, header=1)
+                df = pd.read_excel(file_path, header=0)  # تغییر header به 0 برای خواندن عنوان ستون‌ها
                 messages.success(request, 'فایل با موفقیت بارگذاری شد.')
             except Exception as e:
                 form.add_error(None, f"Error reading Excel file: {str(e)}")
                 return render(request, 'recipe/upload.html', {'form': form})
 
             # بررسی و به‌روزرسانی یا ایجاد رکورد جدید با اعتبارسنجی
-            today = now().date()
             extracted_data = []
             for index, row in df.iterrows():
-                if not pd.isnull(row['كد كالا']) and not pd.isnull(row['نام كالا']) and not pd.isnull(row['تعداد']):
+                if not pd.isnull(row['كد كالا']) and not pd.isnull(row['نام كالا']) and not pd.isnull(row['مقدار - تعداد']):
                     item = {
-                        'code': row['كد كالا'],
+                        'code': str(row['كد كالا']).zfill(8),  # اضافه کردن صفرهای پیش‌رو در صورت نیاز
                         'product_name': row['نام كالا'],
-                        'count': row['تعداد']
+                        'count': row['مقدار - تعداد'],  # استفاده از ستون جدید برای تعداد
+                        'unit_price': row['في واحد'],  # اضافه کردن ستون فی واحد
+                        'total_price': row['جمع كل']  # اضافه کردن ستون جمع کل
                     }
                     extracted_data.append(item)
 
@@ -250,13 +252,13 @@ def upload_file(request):
             if not extracted_data:
                 form.add_error(None, "هیچ داده معتبری در فایل یافت نشد.")
                 return render(request, 'recipe/upload.html', {'form': form})
-
+            print(date_obj)
             # ذخیره یا به‌روزرسانی رکورد
             RecipeSaleFile.objects.update_or_create(
-                created_at=today,
+                date_created=date_obj,
                 defaults={'recipe_prices': extracted_data}
             )
-            return redirect(reverse('recipe:salereport', kwargs={'date': today_date}))
+            return redirect(reverse('recipe:salereport', kwargs={'date': date}))
     else:
         form = UploadFileForm()
     return render(request, 'recipe/upload.html', {'form': form})

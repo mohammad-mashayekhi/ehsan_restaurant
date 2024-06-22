@@ -66,7 +66,7 @@
     </h4>
     <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;">
         <div class="card-header" style="margin-inline: 60px;">
-            <a href="{% url 'recipe:upload_file' %}" class="btn btn-primary" style="float: left;"> آپلود فایل</a>
+            <a href="{% url 'recipe:upload_file' date  %}" class="btn btn-primary" style="float: left;"> آپلود فایل</a>
             <button class="btn-arrow btn" id="prevDayBtn"><< </button>
             <input class='form-control-sm date' style="text-align: center;"  type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
             <button class="btn-arrow btn" id="nextDayBtn">>></button>
@@ -86,6 +86,8 @@
                                     <th class="th">کد کالا</th>
                                     <th class="th">نام کالا</th>
                                     <th class="th">تعداد</th>
+                                    <th class="th">في واحد</th>
+                                    <th class="th">جمع کل</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body">
@@ -95,6 +97,8 @@
                                     <td class="small-td">{{ recipe.code }}</td>
                                     <td class="large">{{ recipe.product_name }}</td>
                                     <td class="large">{{ recipe.count }}</td>
+                                    <td class="large">{{ recipe.unit_price }}</td>
+                                    <td class="large">{{ recipe.total_price }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
