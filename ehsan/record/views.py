@@ -2,7 +2,7 @@ from datetime import datetime
 from django.shortcuts import render, redirect
 from .models import MonthlyReport
 from .forms import DailyReportForm ,IngredientForm
-
+from foodstuff.models import Category
 def report(request, date):
     date_object = datetime.strptime(date, '%Y-%m-%d').replace(day=1)
     jalali_date = jdatetime.date.fromgregorian(date=date_object).strftime('%Y/%m/%d')
@@ -227,10 +227,12 @@ def consumptionreport(request, date):
 
     # Calculate total percentage difference
     total_percentage_difference = (total_difference / total_recipe_amount) * 100 if total_recipe_amount != 0 else 0
+    categories = Category.objects.all().order_by('cat_id')  # اضافه کردن دسته بندی‌ها
 
     context = {
         'date': date,
         'jalali_date': jalali_date,
+        'categories':categories,
         'date_obj': date_obj,
         'report_data': report_data,
         'total_recipe_amount': total_recipe_amount,
