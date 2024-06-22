@@ -175,7 +175,6 @@
 
             dateInput.addEventListener('change', goToSelectedDate);
 
-
             var currentUrl = window.location.href;
             var currentDateStr = currentUrl.split('/').pop().slice(0, 10);
             var dateParts = currentDateStr.split('-');
@@ -187,7 +186,6 @@
                 var url = "/foodstuff/price/" + nextDateStr + "/";
                 window.location.href = url;
             });
-
 
             // Function to format the number
             function formatNumber(input) {

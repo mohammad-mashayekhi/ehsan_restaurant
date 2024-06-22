@@ -134,8 +134,6 @@
                                 <tr>
                                     <th class="th">دسته بندی</th>
                                     <th class="th">عنوان</th>
-                                    <th class="th">جمع مقادیر ورودی</th>
-                                    <th class="th">جمع مقادیر خروجی</th>
                                     <th class="th">موجودی</th>
                                     <th class="th">آخرین قیمت</th>
                                     <th class="th">قیمت تمام شده</th>
@@ -147,19 +145,19 @@
                                 <tr>
                                     <td>{{ item.stuff_category }}</td>
                                     <td>{{ item.stuff_name }}</td>
-                                    <td>{{ item.sum_quantity_in }}</td>
-                                    <td>{{ item.sum_quantity_out }}</td>
                                     <td style="direction:ltr">{{ item.net_quantity|intcomma }}</td>
                                     <td style="direction:ltr">{{ item.latest_price|intcomma }}</td>
                                     <td style="direction:ltr">{{ item.last_price|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
                                 <tfoot>
-                                    <td colspan="6" style="text-align:right;"><strong>مجموع ارزش انبار:</strong></td>
+                                    <td colspan="4" style="text-align:right;"><strong>مجموع ارزش انبار:</strong></td>
                                     <td><strong>{{ total_inventory_value|intcomma }}</strong></td>
                                 </tfoot> 
                             </tbody>
                         </table>
+                        <button class="btn btn-secondary mx-2" id="excelButton" style=" float: left;">اکسل</button>
+                        <button class="btn btn-secondary" id="printButton" style=" float: left;">پرینت</button>
                     </div>
                 </div>
             </div>
@@ -175,6 +173,40 @@
             var table = $('#datatable').DataTable({
                 paging: false,
                 dom: 'lrtip', // remove the default search box
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: 'Excel',
+                        className: 'custom-excel-button',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4], // Include columns except the last one
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if ($(node).find('input').length > 0) {
+                                        return $(node).find('input').val(); // Use the input value instead of '1'
+                                    }
+                                    return data; // Use the default data if no input is found
+                                }
+                            }
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Print',
+                        className: 'custom-print-button',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4], // Include columns except the last one
+                            format: {
+                                body: function (data, row, column, node) {
+                                    if ($(node).find('input').length > 0) {
+                                        return $(node).find('input').val(); // Use the input value instead of '1'
+                                    }
+                                    return data; // Use the default data if no input is found
+                                }
+                            }
+                        }
+                    }
+                ],
                 fixedHeader: {
                     header: true,
                     footer: true
@@ -192,6 +224,16 @@
                 table.search(this.value).draw();
             });
             $('.dataTables_info').css('display', 'none');
+            // Custom button click events
+            $('#excelButton').on('click', function () {
+                table.button('.custom-excel-button').trigger();
+            });
+            $('#printButton').on('click', function () {
+                table.button('.custom-print-button').trigger();
+            });
+
+            // Hide default buttons
+            $('.dt-buttons').hide();
         });
     </script>
     <script>
