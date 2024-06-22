@@ -286,7 +286,7 @@
 
             // Function to remove all non-numeric characters (except the decimal point)
             function cleanNumber(number) {
-                return number.toString().replace(/[^0-9.]/g, "");
+                return parseFloat(number.toString().replace(/[^0-9.]/g, ""));
             }
 
             // Add input event listener to price inputs
@@ -300,7 +300,8 @@
             // Format price inputs on page load
             $('.price-input').each(function () {
                 var inputVal = $(this).val();
-                var formattedVal = formatNumberWithCommas(cleanNumber(inputVal));
+                var cleanedVal = cleanNumber(inputVal);
+                var formattedVal = formatNumberWithCommas(cleanedVal);
                 $(this).val(formattedVal);
             });
 
