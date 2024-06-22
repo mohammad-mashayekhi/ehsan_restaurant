@@ -156,16 +156,20 @@ def consumptionreport(request, date):
     for sale in sales:
         # Parse recipe_prices JSON data
         recipe_prices = sale.recipe_prices
+
         for price in recipe_prices:
             recipe_id = price.get('code')
-            count = price.get('count')
+            
+            recipe_id = str(recipe_id).zfill(8)
 
+            count = price.get('count')
+            print(recipe_id)
             # Retrieve the recipe based on recipe_id
             try:
                 recipe = Recipe.objects.get(recipe_id=recipe_id)
             except Recipe.DoesNotExist:
                 continue
-        
+
             # Calculate total ingredients needed based on the sales quantity
             total_ingredients = {}
             for ingredient_id, quantity in recipe.ingredients.items():
@@ -198,7 +202,6 @@ def consumptionreport(request, date):
                 total_out_quantity += out_quantity
                 total_difference += difference
                 total_loss_amount += loss_amount
-
                 # Check if ingredient_name already exists in report_data
                 found = False
                 for item in report_data:
