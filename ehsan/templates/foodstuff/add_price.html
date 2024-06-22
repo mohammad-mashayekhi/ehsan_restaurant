@@ -187,32 +187,7 @@
                 window.location.href = url;
             });
 
-            // Function to format the number
-            function formatNumber(input) {
-                var value = input.value.replace(/,/g, '');
-                if (value) {
-                    input.value = parseFloat(value).toLocaleString('en-US');
-                }
-            }
-
-            // Select all price input fields
-            var priceInputs = document.querySelectorAll('.price-input');
-
-            // Format the price inputs on page load
-            priceInputs.forEach(function (input) {
-                formatNumber(input);
-            });
-
-            // Add event listeners to format the numbers as the user types
-            priceInputs.forEach(function (input) {
-                input.addEventListener('input', function () {
-                    formatNumber(input);
-                });
-
-                input.addEventListener('blur', function () {
-                    formatNumber(input);
-                });
-            });
+            
         });
         $("#date").persianDatepicker({
                 showGregorianDate: true,
@@ -302,6 +277,41 @@
 
             // Hide default buttons
             $('.dt-buttons').hide();
+
+           
+            // Function to format the input value with thousands separators
+            function formatNumberWithCommas(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
+            // Function to remove all non-numeric characters (except the decimal point)
+            function cleanNumber(number) {
+                return number.toString().replace(/[^0-9.]/g, "");
+            }
+
+            // Add input event listener to price inputs
+            $('.price-input').on('input', function () {
+                var inputVal = $(this).val();
+                var cleanedVal = cleanNumber(inputVal);
+                var formattedVal = formatNumberWithCommas(cleanedVal);
+                $(this).val(formattedVal);
+            });
+
+            // Format price inputs on page load
+            $('.price-input').each(function () {
+                var inputVal = $(this).val();
+                var formattedVal = formatNumberWithCommas(cleanNumber(inputVal));
+                $(this).val(formattedVal);
+            });
+
+            // Before submitting the form, clean the input values
+            $('#priceForm').on('submit', function () {
+                $('.price-input').each(function () {
+                    var cleanedVal = cleanNumber($(this).val());
+                    $(this).val(cleanedVal);
+                });
+            });
+            
         });
     </script>
 </div>
