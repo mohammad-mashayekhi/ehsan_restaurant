@@ -148,11 +148,22 @@
                     <img src="{% static 'img/avatars/21.png' %}" class="avatar">
                 </div>
                 <div class="app-brand demo">
-                    <a href="index.html" class="app-brand-link">
+                    <a href="#" class="app-brand-link">
                         <span class="menu-text">{{user.username}}</span>
                         </br>
                         <span class="menu-text ms-2">خوش آمدید!</span>
                     </a>
+                </div>
+                <div class="app-brand">
+                    {% if user.groups.exists %}
+                        <div>
+                            {% for group in user.groups.all %}
+                                <span> سطح دسترسی : {{ group.name }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <span>هیچ گروهی</span>
+                    {% endif %}
                 </div>
                 <li class="menu-item  {% if request.resolver_match.view_name == 'dashboard' %} active {% endif %}">
                     <a href="{% url 'dashboard' %}" class="menu-link">
@@ -202,6 +213,7 @@
                         </div>
                     </a>
                 </li>
+            {% if user.groups.all.0.name != 'hall_manager' %}
                 <li class="menu-item {% if 'record/report' in request.path %} active {% endif %}">
                     <a href="#"  id="dynamicMenuLinkMonthReport" class="menu-link">
                         <div>
@@ -211,6 +223,8 @@
                         </div>
                     </a>
                 </li>
+            {% endif %}
+            {% if user.groups.all.0.name != 'kitchen_manager' %}
                 <li class="menu-item {% if request.resolver_match.view_name == 'record:claimsdebts' %} active {% endif %}">
                     <a href="#" id="dynamicMenuLinkClaimsDebts" class="menu-link">
                         <div>
@@ -220,6 +234,7 @@
                         </div>
                     </a>
                 </li>
+                {% endif %}
                 <li class="menu-item {% if request.resolver_match.view_name == 'record:consumptionreport' %} active {% endif %}">
                     <a href="#" id="dynamicMenuLinkConsumptionReport" class="menu-link">
                         <div>
@@ -247,6 +262,7 @@
                         </div>
                     </a>
                 </li>
+                {% if user.groups.all.0.name != 'accountants' %}
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
                         <div>
@@ -256,6 +272,7 @@
                         </div>
                     </a>
                 </li>
+                {% endif %}
                 <div class="logout-btn-wrapper">
                     <button class="btn btn-primary">
                         <a href="{% url 'logout' %}" class="menu-link">
