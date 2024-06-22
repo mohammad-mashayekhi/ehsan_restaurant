@@ -137,9 +137,9 @@ def consumptionreport(request, date):
         return HttpResponse('Invalid date format', status=400)
 
     # Retrieve all RecipeSaleFile records for the given date
-    sales = RecipeSaleFile.objects.filter(created_at=date_obj)
+    sales = RecipeSaleFile.objects.filter(date_created=date_obj)
     report_data = []
-
+    print(sales)
     # Retrieve the prices for the given date
     try:
         price_entry = Price.objects.get(date=date_obj)

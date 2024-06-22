@@ -229,7 +229,10 @@ def upload_file(request, date):
             
             # خواندن فایل اکسل
             try:
-                df = pd.read_excel(file_path, header=0)  # تغییر header به 0 برای خواندن عنوان ستون‌ها
+                df = pd.read_excel(file_path, header=0, dtype={
+                    'كد كالا': str,           # تمام کد کالاها به عنوان رشته خوانده شوند
+                    'مقدار - تعداد': float   # ستون مقدار - تعداد به عنوان اعشاری (float) خوانده شود
+                })                
                 messages.success(request, 'فایل با موفقیت بارگذاری شد.')
             except Exception as e:
                 form.add_error(None, f"Error reading Excel file: {str(e)}")
@@ -240,7 +243,7 @@ def upload_file(request, date):
             for index, row in df.iterrows():
                 if not pd.isnull(row['كد كالا']) and not pd.isnull(row['نام كالا']) and not pd.isnull(row['مقدار - تعداد']):
                     item = {
-                        'code': str(row['كد كالا']).zfill(8),  # اضافه کردن صفرهای پیش‌رو در صورت نیاز
+                        'code': str(row['كد كالا']),
                         'product_name': row['نام كالا'],
                         'count': row['مقدار - تعداد'],  # استفاده از ستون جدید برای تعداد
                         'unit_price': row['في واحد'],  # اضافه کردن ستون فی واحد
