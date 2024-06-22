@@ -244,6 +244,15 @@
                         </div>
                     </a>
                 </li>
+                <li class="menu-item {% if 'record/report' in request.path %} active {% endif %}">
+                    <a href="#"  id="dynamicMenuLinkMonthReport" class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/commitreportmoney.png' %}" alt="Dashboard Icon"
+                                width="20" height="20">
+                            گزارشات حسابداری
+                        </div>
+                    </a>
+                </li>
                 <li class="menu-item {% if request.resolver_match.view_name == 'repository:total_inventory' %} active {% endif %}">
                     <a href="{% url 'repository:total_inventory' %}" class="menu-link">
                         <div>
