@@ -27,8 +27,9 @@
 
 
   .card_head_title {
+    text-align:center !important;
     font-size: 1vw;
-    color: #c1e4ea;
+    color: #ffffff;
     padding: 5px;
     background: #2CA9C9 !important;
   }
@@ -83,9 +84,7 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data: ['تعداد']
-    },
+    
     toolbox: {
       show: true,
       feature: {
@@ -94,11 +93,10 @@
         saveAsImage: { show: true }
       }
     },
-    calculable: true,
     xAxis: [
       {
         type: 'category',
-        data: ['1','2','3','4','5','6','7','8','9','10','11','12']
+        data: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
       }
     ],
     yAxis: [
@@ -127,9 +125,6 @@
     tooltip: {
       trigger: 'axis'
     },
-    legend: {
-      data: ['قیمت']
-    },
     toolbox: {
       show: true,
       feature: {
@@ -138,11 +133,10 @@
         saveAsImage: { show: true }
       }
     },
-    calculable: true,
     xAxis: [
       {
         type: 'category',
-        data: ['1','2','3','4','5','6','7','8','9','10','11','12']
+        data: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
       }
     ],
     yAxis: [

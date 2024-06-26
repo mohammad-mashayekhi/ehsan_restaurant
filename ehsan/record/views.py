@@ -332,45 +332,48 @@ def reportchart(request, date):
     })
     
     
-# views.py
 from django.shortcuts import render
 from django.utils import timezone
 import calendar
 from collections import defaultdict
 import json
+from khayyam import JalaliDate
 
 def monthsale(request, date):
-    current_year = timezone.now().year
+    current_year = JalaliDate.today().year  # دریافت سال جاری شمسی
 
-    # Fetch all sales data from RecipeSaleFile
+    # دریافت تمامی داده‌های فروش از مدل RecipeSaleFile
     sales_data = RecipeSaleFile.objects.all()
 
-    # Prepare a defaultdict to store aggregated sales data
+    # آماده‌سازی defaultdict برای ذخیره‌سازی داده‌های فروش تجمیع شده
     monthly_sales = defaultdict(lambda: {'count': 0, 'total_price': 0})
 
-    # Aggregate sales data by month and year
+    # تجمیع داده‌های فروش بر اساس ماه و سال
     for sale in sales_data:
-        month = sale.date_created.month
-        year = sale.date_created.year
+        # تبدیل تاریخ میلادی به شمسی
+        jalali_date = JalaliDate(sale.date_created)
+        month = jalali_date.month
+        year = jalali_date.year
+        
         total_count = sum(item['count'] for item in sale.recipe_prices)
         total_price = sum(item['total_price'] for item in sale.recipe_prices)
 
-        if year == current_year:  # Considering current year data only
-            monthly_sales[(year, month)]['count'] += total_count
-            monthly_sales[(year, month)]['total_price'] += total_price
+        if year == current_year:  # در نظر گرفتن داده‌های سال جاری
+            monthly_sales[month]['count'] += total_count
+            monthly_sales[month]['total_price'] += total_price
 
-    # Prepare data for the charts
-    months = [calendar.month_name[i] for i in range(1, 13)]
-    count_data = [monthly_sales[(current_year, i)]['count'] for i in range(1, 13)]
-    price_data = [monthly_sales[(current_year, i)]['total_price'] for i in range(1, 13)]
+    # آماده‌سازی داده‌ها برای نمودارها
+    months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
+    count_data = [monthly_sales[i]['count'] for i in range(1, 13)]
+    price_data = [monthly_sales[i]['total_price'] for i in range(1, 13)]
 
-    # Prepare data in a dictionary format
+    # آماده‌سازی داده‌ها به صورت دیکشنری
     data_dict = {}
     for i in range(12):
         data_dict[f'count{i+1}'] = count_data[i]
         data_dict[f'price{i+1}'] = price_data[i]
 
-    # Convert data to JSON format
+    # تبدیل داده‌ها به فرمت JSON
     chart_data_json = json.dumps(data_dict)
 
     context = {
