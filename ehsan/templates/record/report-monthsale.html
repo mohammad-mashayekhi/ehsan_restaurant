@@ -84,7 +84,9 @@
     tooltip: {
       trigger: 'axis'
     },
-    
+    legend: {
+      data: ['قیمت', 'تعداد']
+    },
     toolbox: {
       show: true,
       feature: {
@@ -102,6 +104,17 @@
     yAxis: [
       {
         type: 'value',
+        name:'تعداد',
+        min:1000,
+        max:5000,
+        interval:1000,
+      },
+      {
+        type: 'value',
+        name:'قیمت بر حسب میلیون ریال',
+        min:1000,
+        max:5000,
+        interval:1000,
       }
     ],
     series: [
@@ -112,6 +125,15 @@
           chartData.count1, chartData.count2, chartData.count3, chartData.count4,
           chartData.count5, chartData.count6, chartData.count7, chartData.count8,
           chartData.count9, chartData.count10, chartData.count11, chartData.count12
+        ],
+      },
+      {
+        name: 'قیمت',
+        type: 'bar',
+        data: [
+          chartData.price1, chartData.price2, chartData.price3, chartData.price4,
+          chartData.price5, chartData.price6, chartData.price7, chartData.price8,
+          chartData.price9, chartData.price10, chartData.price11, chartData.price12
         ],
       },
     ],

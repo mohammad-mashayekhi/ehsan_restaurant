@@ -334,7 +334,6 @@ def reportchart(request, date):
     
 from django.shortcuts import render
 from django.utils import timezone
-import calendar
 from collections import defaultdict
 import json
 from khayyam import JalaliDate
@@ -365,7 +364,7 @@ def monthsale(request, date):
     # آماده‌سازی داده‌ها برای نمودارها
     months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
     count_data = [monthly_sales[i]['count'] for i in range(1, 13)]
-    price_data = [monthly_sales[i]['total_price'] for i in range(1, 13)]
+    price_data = [monthly_sales[i]['total_price'] / 1000000.0 for i in range(1, 13)]  # تقسیم بر ۱۰۰۰۰۰۰ و تبدیل به float
 
     # آماده‌سازی داده‌ها به صورت دیکشنری
     data_dict = {}
