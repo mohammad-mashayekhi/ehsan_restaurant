@@ -198,7 +198,7 @@
                         <div>
                             <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
                                 height="20">
-                            گزارش فروش روزانه
+                                ثبت گزارش فروش روزانه
                         </div>
                     </a>
                 </li>
@@ -230,6 +230,15 @@
                             <img src="{% static 'img/icons/menu/masrafreport.png' %}" alt="Dashboard Icon" width="20"
                                 height="20">
                             گزارش مصرف
+                        </div>
+                    </a>
+                </li>
+                <li class="menu-item {% if request.resolver_match.view_name == 'record:monthsale' %} active {% endif %}">
+                    <a href="#" id="dynamicmenuLinkMonthSale"  class="menu-link">
+                        <div>
+                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
+                                height="20">
+                                گزارش فروش ماهانه
                         </div>
                     </a>
                 </li>
@@ -355,6 +364,7 @@
                 var newUrlClaimsDebts =  '{% url "record:claimsdebts" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlConsumptionReport =  '{% url "record:consumptionreport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlReportchart =  '{% url "record:reportchart" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
+                var newUrlMonthSale =  '{% url "record:monthsale" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 
                 // پیدا کردن المان لینک و به روزرسانی href آن
                 var menuLinkFoodstuff = document.getElementById('dynamicMenuLinkFoodstuff');
@@ -364,6 +374,7 @@
                 var menuLinkClaimsDebts = document.getElementById('dynamicMenuLinkClaimsDebts');
                 var menuLinkConsumptionReport = document.getElementById('dynamicMenuLinkConsumptionReport');
                 var menuLinkReportChart = document.getElementById('dynamicMenuLinkreportchart');
+                var menuLinkMonthSale = document.getElementById('dynamicmenuLinkMonthSale');
                 
                 
                 if (menuLinkFoodstuff) {
@@ -387,6 +398,10 @@
                 if (menuLinkReportChart) {
                     menuLinkReportChart.href = newUrlReportchart;
                 }
+                if (menuLinkMonthSale) {
+                    menuLinkMonthSale.href = newUrlMonthSale;
+                }
+                
             });
         </script>
 </body>

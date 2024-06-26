@@ -9,4 +9,6 @@ urlpatterns = [
     path('claimsdebts/<str:date>/', add_claimsdebts, name='claimsdebts'),
     path('consumptionreport/<str:date>/', consumptionreport, name='consumptionreport'),
     path('chart/<str:date>/', reportchart, name='reportchart'),
+    path('monthsale/<str:date>/', monthsale, name='monthsale'),
+
 ]

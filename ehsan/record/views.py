@@ -308,8 +308,73 @@ def reportchart(request, date):
             "total_expenses": float(report.total_expenses),
         }
     
-    # ارسال داده‌ها به قالب
-    return render(request, 'record/report-chart.html', {'sales_report': sales_report
-                                                        , 'expenses_report': expenses_report
-                                                        ,'jalali_date':jalali_date
-                                                        ,'date':date,})
+   # محاسبه درصد برای فروش‌ها
+    sales_keys = list(sales_report.keys())
+    for key in sales_keys:
+        if key != 'total_sales' and sales_report['total_sales'] > 0:
+            sales_report[key + '_percent'] = (sales_report[key] / sales_report['total_sales']) * 100
+        else:
+            sales_report[key + '_percent'] = 0.0
+
+    # محاسبه درصد برای هزینه‌ها
+    expenses_keys = list(expenses_report.keys())
+    for key in expenses_keys:
+        if key != 'total_expenses' and expenses_report['total_expenses'] > 0:
+            expenses_report[key + '_percent'] = (expenses_report[key] / expenses_report['total_expenses']) * 100
+        else:
+            expenses_report[key + '_percent'] = 0.0
+    
+    return render(request, 'record/report-chart.html', {
+        'sales_report': sales_report,
+        'expenses_report': expenses_report,
+        'jalali_date': jalali_date,
+        'date': date,
+    })
+    
+    
+# views.py
+from django.shortcuts import render
+from django.utils import timezone
+import calendar
+from collections import defaultdict
+import json
+
+def monthsale(request, date):
+    current_year = timezone.now().year
+
+    # Fetch all sales data from RecipeSaleFile
+    sales_data = RecipeSaleFile.objects.all()
+
+    # Prepare a defaultdict to store aggregated sales data
+    monthly_sales = defaultdict(lambda: {'count': 0, 'total_price': 0})
+
+    # Aggregate sales data by month and year
+    for sale in sales_data:
+        month = sale.date_created.month
+        year = sale.date_created.year
+        total_count = sum(item['count'] for item in sale.recipe_prices)
+        total_price = sum(item['total_price'] for item in sale.recipe_prices)
+
+        if year == current_year:  # Considering current year data only
+            monthly_sales[(year, month)]['count'] += total_count
+            monthly_sales[(year, month)]['total_price'] += total_price
+
+    # Prepare data for the charts
+    months = [calendar.month_name[i] for i in range(1, 13)]
+    count_data = [monthly_sales[(current_year, i)]['count'] for i in range(1, 13)]
+    price_data = [monthly_sales[(current_year, i)]['total_price'] for i in range(1, 13)]
+
+    # Prepare data in a dictionary format
+    data_dict = {}
+    for i in range(12):
+        data_dict[f'count{i+1}'] = count_data[i]
+        data_dict[f'price{i+1}'] = price_data[i]
+
+    # Convert data to JSON format
+    chart_data_json = json.dumps(data_dict)
+
+    context = {
+        'chart_data_json': chart_data_json,
+    }
+
+    return render(request, 'record/report-monthsale.html', context)

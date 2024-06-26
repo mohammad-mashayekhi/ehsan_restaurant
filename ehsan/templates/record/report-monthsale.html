@@ -1,0 +1,169 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block contant %}
+<style>
+  #chart-sale,
+  #chart-price {
+    position: relative;
+    height: 40vh;
+    overflow: hidden;
+  }
+
+  .th {
+    background-color: #6CC3DA !important;
+    color: white !important;
+    font-size: 1vw !important;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align-last: center;
+    letter-spacing: 0px !important;
+  }
+
+  .th span {
+    font-size: 10px !important;
+  }
+
+
+  .card_head_title {
+    font-size: 1vw;
+    color: #c1e4ea;
+    padding: 5px;
+    background: #2CA9C9 !important;
+  }
+</style>
+
+<div class="container-xxl flex-grow-1 container-p-y">
+  <h4 class="fw-bold pt-3 mb-4">
+    <span class="text-muted fw-light">فروش ماهانه/</span> مشاهده
+  </h4>
+
+  <!-- نمودار برای تعداد -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="card_head_title">
+        فروش بر حسب تعداد در سال {{ chart_data.year }}
+      </div>
+    </div>
+    <div class="mt-3 p-4">
+      <div id="chart-sale"></div>
+    </div>
+  </div>
+
+  <!-- نمودار برای کل قیمت -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="card_head_title">
+        فروش بر حسب کل قیمت در سال {{ chart_data.year }}
+      </div>
+    </div>
+    <div class="mt-3 p-4">
+      <div id="chart-price"></div>
+    </div>
+  </div>
+</div>
+<script src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+
+<script>
+  var chartCountDom = document.getElementById('chart-sale');
+  var chartPriceDom = document.getElementById('chart-price');
+
+  var chartCount = echarts.init(chartCountDom);
+  var chartPrice = echarts.init(chartPriceDom);
+
+  // استخراج داده‌های JSON از داخل تمپلیت
+  var chartData = JSON.parse('{{ chart_data_json|escapejs }}');
+
+  var optionCount = {
+    textStyle: {
+      fontFamily: "IRANSans",
+      fontSize: 20,
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['تعداد']
+    },
+    toolbox: {
+      show: true,
+      feature: {
+        dataView: { show: true, readOnly: true },
+        magicType: { show: true, type: ['line', 'bar'] },
+        saveAsImage: { show: true }
+      }
+    },
+    calculable: true,
+    xAxis: [
+      {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10','11','12']
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+      }
+    ],
+    series: [
+      {
+        name: 'تعداد',
+        type: 'bar',
+        data: [
+          chartData.count1, chartData.count2, chartData.count3, chartData.count4,
+          chartData.count5, chartData.count6, chartData.count7, chartData.count8,
+          chartData.count9, chartData.count10, chartData.count11, chartData.count12
+        ],
+      },
+    ],
+  };
+
+  var optionPrice = {
+    textStyle: {
+      fontFamily: "IRANSans",
+      fontSize: 20,
+    },
+    tooltip: {
+      trigger: 'axis'
+    },
+    legend: {
+      data: ['قیمت']
+    },
+    toolbox: {
+      show: true,
+      feature: {
+        dataView: { show: true, readOnly: true },
+        magicType: { show: true, type: ['line', 'bar'] },
+        saveAsImage: { show: true }
+      }
+    },
+    calculable: true,
+    xAxis: [
+      {
+        type: 'category',
+        data: ['1','2','3','4','5','6','7','8','9','10','11','12']
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value',
+      }
+    ],
+    series: [
+      {
+        name: 'قیمت',
+        type: 'bar',
+        data: [
+          chartData.price1, chartData.price2, chartData.price3, chartData.price4,
+          chartData.price5, chartData.price6, chartData.price7, chartData.price8,
+          chartData.price9, chartData.price10, chartData.price11, chartData.price12
+        ],
+      },
+    ],
+  };
+
+  chartCount.setOption(optionCount);
+  chartPrice.setOption(optionPrice);
+</script>
+{% endblock %}

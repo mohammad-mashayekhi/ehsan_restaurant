@@ -5,7 +5,7 @@
 
 #chart-sale, #chart-cost {
   position: relative;
-  height: 100vh;
+  height: 40vh;
   overflow: hidden;
 }
 
@@ -85,8 +85,8 @@
       <input class='form-control-sm date' style="text-align: center;"  type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
       <button class="btn-arrow btn" id="nextDayBtn">>></button>
   </div>
-    <div class="row">
-      <div class="col-sm text-center">
+    <div class="">
+      <div class="text-center">
         <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
           <div class="card_head_title">
             فروش
@@ -97,19 +97,13 @@
           </div>
         </div>
       </div>
-      <div class="col-sm text-center">
+      <div class="text-center">
         <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
           <div class="card_head_title">هزینه</div>
           <div class="mt-3 p-4">
             <div id="chart-cost"></div>
         </div>
       </div>
-      </div>
-    </div>
-    <div class="card mb-4 p-3 text-center" style="margin-inline: 60px; box-shadow: none;">
-      <div class="card_head_title">سود و زیان</div>
-      <div class="mt-3 p-4">
-      asd
       </div>
     </div>
   </div>
@@ -166,10 +160,7 @@
     });
   </script>
   
-  <script>
-    var salesReportData = {{ sales_report|safe }};
-    var expensesReportData = {{ expenses_report|safe }};
-
+  <script type="text/javascript">
     // نمودار فروش
     var domSales = document.getElementById('chart-sale');
     var myChartSales = echarts.init(domSales, null, {
@@ -177,47 +168,54 @@
       useDirtyRect: false
     });
     var optionSales = {
+      textStyle: {
+        fontFamily: "IRANSans",
+        fontSize:20,
+
+      },
       tooltip: {
-        trigger: 'item'
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+        orient: 'vertical',
+        left: 'right'
       },
       series: [
         {
           name: 'فروش',
           type: 'pie',
           radius: ['40%', '70%'],
-          avoidLabelOverlap: false,
+          avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 10,
             borderColor: '#fff',
             borderWidth: 2
           },
           label: {
-            show: false,
-            position: 'center'
+            formatter: '{d}%',
+            fontSize: 18,
+            FontFace: 'sans'
           },
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 16,
               fontWeight: 'bold'
             }
           },
           labelLine: {
-            show: false
+            show: true
           },
           data: [
-            { value: salesReportData.sales_hall, name: 'سالن' },
-            { value: salesReportData.sales_takeaway, name: 'بیرون‌بر' },
-            { value: salesReportData.sales_snappfood, name: 'اسنپ‌فود' },
-            { value: salesReportData.sales_company, name: 'شرکتی' },
-            { value: salesReportData.sales_special_company, name: 'شرکت خاص' },
-            { value: salesReportData.sales_charity, name: 'خیریه' },
-            { value: salesReportData.sales_charity1, name: 'هیات' },
-            { value: salesReportData.sales_misc, name: 'متفرقه' }
+            { value: {{ sales_report.sales_hall }}, name: 'فروش حضوری', percent: {{ sales_report.sales_hall_percent }} },
+            { value: {{ sales_report.sales_takeaway }}, name: 'فروش بیرون‌بر', percent: {{ sales_report.sales_takeaway_percent }} },
+            { value: {{ sales_report.sales_snappfood }}, name: 'فروش اسنپ‌فود', percent: {{ sales_report.sales_snappfood_percent }} },
+            { value: {{ sales_report.sales_company }}, name: 'فروش شرکتی', percent: {{ sales_report.sales_company_percent }} },
+            { value: {{ sales_report.sales_special_company }}, name: 'فروش ویژه شرکتی', percent: {{ sales_report.sales_special_company_percent }} },
+            { value: {{ sales_report.sales_charity }}, name: 'فروش خیریه', percent: {{ sales_report.sales_charity_percent }} },
+            { value: {{ sales_report.sales_charity1 }}, name: 'فروش هیات', percent: {{ sales_report.sales_charity1_percent }} },
+            { value: {{ sales_report.sales_misc }}, name: 'فروش متفرقه', percent: {{ sales_report.sales_misc_percent }} }
           ]
         }
       ]
@@ -236,47 +234,53 @@
       useDirtyRect: false
     });
     var optionCost = {
+      textStyle: {
+        fontSize:20,
+        fontFamily: "IRANSans"
+      },
       tooltip: {
-        trigger: 'item'
+        trigger: 'item',
+        formatter: '{a} <br/>{b}: {c} ({d}%)'
       },
       legend: {
-        top: '5%',
-        left: 'center'
+        orient: 'vertical',
+        left: 'right'
       },
       series: [
         {
-          name: 'هزینه',
+          name: 'فروش',
           type: 'pie',
           radius: ['40%', '70%'],
-          avoidLabelOverlap: false,
+          avoidLabelOverlap: true,
           itemStyle: {
             borderRadius: 10,
             borderColor: '#fff',
             borderWidth: 2
           },
           label: {
-            show: false,
-            position: 'center'
+            formatter: '{d}%',
+            fontSize: 18,
+            FontFace: 'sans'
           },
           emphasis: {
             label: {
               show: true,
-              fontSize: 40,
+              fontSize: 16,
               fontWeight: 'bold'
             }
           },
           labelLine: {
-            show: false
+            show: true
           },
           data: [
-            { value: expensesReportData.rent, name: 'اجاره' },
-            { value: expensesReportData.salaries, name: 'حقوق' },
-            { value: expensesReportData.hall, name: 'هزینه سالن' },
-            { value: expensesReportData.raw_materials, name: 'مواد خام' },
-            { value: expensesReportData.consumables, name: 'مصرفی' },
-            { value: expensesReportData.maintenance, name: 'تعمیر و نگهداری' },
-            { value: expensesReportData.delivery, name: 'هزینه ارسال' },
-            { value: expensesReportData.misc_expenses, name: 'هزینه‌های متفرقه' }
+            { value: {{ expenses_report.rent }}, name: 'اجاره', percent: {{ expenses_report.rent_percent }} },
+            { value: {{ expenses_report.salaries }}, name: 'حقوق', percent: {{ expenses_report.salaries_percent }} },
+            { value: {{ expenses_report.hall }}, name: 'هزینه سالن', percent: {{ expenses_report.hall_percent }} },
+            { value: {{ expenses_report.raw_materials }}, name: 'مواد خام', percent: {{ expenses_report.raw_materials_percent }} },
+            { value: {{ expenses_report.consumables }}, name: 'مصرفی', percent: {{ expenses_report.consumables_percent }} },
+            { value: {{ expenses_report.maintenance }}, name: 'تعمیر و نگهداری', percent: {{ expenses_report.maintenance_percent }} },
+            { value: {{ expenses_report.delivery }}, name: 'هزینه ارسال', percent: {{ expenses_report.delivery_percent }} },
+            { value: {{ expenses_report.misc_expenses }}, name: 'هزینه‌های متفرقه', percent: {{ expenses_report.misc_expenses_percent }} }
           ]
         }
       ]
