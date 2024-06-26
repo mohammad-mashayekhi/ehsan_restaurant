@@ -340,7 +340,7 @@ from khayyam import JalaliDate
 
 def monthsale(request, date):
     current_year = JalaliDate.today().year  # دریافت سال جاری شمسی
-
+     
     # دریافت تمامی داده‌های فروش از مدل RecipeSaleFile
     sales_data = RecipeSaleFile.objects.all()
 
@@ -377,6 +377,7 @@ def monthsale(request, date):
 
     context = {
         'chart_data_json': chart_data_json,
+        'chart_data_year':current_year,
     }
 
     return render(request, 'record/report-monthsale.html', context)
