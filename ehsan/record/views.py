@@ -6,9 +6,10 @@ from foodstuff.models import Category
 def report(request, date):
     date_object = datetime.strptime(date, '%Y-%m-%d').replace(day=1)
     jalali_date = jdatetime.date.fromgregorian(date=date_object).strftime('%Y/%m/%d')
+    report_date = date_object.replace(day=1)
 
     # Get or create MonthlyReport instance for the given date
-    report_instance, created = MonthlyReport.objects.get_or_create(date=date_object)
+    report_instance, created = MonthlyReport.objects.get_or_create(date=report_date)
 
     if request.method == 'POST':
         form = DailyReportForm(request.POST, instance=report_instance)
@@ -340,7 +341,7 @@ from khayyam import JalaliDate
 
 def monthsale(request, date):
     current_year = JalaliDate.today().year  # دریافت سال جاری شمسی
-     
+    
     # دریافت تمامی داده‌های فروش از مدل RecipeSaleFile
     sales_data = RecipeSaleFile.objects.all()
 
@@ -361,23 +362,38 @@ def monthsale(request, date):
             monthly_sales[month]['count'] += total_count
             monthly_sales[month]['total_price'] += total_price
 
+    # Query MonthlyReport for the current year and calculate monthly profit and misc expenses
+    monthly_reports = MonthlyReport.objects.filter(date__year=current_year)
+    monthly_profits = defaultdict(lambda: 0.0)
+    monthly_expenses = defaultdict(lambda: 0.0)
+
+    for report in monthly_reports:
+        jalali_date = JalaliDate(report.date)
+        month = jalali_date.month
+        monthly_profits[month] = float(report.monthly_profit)
+        monthly_expenses[month] = float(report.misc_expenses)  # Assuming misc_expenses is a float field
+
     # آماده‌سازی داده‌ها برای نمودارها
     months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
     count_data = [monthly_sales[i]['count'] for i in range(1, 13)]
     price_data = [monthly_sales[i]['total_price'] / 1000000.0 for i in range(1, 13)]  # تقسیم بر ۱۰۰۰۰۰۰ و تبدیل به float
+    profit_data = [monthly_profits[i] for i in range(1, 13)]
+    expense_data = [monthly_expenses[i] for i in range(1, 13)]
 
     # آماده‌سازی داده‌ها به صورت دیکشنری
     data_dict = {}
     for i in range(12):
         data_dict[f'count{i+1}'] = count_data[i]
         data_dict[f'price{i+1}'] = price_data[i]
+        data_dict[f'profit{i+1}'] = profit_data[i]
+        data_dict[f'expense{i+1}'] = expense_data[i]
 
     # تبدیل داده‌ها به فرمت JSON
     chart_data_json = json.dumps(data_dict)
 
     context = {
         'chart_data_json': chart_data_json,
-        'chart_data_year':current_year,
+        'chart_data_year': current_year,
     }
 
     return render(request, 'record/report-monthsale.html', context)

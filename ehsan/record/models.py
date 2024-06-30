@@ -20,9 +20,9 @@ class MonthlyReport(models.Model):
     consumables = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     maintenance = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     delivery = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    misc_expenses = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    total_expenses = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    monthly_profit = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    misc_expenses = models.DecimalField(max_digits=20, decimal_places=2, default=0.0)
+    total_expenses = models.DecimalField(max_digits=20, decimal_places=2, default=0.0)
+    monthly_profit = models.DecimalField(max_digits=20, decimal_places=2, default=0.0)
     profit_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     cost_to_sales_ratio = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
 

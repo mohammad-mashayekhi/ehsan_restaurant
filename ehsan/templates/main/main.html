@@ -260,15 +260,6 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item">
-                    <a href="cards-actions.html" class="menu-link">
-                        <div>
-                            <img src="{% static 'img/icons/menu/briefcase.png' %}" alt="Dashboard Icon" width="20"
-                                height="20">
-                            اتوماسیون اداری
-                        </div>
-                    </a>
-                </li>
                 {% if user.groups.all.0.name != 'accountants' %}
                 <li class="menu-item">
                     <a href="cards-actions.html" class="menu-link">
