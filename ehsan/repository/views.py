@@ -102,6 +102,7 @@ def TotalInventoryView(request):
     quantities_sum_in = {}
     quantities_sum_out = {}
     categories = Category.objects.all()  # اضافه کردن دسته بندی‌ها
+    error_items = []  # لیستی برای نگهداری آیتم‌های دارای خطا
 
     # Get repositories with type 'in'
     repositories_in = Repository.objects.filter(type='in')
@@ -113,9 +114,16 @@ def TotalInventoryView(request):
     def accumulate_quantities(repositories, quantities_sum):
         for repo in repositories:
             for stuff_id, quantity in repo.quantities.items():
-                # Remove commas from the quantity string and then convert to integer
-                quantity = quantity.replace(',', '')
-                quantities_sum[stuff_id] = quantities_sum.get(stuff_id, 0) + float(quantity)
+                try:
+                    # Remove commas from the quantity string and then convert to float
+                    quantity = quantity.replace(',', '')
+                    quantities_sum[stuff_id] = quantities_sum.get(stuff_id, 0) + float(quantity)
+                except ValueError:
+                    error_items.append({
+                        'stuff_id': stuff_id,
+                        'stuff_name': Stuffs.objects.get(stuff_id=stuff_id).stuff_name,
+                        'date': repo.date
+                    })
     
     # Accumulate quantities for 'in' type repositories
     accumulate_quantities(repositories_in, quantities_sum_in)
@@ -168,5 +176,6 @@ def TotalInventoryView(request):
     return render(request, 'repository/total_inventory.html', {
         'data': data,
         'categories': categories,
-        'total_inventory_value': total_inventory_value
+        'total_inventory_value': total_inventory_value,
+        'error_items': error_items  # اضافه کردن لیست آیتم‌های دارای خطا به قالب
     })
