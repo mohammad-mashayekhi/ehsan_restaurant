@@ -1,5 +1,113 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
-
+<div class="container-xxl flex-grow-1 container-p-y">
+    <h4 class="fw-bold pt-3 mb-4">
+        <span class="text-muted fw-light">داشبورد/</span> سلام {{ request.user.get_full_name }}
+    </h4>
+    <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;">
+        <div class="card-header" style="margin-inline: 60px;">
+            <h4>تاریخ امروز: {{jalali_date}} 
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6 col-lg-6">
+                    <div class="card" style="box-shadow: none;">
+                        <div class="card-header">
+                            <h5>فعالیت‌های داشبورد</h5>
+                        </div>
+                        <div class="card-body pt-4 pb-2 mt-2">
+                            <ul class="timeline card-timeline mb-0">
+                                <li class="timeline-item timeline-item-transparent">
+                                    <span class="timeline-point {% if last_entry_in_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
+                                    <div class="timeline-event">
+                                        <div class="timeline-header mb-1">
+                                            <h6 class="mb-2 fw-semibold">
+                                                آخرین ثبت ورودی انبار
+                                            </h6>
+                                            <small class="fw-bold">{{ last_entry_in_date }}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item timeline-item-transparent">
+                                    <span class="timeline-point {% if last_entry_out_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
+                                    <div class="timeline-event">
+                                        <div class="timeline-header mb-1">
+                                            <h6 class="mb-2 fw-semibold">
+                                                آخرین ثبت خروجی انبار
+                                            </h6>
+                                            <small class="fw-bold">{{ last_entry_out_date }}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item timeline-item-transparent">
+                                    <span class="timeline-point {% if last_sale_info_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
+                                    <div class="timeline-event">
+                                        <div class="timeline-header mb-1">
+                                            <h6 class="mb-2 fw-semibold">
+                                                آخرین ثبت اطلاعات فروش
+                                            </h6>
+                                            <small class="fw-bold">{{ last_sale_info_date }}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="timeline-item timeline-item-transparent">
+                                    <span class="timeline-point {% if last_price_update_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
+                                    <div class="timeline-event">
+                                        <div class="timeline-header mb-1">
+                                            <h6 class="mb-2 fw-semibold">
+                                                آخرین زمان آپدیت قیمت‌ مواد اولیه
+                                            </h6>
+                                            <small class="fw-bold">{{ last_price_update_date }}</small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-6">
+                    <div class="card" style="box-shadow: none;">
+                        <div class="card-header">
+                            <h5>رفتن به ...</h5>
+                        </div>
+                        <div class="card-body pt-4 pb-2 mt-2">
+                            <ul class="timeline card-timeline mb-0">
+                                <div class="timeline-event">
+                                    <div class="timeline-header">
+                                        <a href="{% url 'repository:in_repository' today_date %}" class="mb-4 fw-semibold btn btn-primary waves-effect waves-light">
+                                            ثبت ورودی انبار
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="timeline-event">
+                                    <div class="timeline-header mb-1">
+                                        <a href="{% url 'repository:out_repository' today_date %}" class="mb-4 fw-semibold btn btn-primary waves-effect waves-light">
+                                            ثبت خروجی انبار
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="timeline-event">
+                                    <div class="timeline-header mb-1">
+                                        <a href="{% url 'recipe:salereport' today_date %}" class="mb-2 fw-semibold btn btn-primary waves-effect waves-light">
+                                            ثبت اطلاعات فروش
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="timeline-event">
+                                    <div class="timeline-header mt-4">
+                                        <a href="{% url 'foodstuff:add_price' today_date %}" class="mb-4 fw-semibold btn btn-primary waves-effect waves-light">
+                                            ثبت قیمت‌ مواد اولیه
+                                        </a>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
