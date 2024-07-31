@@ -61,10 +61,10 @@
                   {{ month.name }}
               </button>
           {% endfor %}
-          <button class="btn btn-primary month-button" style="float: left;" type="submit">ذخیره</button>
+          <button id="saveButton" class="btn btn-primary month-button" style="float: left;">ذخیره</button>
         </div>
       </div>
-      <form method="post">
+      <form id="reportForm" method="post">
         {% csrf_token %}
       <div class="row">
         <div class="col-sm text-center">
@@ -271,6 +271,20 @@
   </form>
     </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // دکمه ذخیره
+    var saveButton = document.getElementById('saveButton');
+    // فرم
+    var form = document.getElementById('reportForm');
+    
+    // وقتی دکمه ذخیره کلیک می‌شود
+    saveButton.addEventListener('click', function () {
+      // ارسال فرم
+      form.submit();
+    });
+  });
+</script>
   <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
   <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
   <script>
