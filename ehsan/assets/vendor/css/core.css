@@ -7,7 +7,7 @@
 :root,
 [data-bs-theme=light] {
   --bs-blue: #26c6f9;
-  --bs-indigo: #666cff;
+  --bs-indigo: #FF8A00;
   --bs-purple: #6f42c1;
   --bs-pink: #e83e8c;
   --bs-red: #ff4d49;
@@ -22,7 +22,7 @@
   --bs-gray-dark: rgba(76, 78, 100, 0.8);
   --bs-gray-25: rgba(76, 78, 100, 0.015);
   --bs-gray-50: rgba(76, 78, 100, 0.03);
-  --bs-primary: #666cff;
+  --bs-primary: #FF8A00;
   --bs-secondary: #6d788d;
   --bs-success: #72e128;
   --bs-info: #26c6f9;
@@ -89,7 +89,7 @@
   --bs-tertiary-bg: rgba(76, 78, 100, 0.06);
   --bs-tertiary-bg-rgb: 76, 78, 100;
   --bs-heading-color: #636578;
-  --bs-link-color: #666cff;
+  --bs-link-color: #FF8A00;
   --bs-link-color-rgb: 102, 108, 255;
   --bs-link-decoration: none;
   --bs-link-hover-color: #5c61e6;
@@ -2312,8 +2312,8 @@ textarea.form-control-lg {
   box-shadow: 0 0 0.25rem 0.05rem rgba(102, 108, 255, 0.1);
 }
 .form-check-input:checked {
-  background-color: #666cff;
-  border-color: #666cff;
+  background-color: #FF8A00;
+  border-color: #FF8A00;
 }
 .form-check-input:checked[type=checkbox] {
   --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 19 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 10l3 3l6-6'/%3e%3c/svg%3e");
@@ -2322,8 +2322,8 @@ textarea.form-control-lg {
   --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='transparent' stroke='%23fff'/%3e%3c/svg%3e");
 }
 .form-check-input[type=checkbox]:indeterminate {
-  background-color: #666cff;
-  border-color: #666cff;
+  background-color: #FF8A00;
+  border-color: #FF8A00;
   --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 10h8'/%3e%3c/svg%3e");
 }
 .form-check-input:disabled {
@@ -2414,7 +2414,7 @@ textarea.form-control-lg {
   height: 1.25rem;
   margin-top: -0.5rem;
   appearance: none;
-  background-color: #666cff;
+  background-color: #FF8A00;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -2440,7 +2440,7 @@ textarea.form-control-lg {
   width: 1.25rem;
   height: 1.25rem;
   appearance: none;
-  background-color: #666cff;
+  background-color: #FF8A00;
   border: 0;
   border-radius: 1rem;
   transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -2848,7 +2848,7 @@ textarea.form-control-lg {
   --bs-dropdown-link-color: #828393;
   --bs-dropdown-link-hover-color: #828393;
   --bs-dropdown-link-hover-bg: rgba(76, 78, 100, 0.06);
-  --bs-dropdown-link-active-color: #666cff;
+  --bs-dropdown-link-active-color: #ffc466;
   --bs-dropdown-link-active-bg: rgba(102, 108, 255, 0.1);
   --bs-dropdown-link-disabled-color: #d8d8dd;
   --bs-dropdown-item-padding-x: 1rem;
@@ -3116,7 +3116,7 @@ textarea.form-control-lg {
   --bs-dropdown-link-hover-color: #fff;
   --bs-dropdown-divider-bg: rgba(76, 78, 100, 0.05);
   --bs-dropdown-link-hover-bg: rgba(255, 255, 255, 0.15);
-  --bs-dropdown-link-active-color: #666cff;
+  --bs-dropdown-link-active-color: #FF8A00;
   --bs-dropdown-link-active-bg: rgba(102, 108, 255, 0.1);
   --bs-dropdown-link-disabled-color: rgba(76, 78, 100, 0.5);
   --bs-dropdown-header-color: rgba(76, 78, 100, 0.5);
@@ -3269,9 +3269,9 @@ textarea.form-control-lg {
   --bs-nav-tabs-border-color: #eaeaec;
   --bs-nav-tabs-border-radius: var(--bs-border-radius);
   --bs-nav-tabs-link-hover-border-color: var(--bs-secondary-bg) var(--bs-secondary-bg) #eaeaec;
-  --bs-nav-tabs-link-active-color: #666cff;
+  --bs-nav-tabs-link-active-color: #FF8A00;
   --bs-nav-tabs-link-active-bg: #fff;
-  --bs-nav-tabs-link-active-border-color: #666cff;
+  --bs-nav-tabs-link-active-border-color: #FF8A00;
   border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
 }
 .nav-tabs .nav-link {
@@ -4149,8 +4149,8 @@ textarea.form-control-lg {
   --bs-pagination-focus-bg: #f6f6f7;
   --bs-pagination-focus-box-shadow: none;
   --bs-pagination-active-color: #fff;
-  --bs-pagination-active-bg: #666cff;
-  --bs-pagination-active-border-color: #666cff;
+  --bs-pagination-active-bg: #FF8A00;
+  --bs-pagination-active-border-color: #FF8A00;
   --bs-pagination-disabled-color: #bbbcc4;
   --bs-pagination-disabled-bg: #f6f6f7;
   --bs-pagination-disabled-border-color: #eaeaec;
@@ -4363,7 +4363,7 @@ textarea.form-control-lg {
   --bs-progress-border-radius: 0;
   --bs-progress-box-shadow: var(--bs-box-shadow-inset);
   --bs-progress-bar-color: #fff;
-  --bs-progress-bar-bg: #666cff;
+  --bs-progress-bar-bg: #FF8A00;
   --bs-progress-bar-transition: width 0.6s ease;
   display: flex;
   height: var(--bs-progress-height);
@@ -8693,11 +8693,11 @@ div:not(.nav-align-left):not(.nav-align-right) > .nav-tabs {
 }
 .nav-tabs.nav-tabs-widget .nav-link.active {
   border-style: solid;
-  border-color: #666cff;
+  border-color: #FF8A00;
 }
 .nav-tabs.nav-tabs-widget .nav-link.active .avatar-initial {
   background-color: #dddfff !important;
-  color: #666cff !important;
+  color: #FF8A00 !important;
 }
 .nav-tabs.nav-tabs-widget .tab-slider {
   display: none;
@@ -12193,7 +12193,7 @@ button.list-group-item-gray.active {
 }
 
 .border-primary {
-  border-color: #666cff !important;
+  border-color: #FF8A00 !important;
 }
 
 .border-secondary {
@@ -20821,7 +20821,7 @@ html:not(.layout-footer-fixed) .content-wrapper {
   box-shadow: 0 0 0 10px #f7f7f9;
 }
 .timeline .timeline-item .timeline-indicator i {
-  color: #666cff;
+  color: #FF8A00;
 }
 .timeline .timeline-item .timeline-point {
   position: absolute;
@@ -20832,7 +20832,7 @@ html:not(.layout-footer-fixed) .content-wrapper {
   height: 0.75rem;
   width: 0.75rem;
   border-radius: 50%;
-  background-color: #666cff;
+  background-color: #FF8A00;
   box-shadow: 0 0 0 10px #fff;
 }
 .timeline .timeline-item.timeline-item-transparent .timeline-event {
@@ -20849,7 +20849,7 @@ html:not(.layout-footer-fixed) .content-wrapper {
 .timeline.timeline-outline .timeline-item .timeline-point {
   outline: unset;
   background-color: #fff !important;
-  border: 1px solid #666cff;
+  border: 1px solid #FF8A00;
 }
 .timeline.timeline-center:before {
   left: 50%;

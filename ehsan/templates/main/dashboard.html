@@ -1,73 +1,93 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block contant %}
+<style>
+    [dir=rtl] .timeline:not(.timeline-center) .timeline-item{
+        border-right: 0px !important;
+    }
+</style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold pt-3 mb-4">
         <span class="text-muted fw-light">داشبورد/</span> سلام {{ request.user.get_full_name }}
     </h4>
     <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;">
-        <div class="card-header" style="margin-inline: 60px;">
-            <h4>تاریخ امروز: {{jalali_date}} 
-            </h4>
-        </div>
+        <!-- <div class="card-header" style="margin-inline: 60px;"> -->
+            <!-- <h4>تاریخ امروز: {{jalali_date}} 
+            </h4> -->
+        <!-- </div> -->
         <div class="card-body">
             <div class="row">
                 <div class="col-6 col-lg-6">
                     <div class="card" style="box-shadow: none;">
-                        <div class="card-header">
+                        <!-- <div class="card-header">
                             <h5>فعالیت‌های داشبورد</h5>
-                        </div>
+                        </div> -->
                         <div class="card-body pt-4 pb-2 mt-2">
                             <ul class="timeline card-timeline mb-0">
-                                <li class="timeline-item timeline-item-transparent">
-                                    <span class="timeline-point {% if last_entry_in_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
-                                    <div class="timeline-event">
-                                        <div class="timeline-header mb-1">
-                                            <h6 class="mb-2 fw-semibold">
-                                                آخرین ثبت ورودی انبار
-                                            </h6>
-                                            <small class="fw-bold">{{ last_entry_in_date }}</small>
-                                        </div>
+                                <li class="timeline-item timeline-item-transparent mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if not last_entry_in_today %}
+                                        <span class="large mdi mdi-timeline-remove-outline mdi-36px me-2"></span>
+                                        {% else %}
+                                        <span class="large mdi mdi-timeline-check-outline mdi-36px me-2"></span>
+                                        {% endif %}
+                                        <h6 class="fw-semibold mb-0">ثبت روزانه ورودی انبار</h6>
                                     </div>
                                 </li>
-                                <li class="timeline-item timeline-item-transparent">
-                                    <span class="timeline-point {% if last_entry_out_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
-                                    <div class="timeline-event">
-                                        <div class="timeline-header mb-1">
-                                            <h6 class="mb-2 fw-semibold">
-                                                آخرین ثبت خروجی انبار
-                                            </h6>
-                                            <small class="fw-bold">{{ last_entry_out_date }}</small>
-                                        </div>
+                                <li class="timeline-item timeline-item-transparent mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if not last_entry_out_today %}
+                                        <span class="large mdi mdi-timeline-remove-outline mdi-36px me-2"></span>
+                                        {% else %}
+                                        <span class="large mdi mdi-timeline-check-outline mdi-36px me-2"></span>
+                                        {% endif %}
+                                        <h6 class="fw-semibold mb-0">ثبت روزانه خروجی انبار</h6>
                                     </div>
                                 </li>
-                                <li class="timeline-item timeline-item-transparent">
-                                    <span class="timeline-point {% if last_sale_info_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
-                                    <div class="timeline-event">
-                                        <div class="timeline-header mb-1">
-                                            <h6 class="mb-2 fw-semibold">
-                                                آخرین ثبت اطلاعات فروش
-                                            </h6>
-                                            <small class="fw-bold">{{ last_sale_info_date }}</small>
-                                        </div>
+                                <li class="timeline-item timeline-item-transparent mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if not recent_claims_debts %}
+                                        <span class="large mdi mdi-timeline-remove-outline mdi-36px me-2"></span>
+                                        {% else %}
+                                        <span class="large mdi mdi-timeline-check-outline mdi-36px me-2"></span>
+                                        {% endif %}
+                                        <h6 class="fw-semibold mb-0">گزارشات مطالبات بدهی</h6>
                                     </div>
                                 </li>
-                                <li class="timeline-item timeline-item-transparent">
-                                    <span class="timeline-point {% if last_price_update_today %}timeline-point-success{% else %}timeline-point-danger{% endif %}"></span>
-                                    <div class="timeline-event">
-                                        <div class="timeline-header mb-1">
-                                            <h6 class="mb-2 fw-semibold">
-                                                آخرین زمان آپدیت قیمت‌ مواد اولیه
-                                            </h6>
-                                            <small class="fw-bold">{{ last_price_update_date }}</small>
-                                        </div>
+                                <li class="timeline-item timeline-item-transparent  mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if not last_sale_info_today %}
+                                        <span class="large mdi mdi-timeline-remove-outline mdi-36px me-2"></span>
+                                        {% else %}
+                                        <span class="large mdi mdi-timeline-check-outline mdi-36px me-2"></span>
+                                        {% endif %}
+                                        <h6 class="fw-semibold mb-0">ثبت گزارش روزانه</div>
+                                </li>
+                                <li class="timeline-item timeline-item-transparent  mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if not last_price_update_recent %}
+                                        <span class="large mdi mdi-timeline-remove-outline mdi-36px me-2"></span>
+                                        {% else %}
+                                        <span class="large mdi mdi-timeline-check-outline mdi-36px me-2"></span>
+                                        {% endif %}
+                                        <h6 class="fw-semibold mb-0">بروزرسانی قیمت‌ها</h6>
+                                    </div>
+                                </li>
+                                 <li class="timeline-item timeline-item-transparent  mb-4">
+                                    <div class="d-flex align-items-center">
+                                        {% if not last_MonthlyReport_update_recent %}
+                                        <span class="large mdi mdi-timeline-remove-outline mdi-36px me-2"></span>
+                                        {% else %}
+                                        <span class="large mdi mdi-timeline-check-outline mdi-36px me-2"></span>
+                                        {% endif %}
+                                        <h6 class="fw-semibold mb-0">ثبت گزارشات حسابداری</h6>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-lg-6">
+                <!-- <div class="col-6 col-lg-6">
                     <div class="card" style="box-shadow: none;">
                         <div class="card-header">
                             <h5>رفتن به ...</h5>
@@ -105,7 +125,7 @@
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

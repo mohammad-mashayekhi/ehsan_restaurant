@@ -16,6 +16,7 @@
         top: 0;
         z-index: 2;
         text-align-last: center;
+        letter-spacing: 0px !important;
     }
     .thnew {
         background-color: #FF8A00 !important;
@@ -80,6 +81,24 @@
         line-height: 1.5 !important;
         /* Reduce the line height */
     }
+    td:last-child {
+    border-left-style: hidden;
+    border-top-left-radius: 10px; 
+    border-bottom-left-radius: 10px;
+    }
+    td:first-child {
+        border-right-style: hidden;
+        border-bottom-right-radius: 10px; 
+        border-top-right-radius: 10px; 
+    }
+    .thhead{
+        border-right-style: solid;
+        border-bottom-right-radius: 10px; 
+        border-top-right-radius: 10px; 
+    }
+    .table tr{
+        border-color:white;
+    }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold pt-3 mb-4">
@@ -108,25 +127,27 @@
                         <div class="col-md-12">
                             <table id="datatable" class="table table-striped text-center">
                                 <thead class="table-light">
-                                    <tr>
-                                        <th class="th">عنوان</th>
+                                    <tr class="thhead">
+                                        <th style="border-bottom-right-radius: 10px;
+                                        border-top-right-radius: 10px; " class="th">عنوان</th>
                                         <th class="th">دسته بندی</th>
                                         <th class="th">رسپی</th>
                                         <th class="th">خروجی انبار</th>
                                         <th class="th">اختلاف</th>
                                         <th class="th">درصد</th>
-                                        <th class="th">قیمت</th>
+                                        <th style="border-bottom-left-radius: 10px;
+                                        border-top-left-radius: 10px; "class="th">قیمت</th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
                                     {% for item in report_data %}
                                     <tr>
                                         <td class="large">{{ item.ingredient_name }}</td>
-                                        <td>{{ item.category_name }}</td>
-                                        <td>{{ item.amount|floatformat:"0"|intcomma }}</td>
-                                        <td>{{ item.out_quantity }}</td>
-                                        <td style="direction:ltr;">{{ item.difference|floatformat:"0" }}</td>
-                                        <td style="direction:ltr;">{{ item.percentage_difference|floatformat:"0" }}%</td>
+                                        <td class="small-td">{{ item.category_name }}</td>
+                                        <td class="larege" style="font-size: large;">{{ item.amount|floatformat:"0"|intcomma }}</td>
+                                        <td class="larege" style="font-size: large;">{{ item.out_quantity }}</td>
+                                        <td class="larege" style="font-size: large;" style="direction:ltr;">{{ item.difference|floatformat:"0" }}</td>
+                                        <td class="larege" style="font-size: large;" style="direction:ltr;">{{ item.percentage_difference|floatformat:"0" }}%</td>
                                         <td style="direction:ltr;">{{ item.loss_amount|floatformat:"0"|intcomma }}</td>
                                     </tr>
                                     {% endfor %}

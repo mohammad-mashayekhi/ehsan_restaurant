@@ -127,7 +127,7 @@
                             {{ category.cat_name }}</option>
                         {% endfor %}
                     </select>
-                    <div id="datatable_filter" class="search-container">
+                    <div id="datatable_filter" class="form-control-sm search-container">
                         <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
                     </div>
         </div>
@@ -141,12 +141,14 @@
                             <table id="datatable" class="table table-striped text-center">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="th">کد</th>
+                                        <th style="border-bottom-right-radius: 10px;
+                                        border-top-right-radius: 10px; "class="th">کد</th>
                                         <th class="th">دسته بندی</th>
                                         <th class="th">عنوان</th>
                                         <th class="th">مقدار ورودی</th>
                                         <th class="th">مقیاس</th>
-                                        <th class="th" style="border-left: 20px !important;"></th>
+                                        <th style="border-bottom-left-radius: 10px;
+                                        border-top-left-radius: 10px; "class="th" style="border-left: 20px !important;"></th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
@@ -237,7 +239,7 @@
             },
             scrollCollapse: true,
             scrollX: true,
-            scrollY: 380,
+            scrollY: 410,
         
         });
 

@@ -233,15 +233,6 @@
                         </div>
                     </a>
                 </li>
-                <li class="menu-item {% if request.resolver_match.view_name == 'record:monthsale' %} active {% endif %}">
-                    <a href="#" id="dynamicmenuLinkMonthSale"  class="menu-link">
-                        <div>
-                            <img src="{% static 'img/icons/menu/daysell.png' %}" alt="Dashboard Icon" width="20"
-                                height="20">
-                                گزارش فروش ماهانه
-                        </div>
-                    </a>
-                </li>
                 <li class="menu-item {% if 'record/chart' in request.path %} active {% endif %}">
                     <a href="#"  id="dynamicMenuLinkreportchart" class="menu-link">
                         <div>

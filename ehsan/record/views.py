@@ -1,8 +1,16 @@
 from datetime import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import MonthlyReport
 from .forms import DailyReportForm ,IngredientForm
 from foodstuff.models import Category
+from recipe.models import Recipe, RecipeSaleFile
+from repository.models import Repository
+from foodstuff.models import Stuffs , Price
+import jdatetime
+from collections import defaultdict
+import json
+from khayyam import JalaliDate
+    
 def report(request, date):
     date_object = datetime.strptime(date, '%Y-%m-%d').replace(day=1)
     jalali_date = jdatetime.date.fromgregorian(date=date_object).strftime('%Y/%m/%d')
@@ -119,14 +127,6 @@ def add_claimsdebts(request, date):
         'claims': claims,
         'debts': debts,
     })
-
-from django.shortcuts import render, HttpResponse
-from django.utils import timezone
-from datetime import datetime
-from recipe.models import Recipe, RecipeSaleFile
-from repository.models import Repository
-from foodstuff.models import Stuffs , Price
-import jdatetime
 
 def consumptionreport(request, date):
     gregorian_date = datetime.strptime(date, '%Y-%m-%d')
@@ -245,11 +245,6 @@ def consumptionreport(request, date):
 
     return render(request, 'record/consumptionreport.html', context)
 
-
-from django.shortcuts import render
-from .models import MonthlyReport
-from datetime import datetime
-
 def reportchart(request, date):
     gregorian_date = datetime.strptime(date, '%Y-%m-%d')
     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
@@ -325,23 +320,11 @@ def reportchart(request, date):
         else:
             expenses_report[key + '_percent'] = 0.0
     
-    return render(request, 'record/report-chart.html', {
-        'sales_report': sales_report,
-        'expenses_report': expenses_report,
-        'jalali_date': jalali_date,
-        'date': date,
-    })
     
-    
-from django.shortcuts import render
-from django.utils import timezone
-from collections import defaultdict
-import json
-from khayyam import JalaliDate
+    # //////////////////////////////////////////////////////////////////
+    current_date = JalaliDate.today()
+    current_year = current_date.year  # دریافت سال جاری شمسی
 
-def monthsale(request, date):
-    current_year = JalaliDate.today().year  # دریافت سال جاری شمسی
-    
     # دریافت تمامی داده‌های فروش از مدل RecipeSaleFile
     sales_data = RecipeSaleFile.objects.all()
 
@@ -354,7 +337,7 @@ def monthsale(request, date):
         jalali_date = JalaliDate(sale.date_created)
         month = jalali_date.month
         year = jalali_date.year
-        
+
         total_count = sum(item['count'] for item in sale.recipe_prices)
         total_price = sum(item['total_price'] for item in sale.recipe_prices)
 
@@ -362,17 +345,90 @@ def monthsale(request, date):
             monthly_sales[month]['count'] += total_count
             monthly_sales[month]['total_price'] += total_price
 
+    # تبدیل سال شمسی به میلادی برای فیلتر کردن در مدل MonthlyReport
+    start_of_year_gregorian = JalaliDate(current_year, 1, 1).todate()
+    end_of_year_gregorian = JalaliDate(current_year, 12, 29).todate()
+    print(start_of_year_gregorian)
+    print(end_of_year_gregorian)
     # Query MonthlyReport for the current year and calculate monthly profit and misc expenses
-    monthly_reports = MonthlyReport.objects.filter(date__year=current_year)
+    monthly_reports = MonthlyReport.objects.filter(date__range=(start_of_year_gregorian, end_of_year_gregorian))
     monthly_profits = defaultdict(lambda: 0.0)
     monthly_expenses = defaultdict(lambda: 0.0)
 
     for report in monthly_reports:
         jalali_date = JalaliDate(report.date)
         month = jalali_date.month
-        monthly_profits[month] = float(report.monthly_profit)
-        monthly_expenses[month] = float(report.misc_expenses)  # Assuming misc_expenses is a float field
+        monthly_profits[month] += float(report.monthly_profit)
+        monthly_expenses[month] += float(report.total_expenses)  # Assuming misc_expenses is a float field
+        print(monthly_expenses)
+    # آماده‌سازی داده‌ها برای نمودارها
+    months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
+    count_data = [monthly_sales[i]['count'] for i in range(1, 13)]
+    price_data = [monthly_sales[i]['total_price'] / 1000000.0 for i in range(1, 13)]  # تقسیم بر ۱۰۰۰۰۰۰ و تبدیل به float
+    profit_data = [monthly_profits[i] for i in range(1, 13)]
+    expense_data = [monthly_expenses[i] for i in range(1, 13)]
 
+    # آماده‌سازی داده‌ها به صورت دیکشنری
+    data_dict = {}
+    for i in range(12):
+        data_dict[f'count{i+1}'] = count_data[i]
+        data_dict[f'price{i+1}'] = price_data[i]
+        data_dict[f'profit{i+1}'] = profit_data[i]
+        data_dict[f'expense{i+1}'] = expense_data[i]
+
+    # تبدیل داده‌ها به فرمت JSON
+    chart_data_json = json.dumps(data_dict)
+    
+    
+    return render(request, 'record/report-chart.html', {
+        'chart_data_json': chart_data_json,
+        'chart_data_year': current_year,
+        'sales_report': sales_report,
+        'expenses_report': expenses_report,
+        'jalali_date': jalali_date,
+        'date': date,
+    })
+
+def monthsale(request, date):
+    current_date = JalaliDate.today()
+    current_year = current_date.year  # دریافت سال جاری شمسی
+
+    # دریافت تمامی داده‌های فروش از مدل RecipeSaleFile
+    sales_data = RecipeSaleFile.objects.all()
+
+    # آماده‌سازی defaultdict برای ذخیره‌سازی داده‌های فروش تجمیع شده
+    monthly_sales = defaultdict(lambda: {'count': 0, 'total_price': 0})
+
+    # تجمیع داده‌های فروش بر اساس ماه و سال
+    for sale in sales_data:
+        # تبدیل تاریخ میلادی به شمسی
+        jalali_date = JalaliDate(sale.date_created)
+        month = jalali_date.month
+        year = jalali_date.year
+
+        total_count = sum(item['count'] for item in sale.recipe_prices)
+        total_price = sum(item['total_price'] for item in sale.recipe_prices)
+
+        if year == current_year:  # در نظر گرفتن داده‌های سال جاری
+            monthly_sales[month]['count'] += total_count
+            monthly_sales[month]['total_price'] += total_price
+
+    # تبدیل سال شمسی به میلادی برای فیلتر کردن در مدل MonthlyReport
+    start_of_year_gregorian = JalaliDate(current_year, 1, 1).todate()
+    end_of_year_gregorian = JalaliDate(current_year, 12, 29).todate()
+    print(start_of_year_gregorian)
+    print(end_of_year_gregorian)
+    # Query MonthlyReport for the current year and calculate monthly profit and misc expenses
+    monthly_reports = MonthlyReport.objects.filter(date__range=(start_of_year_gregorian, end_of_year_gregorian))
+    monthly_profits = defaultdict(lambda: 0.0)
+    monthly_expenses = defaultdict(lambda: 0.0)
+
+    for report in monthly_reports:
+        jalali_date = JalaliDate(report.date)
+        month = jalali_date.month
+        monthly_profits[month] += float(report.monthly_profit)
+        monthly_expenses[month] += float(report.total_expenses)  # Assuming misc_expenses is a float field
+        print(monthly_expenses)
     # آماده‌سازی داده‌ها برای نمودارها
     months = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
     count_data = [monthly_sales[i]['count'] for i in range(1, 13)]

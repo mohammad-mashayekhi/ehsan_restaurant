@@ -122,7 +122,7 @@
                     {{ category.cat_name }}</option>
                 {% endfor %}
             </select>
-            <div id="datatable_filter" class="search-container">
+            <div id="datatable_filter" class="form-control-sm search-container">
                 <input type="search" id="search-box" placeholder="جستجو" class="form-control form-control-sm">
             </div>
         </div>
@@ -135,22 +135,24 @@
                         <table id="datatable" class="table table-striped text-center">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="th">دسته بندی</th>
+                                    <th style="border-bottom-right-radius: 10px;
+                                        border-top-right-radius: 10px; " class="th">دسته بندی</th>
                                     <th class="th">عنوان</th>
                                     <th class="th">موجودی</th>
                                     <th class="th">آخرین قیمت</th>
-                                    <th class="th">قیمت تمام شده</th>
+                                    <th style="border-bottom-left-radius: 10px;
+                                        border-top-left-radius: 10px; " class="th">قیمت تمام شده</th>
                                     
                                 </tr>
                             </thead>
                             <tbody id="table-body">
                                 {% for item in data %}
                                 <tr>
-                                    <td>{{ item.stuff_category }}</td>
+                                    <td class="small-td">{{ item.stuff_category }}</td>
                                     <td>{{ item.stuff_name }}</td>
-                                    <td style="direction:ltr">{{ item.net_quantity|intcomma }}</td>
-                                    <td style="direction:ltr">{{ item.latest_price|intcomma }}</td>
-                                    <td style="direction:ltr">{{ item.last_price|intcomma }}</td>
+                                    <td class="large-td" style="direction:ltr">{{ item.net_quantity|intcomma }}</td>
+                                    <td class="larege" style="font-size: large;" style="direction:ltr">{{ item.latest_price|intcomma }}</td>
+                                    <td class="larege" style="font-size: large;" style="direction:ltr">{{ item.last_price|intcomma }}</td>
                                 </tr>
                                 {% endfor %}
                                 <tfoot>
