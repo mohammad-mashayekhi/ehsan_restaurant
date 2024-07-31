@@ -5,6 +5,9 @@
 <script src="{% static 'vendor/js/jquery.min.js' %}"></script>
 
 <style>
+  .card{
+    text-align-last: right;
+  }
   .th {
     background-color: #6CC3DA !important;
     color: white !important;
@@ -21,64 +24,48 @@
     font-size: 10px !important;
   }
 
-  .bt-out {
-    background-color: #c1e4ea;
-    padding: 30px;
-    margin-bottom: -30px;
-    font-weight: bold;
-    font-size: 1vw;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    border-bottom-left-radius: -15px;
-    width: 100%;
-    text-align: center;
+  .month-buttons .month-button {
+    margin: 5px;
   }
 
-  .bt-out a {
-    color: black !important;
+  .month-buttons .month-button.active {
+      background-color: #2CA9C9; /* رنگ پس‌زمینه برای دکمه فعال */
+      color: white; /* رنگ متن برای دکمه فعال */
+      border-color: #2CA9C9; /* رنگ حاشیه برای دکمه فعال */
   }
 
-  .bt-in {
-    padding: 30px;
-    margin-bottom: -30px;
-    font-weight: bold;
-    font-size: 1vw;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    width: 100%;
-    text-align: center;
+  .month-buttons .month-button:hover {
+      background-color: #2CA9C9; /* رنگ پس‌زمینه هنگام hover */
+      color: white; /* رنگ متن هنگام hover */
   }
-
-  .bt-in a {
-    color: black !important;
-  }
-  .btn-arrow {
-    background-color: #FF8A00;
-    color: white;
-    width: 1%;
-    height: 1%;
-    padding: 1%;
-  }
+  
   .card_head_title{
     font-size: 1vw;
-    color: #c1e4ea;
+    color: #ffffff;
     padding: 5px;
     background: #2CA9C9 !important;
+    border-radius: 15px;
+    text-align-last: center;
   }
 </style>
 <div class="container-xxl flex-grow-1 container-p-y">
   <h4 class="fw-bold pt-3 mb-4">
     <span class="text-muted fw-light">گزارشات/</span> ثبت حسابداری
   </h4>
-  <form method="post">
-    {% csrf_token %}
     <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;margin-top:-20px">
       <div class="card-header" style="margin-inline: 60px;">
-        <button class="btn btn-primary" style="float: left;" type="submit">ذخیره</button>
-        <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-        <input class='form-control-sm date' style="text-align: center;" type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
-        <button class="btn-arrow btn" id="nextDayBtn">>></button>
+        <div class="month-buttons">
+          {% for month in months %}
+              <button class="btn btn-secendary month-button {% if month.url_date == current_month %}active{% endif %}"
+                      onclick="window.location.href='{% url 'record:report' month.url_date %}'">
+                  {{ month.name }}
+              </button>
+          {% endfor %}
+          <button class="btn btn-primary month-button" style="float: left;" type="submit">ذخیره</button>
+        </div>
       </div>
+      <form method="post">
+        {% csrf_token %}
       <div class="row">
         <div class="col-sm text-center">
           <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
@@ -87,74 +74,74 @@
             </div>
             <div class="mt-3 p-4">
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_hall.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_hall }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_takeaway.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_takeaway }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_snappfood.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_snappfood }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_company.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_company }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_special_company.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_special_company }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_charity1.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_charity1 }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_charity.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_charity }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.sales_misc.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.sales_misc }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.total_sales.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.total_sales }}
                 </div>
               </div>
@@ -166,34 +153,34 @@
             <div class="card_head_title">هزینه</div>
             <div class="mt-3 p-4">
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.rent.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.rent }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.salaries.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.salaries }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.maintenance.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.maintenance }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.hall.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.hall }}
                 </div>
               </div>
@@ -201,39 +188,39 @@
                 <div class="col-sm text-center">
                   {{ form.delivery.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.delivery }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.consumables.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.consumables }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.misc_expenses.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.misc_expenses }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.total_expenses.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.total_expenses }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center">
                   {{ form.raw_materials.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.raw_materials }}
                 </div>
               </div>
@@ -247,30 +234,30 @@
           <div class="row mt-2">
             <div class="col-sm">
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center" style="align-content:center">
                   {{ form.monthly_profit.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.monthly_profit }}
                 </div>
               </div>
             </div>
             <div class="col-sm">
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-4 text-center" style="align-content:center">
                   {{ form.profit_percentage.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-8 text-center">
                   {{ form.profit_percentage }}
                 </div>
               </div>
             </div>
             <div class="col-sm">
               <div class="row mt-2">
-                <div class="col-sm text-center">
+                <div class="col-sm-5 text-center" style="align-content:center">
                   {{ form.cost_to_sales_ratio.label_tag }}
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-sm-7 text-center">
                   {{ form.cost_to_sales_ratio }}
                 </div>
               </div>
@@ -280,9 +267,9 @@
       </div>
       {% if form.errors %}
       <ul class="errorlist">{{ form.errors }}</ul>
-    {% endif %}    
-    </div>
+    {% endif %}
   </form>
+    </div>
 </div>
   <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
   <script src="{% static 'js/persianDatepicker.min.js' %}"></script>

@@ -15,6 +15,7 @@
         top: 0;
         z-index: 2;
         text-align-last: center;
+        border:0px
     }
 
     .price-input {
@@ -82,18 +83,20 @@
                         <table id="datatable" class="table table-striped text-center">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="th">ردیف</th>
+                                    <th class="th" style="border-bottom-right-radius: 10px;
+                                        border-top-right-radius: 10px; ">ردیف</th>
                                     <th class="th">کد کالا</th>
                                     <th class="th">نام کالا</th>
                                     <th class="th">تعداد</th>
                                     <th class="th">في واحد</th>
-                                    <th class="th">جمع کل</th>
+                                    <th class="th" style="border-bottom-left-radius: 10px;
+                                        border-top-left-radius: 10px; ">جمع کل</th>
                                 </tr>
                             </thead>
                             <tbody id="table-body">
                                 {% for recipe in file.recipe_prices %}
                                 <tr>
-                                    <td class="small-td">{{ forloop.counter }}</td>
+                                    <td class="small-td" >{{ forloop.counter }}</td>
                                     <td class="small-td">{{ recipe.code }}</td>
                                     <td class="large">{{ recipe.product_name }}</td>
                                     <td class="large">{{ recipe.count }}</td>

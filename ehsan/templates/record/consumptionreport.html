@@ -154,13 +154,15 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th class="thnew large">جمع مقادیر</th>
+                                        <th class="thnew large" style="letter-spacing: 0px !important;border-bottom-right-radius: 10px;
+                                        border-top-right-radius: 10px; border:0px" >جمع مقادیر</th>
                                         <th class="thnew"></th>
                                         <th class="thnew">{{ total_recipe_amount|floatformat:"0"|intcomma }}</th>
                                         <th class="thnew">{{ total_out_quantity }}</th>
                                         <th class="thnew" style="direction:ltr;">{{ total_difference|floatformat:"0"|intcomma }}</th>
                                         <th class="thnew" style="direction:ltr;">{{ total_percentage_difference|floatformat:"0"|intcomma }}%</th>
-                                        <th class="thnew" style="direction:ltr;">{{ total_loss_amount|floatformat:"0"|intcomma }}</th>
+                                        <th class="thnew" style="border-bottom-left-radius: 10px;
+                                        border-top-left-radius: 10px;direction:ltr;border:0px ">{{ total_loss_amount|floatformat:"0"|intcomma }}</th>
                                     </tr>
                                 </tfoot>
                             </table>

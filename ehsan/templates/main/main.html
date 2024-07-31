@@ -342,7 +342,7 @@
                 var newUrlFoodstufd = '{% url "foodstuff:add_price" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRepository = '{% url "repository:in_repository" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlRecipeSale = '{% url "recipe:salereport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
-                var newUrlMonthReport = '/record/report/' + year + '-' + month + '-01' ;
+                var newUrlMonthReport = '/record/report/' + year + '-' + month + '-' + day ;
                 var newUrlClaimsDebts =  '{% url "record:claimsdebts" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlConsumptionReport =  '{% url "record:consumptionreport" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
                 var newUrlReportchart =  '{% url "record:reportchart" "PLACEHOLDER_DATE" %}'.replace('PLACEHOLDER_DATE', formattedDate);
