@@ -28,8 +28,8 @@ class MonthlyReport(models.Model):
 
     class Meta:
         ordering = ['-date']
-        verbose_name = "Daily Report"
-        verbose_name_plural = "Daily Reports"
+        verbose_name = "Monthly Report"
+        verbose_name_plural = "Monthly Reports"
 
     def __str__(self):
         return f"Report for {self.date}"
@@ -41,19 +41,35 @@ class MonthlyReport(models.Model):
         super().save(*args, **kwargs)
         
 
-class ClaimsDebts(models.Model):
-    CLAIM = 'claim'
-    DEBT = 'debt'
+class ClaimDebt(models.Model):
+    personal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    company = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    specific_company = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
-    TYPE_CHOICES = [
-        (CLAIM, 'طلب'),
-        (DEBT, 'بدهی'),
-    ]
+    market = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    meat = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    other = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    staff = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
-    claimsdebts_id = ShortUUIDField(editable=True, unique=True, length=10, max_length=30, alphabet="abcdefgh12345")
-    type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    ingredients = models.JSONField(default=dict, null=True, blank=True)
-    date_created = models.DateField(default=timezone.now)
+    total_claims = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total_debts = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    balance = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    value_added_debt = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    level = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    date = models.DateField()
+
+    class Meta:
+        ordering = ['-date']
+        verbose_name = "ClaimDebt Report"
+        verbose_name_plural = "ClaimDebt Reports"
 
     def __str__(self):
-        return f"({self.get_type_display()}) {self.date_created}"
+        return f"ClaimDebt Report for {self.date}"
+
+    def save(self, *args, **kwargs):
+        # Ensure only month and year are stored in the date field
+        if self.date:
+            self.date = self.date.replace(day=1)
+        super().save(*args, **kwargs)

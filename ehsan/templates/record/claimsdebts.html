@@ -57,92 +57,52 @@
         <div class="month-buttons">
           {% for month in months %}
               <button class="btn btn-secendary month-button {% if month.url_date == current_month %}active{% endif %}"
-                      onclick="window.location.href='{% url 'record:report' month.url_date %}'">
+                      onclick="window.location.href='{% url 'record:claimsdebts' month.url_date %}'">
                   {{ month.name }}
               </button>
           {% endfor %}
-          <button class="btn btn-primary month-button" style="float: left;" type="submit">ذخیره</button>
+          <button id="saveButton" class="btn btn-primary month-button" style="float: left;">ذخیره</button>
         </div>
       </div>
-      <form method="post">
+      <form id="claimsdebtsForm" method="post">
         {% csrf_token %}
       <div class="row">
         <div class="col-sm text-center">
           <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
             <div class="card_head_title">
-              فروش
+              مطالبات
             </div>
             <div class="mt-3 p-4">
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.sales_hall.label_tag }}
+                  {{ form.personal.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.sales_hall }}
+                  {{ form.personal }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.sales_takeaway.label_tag }}
+                  {{ form.company.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.sales_takeaway }}
+                  {{ form.company }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.sales_snappfood.label_tag }}
+                  {{ form.specific_company.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.sales_snappfood }}
+                  {{ form.specific_company }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.sales_company.label_tag }}
+                  {{ form.total_claims.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.sales_company }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.sales_special_company.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.sales_special_company }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.sales_charity1.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.sales_charity1 }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.sales_charity.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.sales_charity }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.sales_misc.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.sales_misc }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.total_sales.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.total_sales }}
+                  {{ form.total_claims }}
                 </div>
               </div>
             </div>
@@ -150,78 +110,46 @@
         </div>
         <div class="col-sm text-center">
           <div class="card mb-4 p-3" style="margin-inline: 60px; box-shadow: none;">
-            <div class="card_head_title">هزینه</div>
+            <div class="card_head_title">بدهی‌ها</div>
             <div class="mt-3 p-4">
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.rent.label_tag }}
+                  {{ form.market.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.rent }}
+                  {{ form.market }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.salaries.label_tag }}
+                  {{ form.meat.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.salaries }}
+                  {{ form.meat }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.maintenance.label_tag }}
+                  {{ form.other.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.maintenance }}
+                  {{ form.other }}
                 </div>
               </div>
               <div class="row mt-2">
                 <div class="col-sm-4 text-center">
-                  {{ form.hall.label_tag }}
+                  {{ form.staff.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.hall }}
+                  {{ form.staff }}
                 </div>
               </div>
               <div class="row mt-2">
-                <div class="col-sm text-center">
-                  {{ form.delivery.label_tag }}
+                <div class="col-sm-4 text-center" >
+                  {{ form.total_debts.label_tag }}
                 </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.delivery }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.consumables.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.consumables }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.misc_expenses.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.misc_expenses }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.total_expenses.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.total_expenses }}
-                </div>
-              </div>
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center">
-                  {{ form.raw_materials.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.raw_materials }}
+                <div class="col-sm-8 text-center disabled">
+                  {{ form.total_debts }}
                 </div>
               </div>
             </div>
@@ -235,30 +163,30 @@
             <div class="col-sm">
               <div class="row mt-2">
                 <div class="col-sm-4 text-center" style="align-content:center">
-                  {{ form.monthly_profit.label_tag }}
+                  {{ form.balance.label_tag }}
                 </div>
                 <div class="col-sm-8 text-center">
-                  {{ form.monthly_profit }}
-                </div>
-              </div>
-            </div>
-            <div class="col-sm">
-              <div class="row mt-2">
-                <div class="col-sm-4 text-center" style="align-content:center">
-                  {{ form.profit_percentage.label_tag }}
-                </div>
-                <div class="col-sm-8 text-center">
-                  {{ form.profit_percentage }}
+                  {{ form.balance }}
                 </div>
               </div>
             </div>
             <div class="col-sm">
               <div class="row mt-2">
                 <div class="col-sm-5 text-center" style="align-content:center">
-                  {{ form.cost_to_sales_ratio.label_tag }}
+                  {{ form.value_added_debt.label_tag }}
                 </div>
                 <div class="col-sm-7 text-center">
-                  {{ form.cost_to_sales_ratio }}
+                  {{ form.value_added_debt }}
+                </div>
+              </div>
+            </div>
+            <div class="col-sm">
+              <div class="row mt-2">
+                <div class="col-sm-3 text-center" style="align-content:center">
+                  {{ form.level.label_tag }}
+                </div>
+                <div class="col-sm-9 text-center"  style="direction: ltr;">
+                  {{ form.level }}
                 </div>
               </div>
             </div>
@@ -271,54 +199,18 @@
   </form>
     </div>
 </div>
-  <link rel="stylesheet" href="{% static 'css/persianDatepicker-default.css' %}" />
-  <script src="{% static 'js/persianDatepicker.min.js' %}"></script>
-  <script>
-    var dateInput = document.getElementById('date');
-    var prevDayBtn = document.getElementById('prevDayBtn');
-    var nextDayBtn = document.getElementById('nextDayBtn');
-  
-    document.addEventListener('DOMContentLoaded', function () {
-      if (!dateInput.value) {
-        dateInput.value = '{{date}}';
-      }
-  
-      prevDayBtn.addEventListener('click', function () {
-        var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
-        var dateObject = new Date(placeholderValue); // تبدیل به Date object
-        dateObject.setMonth(dateObject.getMonth() - 1); // یک ماه به عقب
-        dateObject.setDate(1); // تنظیم روز به 1
-        var year = dateObject.getFullYear();
-        var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
-        var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + '01';
-        var url = "/record/report/" + formattedDate + "/";
-        window.location.href = url;
-      });
-  
-      nextDayBtn.addEventListener('click', function () {
-        var placeholderValue = dateInput.getAttribute('placeholder'); // خواندن مقدار placeholder
-        var dateObject = new Date(placeholderValue); // تبدیل به Date object
-        dateObject.setMonth(dateObject.getMonth() + 1); // یک ماه به جلو
-        dateObject.setDate(1); // تنظیم روز به 1
-        var year = dateObject.getFullYear();
-        var month = dateObject.getMonth() + 1; // ماه‌ها از 0 تا 11 شمرده می‌شوند، بنابراین باید یک واحد به آن اضافه کنیم
-        var formattedDate = year + '-' + (month < 10 ? '0' + month : month) + '-' + '01';
-  
-        var url = "/record/report/" + formattedDate + "/";
-        window.location.href = url;
-      });
-  
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // دکمه ذخیره
+    var saveButton = document.getElementById('saveButton');
+    // فرم
+    var form = document.getElementById('claimsdebtsForm');
+    
+    // وقتی دکمه ذخیره کلیک می‌شود
+    saveButton.addEventListener('click', function () {
+      // ارسال فرم
+      form.submit();
     });
-  
-    $("#date").persianDatepicker({
-      showGregorianDate: true,
-      formatDate: "YYYY-MM-DD",
-      onSelect: function () { 
-        var selectedDate = document.getElementById('date').value;
-        console.log(selectedDate)
-        var url = "/record/report/" + selectedDate + "/";
-        window.location.href = url;            
-      }, 
-    });
-  </script>
+  });
+</script>
 {% endblock %}

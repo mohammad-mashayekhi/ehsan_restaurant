@@ -32,7 +32,7 @@ from django.shortcuts import render
 from repository.models import Repository
 from foodstuff.models import Price
 from recipe.models import RecipeSaleFile
-from record.models import ClaimsDebts,MonthlyReport
+from record.models import ClaimDebt,MonthlyReport
 
 
 

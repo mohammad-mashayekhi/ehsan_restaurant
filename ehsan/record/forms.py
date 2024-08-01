@@ -1,5 +1,5 @@
 from django import forms
-from .models import ClaimsDebts,MonthlyReport
+from .models import ClaimDebt,MonthlyReport
 
 class DailyReportForm(forms.ModelForm):
     sales_hall = forms.DecimalField(label='فروش سالن', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'فروش سالن', 'min': 0}), required=False, initial=0)
@@ -28,42 +28,27 @@ class DailyReportForm(forms.ModelForm):
         model = MonthlyReport
         exclude = ['date']
         
-
-class ClaimsForm(forms.ModelForm):
+class ClaimsDebtsForm(forms.ModelForm):
+    personal = forms.DecimalField(label='شخصی', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'شخصی', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    company = forms.DecimalField(label='شرکتی', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'شرکتی', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    specific_company = forms.DecimalField(label='شرکتی خاص', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'شرکتی خاص', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    
+    market = forms.DecimalField(label='بازار', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'بازار', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    meat = forms.DecimalField(label='گوشت', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'گوشت', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    other = forms.DecimalField(label='متفرقه', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'متفرقه', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    staff = forms.DecimalField(label='کارکنان', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'کارکنان', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    
+    total_claims = forms.DecimalField(label='جمع مطالبات', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'جمع مطالبات', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    total_debts = forms.DecimalField(label='جمع بدهی‌ها', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'جمع بدهی‌ها', 'min': 0, 'readonly': True}), required=False, initial=0, max_digits=10, decimal_places=2)
+    level = forms.DecimalField(label='تراز', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'تراز', 'min': 0, 'readonly': True}), required=False, initial=0, max_digits=10, decimal_places=2)
+    
+    balance = forms.DecimalField(label='موجودی حساب', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'موجودی حساب', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    value_added_debt = forms.DecimalField(label='بدهی ارزش افزوده', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'بدهی ارزش افزوده', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    
     class Meta:
-        model = ClaimsDebts
-        fields = ['claimsdebts_id', 'type']
-        widgets = {
-            'claimsdebts_id': forms.TextInput(attrs={'class': 'form-control'}),
-            'type': forms.HiddenInput(),
-        }
-        labels = {
-            'claimsdebts_id': 'عنوان طلب',
-        }
+        model = ClaimDebt
+        exclude = ['date']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['type'].initial = ClaimsDebts.CLAIM  # Set initial value for type
-        self.fields['type'].widget = forms.HiddenInput()  # Hide the field from user input
-
-
-class DebtsForm(forms.ModelForm):
-    class Meta:
-        model = ClaimsDebts
-        fields = ['claimsdebts_id', 'type']
-        widgets = {
-            'claimsdebts_id': forms.TextInput(attrs={'class': 'form-control'}),
-            'type': forms.HiddenInput(),
-        }
-        labels = {
-            'claimsdebts_id': 'عنوان بدهی',
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['type'].initial = ClaimsDebts.DEBT  # Set initial value for type
-        self.fields['type'].widget = forms.HiddenInput()  # Hide the field from user input
-        
 
 class IngredientForm(forms.Form):
     name = forms.CharField(

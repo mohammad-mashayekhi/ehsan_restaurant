@@ -1,7 +1,7 @@
 from datetime import datetime
-from django.shortcuts import render, redirect, HttpResponse
-from .models import MonthlyReport
-from .forms import DailyReportForm ,IngredientForm
+from django.shortcuts import render, redirect, HttpResponse,get_object_or_404
+from .models import MonthlyReport,ClaimDebt
+from .forms import DailyReportForm ,ClaimsDebtsForm
 from foodstuff.models import Category
 from recipe.models import Recipe, RecipeSaleFile
 from repository.models import Repository
@@ -11,11 +11,6 @@ from collections import defaultdict
 import json
 from khayyam import JalaliDate
 
-from datetime import datetime
-from django.shortcuts import render
-from .models import MonthlyReport
-from .forms import DailyReportForm
-import jdatetime
 
 def report(request, date):
     date_object = datetime.strptime(date, '%Y-%m-%d').replace(day=1)
@@ -47,95 +42,138 @@ def report(request, date):
         'current_month': date  # Add the current month
     })
 
-from django.shortcuts import render, redirect, get_object_or_404,HttpResponse
-from django.forms import formset_factory
-from .forms import ClaimsForm, DebtsForm, IngredientForm
-from .models import ClaimsDebts
 
 def add_claimsdebts(request, date):
-    gregorian_date = datetime.strptime(date, '%Y-%m-%d')
-    jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+    date_object = datetime.strptime(date, '%Y-%m-%d').replace(day=1)
+    jalali_date = jdatetime.date.fromgregorian(date=date_object).strftime('%Y/%m/%d')
+    report_date = date_object.replace(day=1)
 
-    try:
-        date_obj = datetime.strptime(date, '%Y-%m-%d').date()
-    except ValueError:
-        return HttpResponse('Invalid date format', status=400)
-
-    if 0 <= date_obj.day <= 15:
-        creation_date = date_obj.replace(day=15)
-    else:
-        creation_date = date_obj.replace(day=30)
-
-    IngredientFormSet = formset_factory(IngredientForm, extra=1)
-
-    try:
-        claims = ClaimsDebts.objects.get(date_created=creation_date, type=ClaimsDebts.CLAIM)
-    except ClaimsDebts.DoesNotExist:
-        claims = ClaimsDebts(date_created=creation_date, type=ClaimsDebts.CLAIM)
-
-    try:
-        debts = ClaimsDebts.objects.get(date_created=creation_date, type=ClaimsDebts.DEBT)
-    except ClaimsDebts.DoesNotExist:
-        debts = ClaimsDebts(date_created=creation_date, type=ClaimsDebts.DEBT)
+    # Get or create ClaimDebt instance for the given date
+    report_instance, created = ClaimDebt.objects.get_or_create(date=report_date)
 
     if request.method == 'POST':
-        claims_form = ClaimsForm(request.POST, instance=claims, prefix='claims')
-        debts_form = DebtsForm(request.POST, instance=debts, prefix='debts')
-        claims_formset = IngredientFormSet(request.POST, prefix='claims_ingredients')
-        debts_formset = IngredientFormSet(request.POST, prefix='debts_ingredients')
-        
-        if claims_form.is_valid() and debts_form.is_valid() and claims_formset.is_valid() and debts_formset.is_valid():
-            claims = claims_form.save(commit=False)
-            debts = debts_form.save(commit=False)
-            
-            claims.type = ClaimsDebts.CLAIM
-            debts.type = ClaimsDebts.DEBT
-            
-            claims.date_created = creation_date
-            debts.date_created = creation_date
-            
-            claims.save()
-            debts.save()
-            
-            claims_ingredients = {form.cleaned_data.get('name'): form.cleaned_data.get('amount') for form in claims_formset
-                      if form.cleaned_data.get('name') and form.cleaned_data.get('amount') is not None}
-            debts_ingredients = {form.cleaned_data.get('name'): form.cleaned_data.get('amount') for form in debts_formset
-                      if form.cleaned_data.get('name') and form.cleaned_data.get('amount') is not None}
-            
-            claims.ingredients = claims_ingredients
-            debts.ingredients = debts_ingredients
-            
-            claims.save()
-            debts.save()
-            
-            return redirect('record:claimsdebts', date=date)
-    else:
-        claims_form = ClaimsForm(instance=claims, prefix='claims')
-        debts_form = DebtsForm(instance=debts, prefix='debts')
-        
-        if claims.id:
-            initial_data = [{'name': ingredient, 'amount': claims.ingredients.get(ingredient, 0)} for ingredient in claims.ingredients.keys()]
-            claims_formset = IngredientFormSet(initial=initial_data, prefix='claims_ingredients')
-        else:
-            claims_formset = IngredientFormSet(prefix='claims_ingredients')
+        form = ClaimsDebtsForm(request.POST, instance=report_instance)
+        if form.is_valid():
+            # Calculate total debts and claims
+            total_claims = (
+                form.cleaned_data['personal'] +
+                form.cleaned_data['company'] +
+                form.cleaned_data['specific_company']
+            )
+            total_debts = (
+                form.cleaned_data['market'] +
+                form.cleaned_data['meat'] +
+                form.cleaned_data['other'] +
+                form.cleaned_data['staff']
+            )
 
-        if debts.id:
-            initial_data = [{'name': ingredient, 'amount': debts.ingredients.get(ingredient, 0)} for ingredient in debts.ingredients.keys()]
-            debts_formset = IngredientFormSet(initial=initial_data, prefix='debts_ingredients')
-        else:
-            debts_formset = IngredientFormSet(prefix='debts_ingredients')
-        
+            # Calculate balance and update the form instance
+            x1 =  total_claims + form.cleaned_data['balance']
+            x2 =  total_debts + form.cleaned_data['value_added_debt']
+            form.instance.level = x1 - x2
+            form.instance.total_claims = total_claims
+            form.instance.total_debts = total_debts
+
+            form.save()
+            return redirect('record:claimsdebts', date=date)  # Redirect to the same view with the same date
+    else:
+        form = ClaimsDebtsForm(instance=report_instance)
 
     return render(request, 'record/claimsdebts.html', {
-        'date': date,
+        'form': form,
         'jalali_date': jalali_date,
-        'claims_form': claims_form,
-        'debts_form': debts_form,
-        'claims_formset': claims_formset,
-        'debts_formset': debts_formset,
-        'claims': claims,
-        'debts': debts,
+        'date': date,
+        'months': get_jalali_months(),
+        'current_month': date  # Add the current month
     })
+
+# from django.forms import formset_factory
+# from .forms import IngredientForm
+# from .models import ClaimDebt
+# def add_claimsdebts(request, date):
+#     gregorian_date = datetime.strptime(date, '%Y-%m-%d')
+#     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
+
+#     try:
+#         date_obj = datetime.strptime(date, '%Y-%m-%d').date()
+#     except ValueError:
+#         return HttpResponse('Invalid date format', status=400)
+
+#     if 0 <= date_obj.day <= 15:
+#         creation_date = date_obj.replace(day=15)
+#     else:
+#         creation_date = date_obj.replace(day=30)
+
+#     IngredientFormSet = formset_factory(IngredientForm, extra=1)
+
+#     try:
+#         claims = ClaimsDebts.objects.get(date_created=creation_date, type=ClaimsDebts.CLAIM)
+#     except ClaimsDebts.DoesNotExist:
+#         claims = ClaimsDebts(date_created=creation_date, type=ClaimsDebts.CLAIM)
+
+#     try:
+#         debts = ClaimsDebts.objects.get(date_created=creation_date, type=ClaimsDebts.DEBT)
+#     except ClaimsDebts.DoesNotExist:
+#         debts = ClaimsDebts(date_created=creation_date, type=ClaimsDebts.DEBT)
+
+#     if request.method == 'POST':
+#         claims_form = ClaimsForm(request.POST, instance=claims, prefix='claims')
+#         debts_form = DebtsForm(request.POST, instance=debts, prefix='debts')
+#         claims_formset = IngredientFormSet(request.POST, prefix='claims_ingredients')
+#         debts_formset = IngredientFormSet(request.POST, prefix='debts_ingredients')
+        
+#         if claims_form.is_valid() and debts_form.is_valid() and claims_formset.is_valid() and debts_formset.is_valid():
+#             claims = claims_form.save(commit=False)
+#             debts = debts_form.save(commit=False)
+            
+#             claims.type = ClaimsDebts.CLAIM
+#             debts.type = ClaimsDebts.DEBT
+            
+#             claims.date_created = creation_date
+#             debts.date_created = creation_date
+            
+#             claims.save()
+#             debts.save()
+            
+#             claims_ingredients = {form.cleaned_data.get('name'): form.cleaned_data.get('amount') for form in claims_formset
+#                       if form.cleaned_data.get('name') and form.cleaned_data.get('amount') is not None}
+#             debts_ingredients = {form.cleaned_data.get('name'): form.cleaned_data.get('amount') for form in debts_formset
+#                       if form.cleaned_data.get('name') and form.cleaned_data.get('amount') is not None}
+            
+#             claims.ingredients = claims_ingredients
+#             debts.ingredients = debts_ingredients
+            
+#             claims.save()
+#             debts.save()
+            
+#             return redirect('record:claimsdebts', date=date)
+#     else:
+#         claims_form = ClaimsForm(instance=claims, prefix='claims')
+#         debts_form = DebtsForm(instance=debts, prefix='debts')
+        
+#         if claims.id:
+#             initial_data = [{'name': ingredient, 'amount': claims.ingredients.get(ingredient, 0)} for ingredient in claims.ingredients.keys()]
+#             claims_formset = IngredientFormSet(initial=initial_data, prefix='claims_ingredients')
+#         else:
+#             claims_formset = IngredientFormSet(prefix='claims_ingredients')
+
+#         if debts.id:
+#             initial_data = [{'name': ingredient, 'amount': debts.ingredients.get(ingredient, 0)} for ingredient in debts.ingredients.keys()]
+#             debts_formset = IngredientFormSet(initial=initial_data, prefix='debts_ingredients')
+#         else:
+#             debts_formset = IngredientFormSet(prefix='debts_ingredients')
+        
+
+#     return render(request, 'record/claimsdebts.html', {
+#         'date': date,
+#         'jalali_date': jalali_date,
+#         'claims_form': claims_form,
+#         'debts_form': debts_form,
+#         'claims_formset': claims_formset,
+#         'debts_formset': debts_formset,
+#         'claims': claims,
+#         'debts': debts,
+#     })
 
 def consumptionreport(request, date):
     gregorian_date = datetime.strptime(date, '%Y-%m-%d')
@@ -463,7 +501,6 @@ def monthsale(request, date):
     }
 
     return render(request, 'record/report-monthsale.html', context)
-
 
 def get_jalali_months():
     """ 
