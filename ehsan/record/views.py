@@ -47,46 +47,6 @@ def report(request, date):
         'current_month': date  # Add the current month
     })
 
-def get_jalali_months():
-    """ 
-    Generates a list of dictionaries for each month of the current year.
-    Each dictionary contains the month name and corresponding URL date.
-    """
-    # Define Persian names for Jalali months
-    jalali_month_names = {
-        1: 'فروردین',
-        2: 'اردیبهشت',
-        3: 'خرداد',
-        4: 'تیر',
-        5: 'مرداد',
-        6: 'شهریور',
-        7: 'مهر',
-        8: 'آبان',
-        9: 'آذر',
-        10: 'دی',
-        11: 'بهمن',
-        12: 'اسفند'
-    }
-
-    year = jdatetime.date.today().year
-    months = []
-
-    for month in range(1, 13):
-        # Create a Jalali date object
-        jalali_date = jdatetime.date(year, month, 1)
-        # Convert Jalali date to Gregorian date
-        gregorian_date = jalali_date.togregorian()
-        # Format the Gregorian date to 'YYYY-MM-DD'
-        formatted_date = gregorian_date.strftime('%Y-%m-%d')
-        # Get the month name in Persian
-        month_name = jalali_month_names[month]
-        months.append({
-            'name': month_name,
-            'url_date': formatted_date
-        })
-
-    return months
-
 from django.shortcuts import render, redirect, get_object_or_404,HttpResponse
 from django.forms import formset_factory
 from .forms import ClaimsForm, DebtsForm, IngredientForm
@@ -436,6 +396,7 @@ def reportchart(request, date):
         'expenses_report': expenses_report,
         'jalali_date': jalali_date,
         'date': date,
+        'months': get_jalali_months(),
     })
 
 def monthsale(request, date):
@@ -502,3 +463,44 @@ def monthsale(request, date):
     }
 
     return render(request, 'record/report-monthsale.html', context)
+
+
+def get_jalali_months():
+    """ 
+    Generates a list of dictionaries for each month of the current year.
+    Each dictionary contains the month name and corresponding URL date.
+    """
+    # Define Persian names for Jalali months
+    jalali_month_names = {
+        1: 'فروردین',
+        2: 'اردیبهشت',
+        3: 'خرداد',
+        4: 'تیر',
+        5: 'مرداد',
+        6: 'شهریور',
+        7: 'مهر',
+        8: 'آبان',
+        9: 'آذر',
+        10: 'دی',
+        11: 'بهمن',
+        12: 'اسفند'
+    }
+
+    year = jdatetime.date.today().year
+    months = []
+
+    for month in range(1, 13):
+        # Create a Jalali date object
+        jalali_date = jdatetime.date(year, month, 1)
+        # Convert Jalali date to Gregorian date
+        gregorian_date = jalali_date.togregorian()
+        # Format the Gregorian date to 'YYYY-MM-DD'
+        formatted_date = gregorian_date.strftime('%Y-%m-%d')
+        # Get the month name in Persian
+        month_name = jalali_month_names[month]
+        months.append({
+            'name': month_name,
+            'url_date': formatted_date
+        })
+
+    return months

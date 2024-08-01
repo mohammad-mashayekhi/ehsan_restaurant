@@ -21,6 +21,20 @@
     text-align-last: center;
     letter-spacing: 0px !important;
   }
+  .month-buttons .month-button {
+    margin: 5px;
+  }
+
+  .month-buttons .month-button.active {
+      background-color: #2CA9C9; /* رنگ پس‌زمینه برای دکمه فعال */
+      color: white; /* رنگ متن برای دکمه فعال */
+      border-color: #2CA9C9; /* رنگ حاشیه برای دکمه فعال */
+  }
+
+  .month-buttons .month-button:hover {
+      background-color: #2CA9C9; /* رنگ پس‌زمینه هنگام hover */
+      color: white; /* رنگ متن هنگام hover */
+  }
 
   .th span {
     font-size: 10px !important;
@@ -84,9 +98,14 @@
   </h4>
   <div class="card mb-4" style="background-color: #c1e4ea; box-shadow: none;margin-top:-20px">
     <div class="card-header" style="margin-inline: 60px;">
-      <button class="btn-arrow btn" id="prevDayBtn"><<</button>
-      <input class='form-control-sm date' style="text-align: center;"  type="text" id="date" value="{{jalali_date}}" placeholder="{{date}}"/>
-      <button class="btn-arrow btn" id="nextDayBtn">>></button>
+      <div class="month-buttons">
+        {% for month in months %}
+          <button class="btn btn-secendary month-button {% if month.url_date == date %}active{% endif %}"
+                  onclick="window.location.href='{% url 'record:reportchart' month.url_date %}'">
+            {{ month.name }}
+          </button>
+        {% endfor %}
+      </div>
   </div>
     <div class="">
       <div class="text-center">
