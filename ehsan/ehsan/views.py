@@ -88,7 +88,7 @@ def dashboard(request):
 
     # بررسی اینکه آیا رکوردی در دو هفته اخیر در ClaimsDebts ایجاد شده است یا خیر
     two_weeks_ago = timezone.now() - timedelta(days=14)
-    recent_claims_debts = ClaimDebt.objects.filter(date_created__gte=two_weeks_ago).exists()
+    recent_claims_debts = ClaimDebt.objects.filter(date=two_weeks_ago).exists()
 
     # دریافت آخرین زمان آپدیت گزارشات حسابداری
     last_MonthlyReport_update = MonthlyReport.objects.order_by('-date').first()
