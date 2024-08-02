@@ -57,7 +57,7 @@
 
 .pdp-default .yearSelect{
     overflow-y: auto;
-    direction: ltr;
+    direction: rtl;
 }
 
 .pdp-default .monthSelect li.disableMonth, .pdp-default .monthSelect li.disableMonth:hover{

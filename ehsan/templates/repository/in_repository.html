@@ -91,6 +91,14 @@
     .table-striped tr {
         line-height: 1 !important;
     }
+        .pdp-header {
+            height: 30px;
+            line-height: 30px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 </style>
 
 <div class="container-xxl flex-grow-1 container-p-y">
@@ -343,6 +351,9 @@
         });
 
         $("#date").persianDatepicker({
+        cellWidth: 39,
+        cellHeight: 30,
+        fontSize: 16,
             showGregorianDate: true,
             formatDate: "YYYY-MM-DD",
             onSelect: function () {
@@ -351,6 +362,8 @@
                 window.location.href = url;
             },
         });
+         
+       
 
         document.addEventListener('DOMContentLoaded', function () {
             var today = new Date();
