@@ -43,22 +43,23 @@
 
 </head>
 <style>
-/* .container-xxl  {
-    margin-bottom: 10%;
+
+html, body {
     height: 100%;
- */
-/* } */
-/* .card-body {
-    height: 100%;
-    
-} */
-/* .card{
-    height: 100%;
-} */
-/* .dataTables_scrollBody{
-    height: 738.789px;
+    margin: 0;
 }
- */
+
+.container-xxl {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    flex-grow: 1;
+    overflow-y: auto;
+    box-shadow: none;
+}
 
     .curved-border {
         border-top-left-radius: 20px;
