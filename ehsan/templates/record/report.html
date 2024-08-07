@@ -336,44 +336,4 @@
     });
   </script>
 
-
-
-<script>
-  $(document).ready(function () {     
-      // Function to format the input value with thousands separators
-      function formatNumberWithCommas(number) {
-          return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-
-      // Function to remove all non-numeric characters (except the decimal point)
-      function cleanNumber(number) {
-          return parseFloat(number.toString().replace(/[^0-9.]/g, ""));
-      }
-
-      // Add input event listener to price inputs
-      $('.price-input').on('input', function () {
-          var inputVal = $(this).val();
-          var cleanedVal = cleanNumber(inputVal);
-          var formattedVal = formatNumberWithCommas(cleanedVal);
-          $(this).val(formattedVal);
-      });
-
-      // Format price inputs on page load
-      $('.price-input').each(function () {
-          var inputVal = $(this).val();
-          var cleanedVal = cleanNumber(inputVal);
-          var formattedVal = formatNumberWithCommas(cleanedVal);
-          $(this).val(formattedVal);
-      });
-
-      // Before submitting the form, clean the input values
-      $('#reportForm').on('submit', function () {
-          $('.price-input').each(function () {
-              var cleanedVal = cleanNumber($(this).val());
-              $(this).val(cleanedVal);
-          });
-      });
-      
-  });
-</script>
 {% endblock %}
