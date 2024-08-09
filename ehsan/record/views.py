@@ -23,14 +23,31 @@ def report(request, date):
     if request.method == 'POST':
         form = DailyReportForm(request.POST, instance=report_instance)
         if form.is_valid():
+            total_sales = (
+                form.cleaned_data['sales_hall'] +
+                form.cleaned_data['sales_takeaway'] +
+                form.cleaned_data['sales_snappfood'] +
+                form.cleaned_data['sales_company'] +
+                form.cleaned_data['sales_special_company'] +
+                form.cleaned_data['sales_charity'] +
+                form.cleaned_data['sales_charity1'] +
+                form.cleaned_data['sales_misc'] 
+            )
+            total_expenses = (
+                form.cleaned_data['rent'] +
+                form.cleaned_data['salaries'] +
+                form.cleaned_data['hall'] +
+                form.cleaned_data['consumables'] +
+                form.cleaned_data['maintenance'] +
+                form.cleaned_data['delivery'] +
+                form.cleaned_data['misc_expenses'] 
+            )
+            form.instance.total_sales = total_sales
+            form.instance.total_expenses = total_expenses
+            
+            
             form.save()
-            return render(request, 'record/report.html', {
-                'form': form,
-                'jalali_date': jalali_date,
-                'date': date,
-                'months': get_jalali_months(),
-                'current_month': date  # Add the current month
-            })
+            return redirect('record:report', date=date)  # Redirect to the same view with the same date
     else:
         form = DailyReportForm(instance=report_instance)
 
