@@ -41,11 +41,21 @@ def dashboard(request):
     import jdatetime
     from datetime import datetime,timedelta
     from django.utils import timezone
+    from django.db.models import DateField
+    from django.db.models.functions import TruncDate
 
     today_date = datetime.now().strftime('%Y-%m-%d')
     gregorian_date = datetime.strptime(today_date, '%Y-%m-%d')
     jalali_date = jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
-    
+    today_gregorian = timezone.now().date()
+
+    def convert_to_gregorian(jalali_date):
+        """ تبدیل تاریخ شمسی به میلادی """
+        if jalali_date:
+            date = jdatetime.date.strptime(jalali_date, '%Y/%m/%d')
+            gregorian_date = date.togregorian()
+            return gregorian_date.strftime('%Y-%m-%d')
+        return None
     def convert_to_jalali(gregorian_date):
         if gregorian_date:
             return jdatetime.date.fromgregorian(date=gregorian_date).strftime('%Y/%m/%d')
@@ -69,6 +79,30 @@ def dashboard(request):
             two_weeks_ago = now - timedelta(days=14)
             return date >= two_weeks_ago    
         return False
+# ////////////
+ # دریافت تاریخ‌ها برای ورودی انبار
+    in_dates = Repository.objects.filter(type='in').annotate(date_only=TruncDate('date')).values_list('date_only', flat=True).distinct()
+
+    # دریافت تاریخ‌ها برای خروجی انبار
+    out_dates = Repository.objects.filter(type='out').annotate(date_only=TruncDate('date')).values_list('date_only', flat=True).distinct()
+
+    # دریافت تاریخ‌ها برای گزارشات مصرف روزانه
+    daily_report_dates = RecipeSaleFile.objects.annotate(date_only=TruncDate('date_created')).values_list('date_only', flat=True).distinct()
+
+    # ایجاد لیستی از تاریخ‌های موجود در ماه گذشته
+    today_gregorian = timezone.now().date()
+    one_month_ago = today_gregorian - timedelta(days=30)
+    date_range = [one_month_ago + timedelta(days=i) for i in range((today_gregorian - one_month_ago).days + 1)]
+
+    # پیدا کردن روزهای خالی
+    empty_in_dates = [date for date in date_range if date not in in_dates]
+    empty_out_dates = [date for date in date_range if date not in out_dates]
+    empty_daily_report_dates = [date for date in date_range if date not in daily_report_dates]
+
+    # تبدیل تاریخ‌های خالی به فرمت میلادی
+    empty_in_dates_gregorian = [date.strftime('%Y-%m-%d') for date in empty_in_dates]
+    empty_out_dates_gregorian = [date.strftime('%Y-%m-%d') for date in empty_out_dates]
+    empty_daily_report_dates_gregorian = [date.strftime('%Y-%m-%d') for date in empty_daily_report_dates]
 
     # دریافت آخرین ورودی انبار
     last_entry_in = Repository.objects.filter(type='in').order_by('-date').first()
@@ -94,7 +128,7 @@ def dashboard(request):
     last_MonthlyReport_update = MonthlyReport.objects.order_by('-date').first()
     last_MonthlyReport_update_recent = is_within_last_month(last_MonthlyReport_update.date) if last_MonthlyReport_update else False
 
-
+    print(empty_in_dates)
     context = {
         'today_date':today_date,
         'jalali_date': jalali_date,
@@ -104,6 +138,10 @@ def dashboard(request):
         'last_price_update_recent': last_price_update_recent,
         'last_MonthlyReport_update_recent': last_MonthlyReport_update_recent,
         'recent_claims_debts': recent_claims_debts,
+        
+       'empty_in_dates': empty_in_dates_gregorian,
+        'empty_out_dates': empty_out_dates_gregorian,
+        'empty_daily_report_dates': empty_daily_report_dates_gregorian,
     }
     return render(request, 'main/dashboard.html', context)
 

@@ -17,7 +17,7 @@
         <!-- </div> -->
         <div class="card-body">
             <div class="row">
-                <div class="col-6 col-lg-6">
+                <div class="col-4 col-lg-4">
                     <div class="card" style="box-shadow: none;">
                         <!-- <div class="card-header">
                             <h5>فعالیت‌های داشبورد</h5>
@@ -87,47 +87,65 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-6 col-lg-6">
+                <div class="col-8 col-lg-8">
                     <div class="card" style="box-shadow: none;">
                         <div class="card-header">
-                            <h5>رفتن به ...</h5>
+                            <h5>تقویم</h5>
                         </div>
                         <div class="card-body pt-4 pb-2 mt-2">
-                            <ul class="timeline card-timeline mb-0">
-                                <div class="timeline-event">
-                                    <div class="timeline-header">
-                                        <a href="{% url 'repository:in_repository' today_date %}" class="mb-4 fw-semibold btn btn-primary waves-effect waves-light">
-                                            ثبت ورودی انبار
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="timeline-event">
-                                    <div class="timeline-header mb-1">
-                                        <a href="{% url 'repository:out_repository' today_date %}" class="mb-4 fw-semibold btn btn-primary waves-effect waves-light">
-                                            ثبت خروجی انبار
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="timeline-event">
-                                    <div class="timeline-header mb-1">
-                                        <a href="{% url 'recipe:salereport' today_date %}" class="mb-2 fw-semibold btn btn-primary waves-effect waves-light">
-                                            ثبت اطلاعات فروش
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="timeline-event">
-                                    <div class="timeline-header mt-4">
-                                        <a href="{% url 'foodstuff:add_price' today_date %}" class="mb-4 fw-semibold btn btn-primary waves-effect waves-light">
-                                            ثبت قیمت‌ مواد اولیه
-                                        </a>
-                                    </div>
-                                </div>
-                            </ul>
+                            <div id="calendar"></div>
                         </div>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var events = [
+            {% for date in empty_in_dates %}
+                {
+                    title: 'ورودی انبار',
+                    start: '{{ date }}',
+                    color: '#4CAF50'
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %},
+            {% for date in empty_out_dates %}
+                {
+                    title: 'خروجی انبار',
+                    start: '{{ date }}',
+                    color: '#00ACC1'
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %},
+            {% for date in empty_daily_report_dates %}
+                {
+                    title: 'گزارش روزانه',
+                    start: '{{ date }}',
+                    color: '#3949AB'
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+
+        // پیکربندی FullCalendar
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'fa', // تنظیم زبان به فارسی
+            events: events,
+            direction: 'rtl', // تنظیم جهت به راست به چپ
+        });
+
+        calendar.render();
+    });
+</script>
+{% endblock %}
+
+{% block pagejs %}
+
+ <!-- FullCalendar JS -->
+ <script src="
+ https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js
+ "></script> <!-- Moment.js و Moment-Jalaali -->
+
 {% endblock %}
