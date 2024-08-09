@@ -278,10 +278,48 @@
     // فرم
     var form = document.getElementById('reportForm');
     
+
+       // Function to format the input value with thousands separators
+       function formatNumberWithCommas(number) {
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Function to remove all non-numeric characters (except the decimal point)
+    function cleanNumber(number) {
+        return parseFloat(number.toString().replace(/[^0-9.]/g, ""));
+    }
+
+    // Add input event listener to price inputs
+    $('.price-input').on('input', function () {
+        var inputVal = $(this).val();
+        var cleanedVal = cleanNumber(inputVal);
+        if (!isNaN(cleanedVal)) {
+            var formattedVal = formatNumberWithCommas(cleanedVal);
+            $(this).val(formattedVal);
+        } else {
+            $(this).val('');
+        }
+    });
+
+    // Format price inputs on page load
+    $('.price-input').each(function () {
+        var inputVal = $(this).val();
+        var cleanedVal = cleanNumber(inputVal);
+        if (!isNaN(cleanedVal)) {
+            var formattedVal = formatNumberWithCommas(cleanedVal);
+            $(this).val(formattedVal);
+        } else {
+            $(this).val('');
+        }
+    });
+
     // وقتی دکمه ذخیره کلیک می‌شود
     saveButton.addEventListener('click', function () {
-      // ارسال فرم
-      form.submit();
+      $('.price-input').each(function () {
+            var cleanedVal = cleanNumber($(this).val());
+            $(this).val(cleanedVal);
+        });
+        form.submit();
     });
   });
 </script>
