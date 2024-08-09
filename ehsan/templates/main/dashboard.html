@@ -112,14 +112,14 @@
                     color: '#4CAF50'
                 }{% if not forloop.last %},{% endif %}
             {% endfor %},
-            {% for date in empty_out_dates %}
+
+            {% for date in empty_daily_report_dates %}
                 {
-                    title: 'خروجی انبار',
+                    title: 'گزارش روزانه',
                     start: '{{ date }}',
-                    color: '#00ACC1'
+                    color: '#3949AB'
                 }{% if not forloop.last %},{% endif %}
-            {% endfor %},
-            
+            {% endfor %}
         ];
 
         // پیکربندی FullCalendar
