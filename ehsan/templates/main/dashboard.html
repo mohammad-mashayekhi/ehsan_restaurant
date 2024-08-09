@@ -105,27 +105,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var events = [
-            {% for date in empty_in_dates %}
-                {
-                    title: 'ورودی انبار',
-                    start: '{{ date }}',
-                    color: '#4CAF50'
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %},
-            {% for date in empty_out_dates %}
-                {
-                    title: 'خروجی انبار',
-                    start: '{{ date }}',
-                    color: '#00ACC1'
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %},
-            {% for date in empty_daily_report_dates %}
-                {
-                    title: 'گزارش روزانه',
-                    start: '{{ date }}',
-                    color: '#3949AB'
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %}
+          
         ];
 
         // پیکربندی FullCalendar
