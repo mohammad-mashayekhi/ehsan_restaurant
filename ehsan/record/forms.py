@@ -38,7 +38,7 @@ class ClaimsDebtsForm(forms.ModelForm):
     other = forms.DecimalField(label='متفرقه', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'متفرقه', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
     staff = forms.DecimalField(label='کارکنان', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'کارکنان', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
     
-    total_claims = forms.DecimalField(label='جمع مطالبات', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'جمع مطالبات', 'min': 0}), required=False, initial=0, max_digits=10, decimal_places=2)
+    total_claims = forms.DecimalField(label='جمع مطالبات', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'جمع مطالبات', 'min': 0, 'readonly': True}), required=False, initial=0, max_digits=10, decimal_places=2)
     total_debts = forms.DecimalField(label='جمع بدهی‌ها', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'جمع بدهی‌ها', 'min': 0, 'readonly': True}), required=False, initial=0, max_digits=10, decimal_places=2)
     level = forms.DecimalField(label='تراز', widget=forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'تراز', 'min': 0, 'readonly': True}), required=False, initial=0, max_digits=10, decimal_places=2)
     
